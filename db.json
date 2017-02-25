@@ -1,0 +1,28 @@
+{
+  "ids": {
+    "User": 1,
+    "AccessToken": 1,
+    "ACL": 1,
+    "RoleMapping": 1,
+    "Role": 1,
+    "replication": 10
+  },
+  "models": {
+    "User": {},
+    "AccessToken": {},
+    "ACL": {},
+    "RoleMapping": {},
+    "Role": {},
+    "replication": {
+      "1": "{\"damage_month\":\"February\",\"damage_date\":2,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":123,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":2,\"current_reading3\":3,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":1}",
+      "2": "{\"damage_month\":\"February\",\"damage_date\":2,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":123,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":2,\"current_reading3\":3,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":2}",
+      "3": "{\"damage_month\":\"February\",\"damage_date\":1,\"location\":\"1\",\"town\":\"1\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":1,\"technician_name\":\"1\",\"teamleader_name\":\"1\",\"dps_name\":\"1\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":1,\"current_reading3\":1,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":3}",
+      "4": "{\"damage_month\":\"February\",\"damage_date\":1,\"location\":\"1\",\"town\":\"1\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":12,\"technician_name\":\"12\",\"teamleader_name\":\"12\",\"dps_name\":\"12\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":1,\"current_reading3\":1,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":4}",
+      "5": "{\"damage_month\":\"February\",\"damage_date\":2,\"location\":\"12\",\"town\":\"12\",\"facility_type\":\"Service\",\"facility_size\":\".75\\\"\",\"facility_material\":\"Steel\",\"print\":\"field_smart\",\"heath_report\":12,\"technician_name\":\"12\",\"teamleader_name\":\"12\",\"dps_name\":\"12\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":1,\"current_reading3\":1,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":5}",
+      "6": "{\"damage_month\":\"February\",\"damage_date\":2,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":123,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":2,\"current_reading2\":3,\"current_reading3\":4,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":6}",
+      "7": "{\"damage_month\":\"February\",\"damage_date\":1,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":123,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":2,\"current_reading3\":3,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":7}",
+      "8": "{\"damage_month\":\"February\",\"damage_date\":1,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":123,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":1,\"current_reading2\":2,\"current_reading3\":3,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":8}",
+      "9": "{\"damage_month\":\"February\",\"damage_date\":2,\"location\":\"123\",\"town\":\"123\",\"facility_type\":\"Main\",\"facility_size\":\".50\\\"\",\"facility_material\":\"Poly\",\"print\":\"field_smart\",\"heath_report\":1234,\"technician_name\":\"123\",\"teamleader_name\":\"123\",\"dps_name\":\"123\",\"locate_equipment\":\"Shure-Lock\",\"currently_locatable\":true,\"proper_connection\":true,\"consistent_readings\":true,\"current_reading1\":2,\"current_reading2\":3,\"current_reading3\":4,\"determination\":\"Facility Issue\",\"connection_comments\":null,\"id\":9}"
+    }
+  }
+}

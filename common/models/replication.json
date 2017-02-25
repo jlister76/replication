@@ -1,0 +1,100 @@
+{
+  "name": "replication",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "damage_month": {
+      "type": "string",
+      "required": true
+    },
+    "damage_date": {
+      "type": "number",
+      "required": true
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "town": {
+      "type": "string",
+      "required": true
+    },
+    "facility_type": {
+      "type": "string",
+      "required": true
+    },
+    "facility_size": {
+      "type": "string",
+      "required": true
+    },
+    "facility_material": {
+      "type": "string",
+      "required": true
+    },
+    "print": {
+      "type": "string",
+      "required": true
+    },
+    "heath_report": {
+      "type": "number",
+      "required": true
+    },
+    "technician_name": {
+      "type": "string",
+      "required": true
+    },
+    "teamleader_name": {
+      "type": "string",
+      "required": true
+    },
+    "dps_name": {
+      "type": "string",
+      "required": true
+    },
+    "locate_equipment": {
+      "type": "string",
+      "required": true
+    },
+    "currently_locatable": {
+      "type": "boolean",
+      "required": true
+    },
+    "proper_connection": {
+      "type": "boolean",
+      "required": true
+    },
+    "consistent_readings": {
+      "type": "boolean",
+      "required": true
+    },
+    "current_reading1": {
+      "type": "number",
+      "required": true
+    },
+    "current_reading2": {
+      "type": "number",
+      "required": true
+    },
+    "current_reading3": {
+      "type": "number",
+      "required": true
+    },
+    "determination": {
+      "type": "string",
+      "required": true
+    },
+    "determination_comments": {
+      "type": "string"
+    },
+    "connection_comments": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

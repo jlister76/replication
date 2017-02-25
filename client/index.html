@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="Replication">
+<head>
+    <meta charset="UTF-8">
+    <title>Replication Results</title>
+  <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Roboto" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body ng-cloak ng-controller="MainCtrl" >
+<div class="md-padding">
+  <h1>Locate Replication Form</h1>
+</div>
+<div layout="column" id="container" class="md-padding" style="height:auto;width:780px;">
+  <span ng-click="test()">TEST</span>
+  <form name="replicationForm" ng-submit="sendEmail(replication.damage.month,replication.damage.date,replication.address,replication.town,replication.facility.type,
+  replication.facility.size,replication.facility.material, replication.print,replication.damagereport,replication.technician,replication.teamleader,replication.dps,
+  replication.equipment,replication.facility.condition,replication.connection,replication.connectionComments,replication.consistency,replication.currentReadingOne,
+  replication.currentReadingTwo,replication.currentReadingThree,
+  replication.determination,replication.determination.comments)">
+    <fieldset style="margin:1rem;background-color:#eeeeee;">
+      <legend>
+        <header>
+          <h4>Damage Information</h4>
+        </header>
+      </legend>
+      <div id="damage-information">
+        <div layout="column" class="md-padding">
+            <div layout layout-align="start center" style="margin:.5rem;">
+              <p style="width:220px;">Date of Damage:</p>
+              <div style="margin-right:1rem;">
+
+                    <select ng-model="replication.damage.month" id="DMG_month" placeholder="Month" required>
+                      <option ng-repeat="m in months" value="{{ m }}">{{ m }}</option>
+                    </select>
+
+              </div>
+              <div style="margin-right:1rem;">
+
+                    <select ng-model="replication.damage.date" id="DMG_date" placeholder="Date" required>
+                      <option ng-repeat="d in dates" value="{{ d }}">{{ d }}</option>
+                    </select>
+
+              </div>
+            </div>
+            <div layout layout-align="start center" style="margin:.5rem;" >
+              <label for="replication_address" style="width:220px;">Address or Intersection</label>
+              <input ng-model="replication.address" id="replication_address" type="text" required>
+            </div>
+          <div layout layout-align="start center" style="margin:.5rem;">
+            <label for="town" style="width:220px;">Town</label>
+            <input ng-model="replication.town" id="town" type="text" required>
+          </div>
+          <div>
+            <div layout layout-align="start center" style="margin:.5rem;">
+              <label for="facility_type" style="width:220px;">Facility</label>
+              <div>
+
+                  <select ng-model="replication.facility.type" id="facility_type" required>
+                    <option ng-repeat="t in type" value="{{t}}">{{t}}</option>
+                  </select>
+
+              </div>
+              <div style="margin:1rem;">
+
+                  <select ng-model="replication.facility.size" id="facility_size" required>
+                    <option ng-repeat="s in size" value="{{s}}">{{s}}</option>
+                  </select>
+
+              </div>
+              <div style="margin: 1rem;">
+
+                  <select ng-model="replication.facility.material" id="facility_material" required>
+                    <option ng-repeat="m in material" value="{{m}}">{{m}}</option>
+                  </select>
+
+              </div>
+            </div>
+            <div layout layout-align="start center" style="margin:.5rem;">
+              <label for="mapping" style="width:220px;" >Facility shown on maps?</label>
+              <div>
+
+                  <select ng-model="replication.print" id="mapping" required>
+                    <option value="field_smart">Field Smart</option>
+                    <option value="gis">HTH Map</option>
+                    <option value="no">Undocumented facility</option>
+                  </select>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset style="margin:1rem;background-color:#EEEEEE;">
+      <legend>
+        <h4>Meeting Information</h4>
+      </legend>
+      <div layout="column" id="replication_meeting_information">
+        <div layout layout-align="start center" style="margin: 1rem;">
+          <label style="width:220px;">Heath Damage Report#</label>
+            <input ng-model="replication.damagereport" type="text" placeholder="ie. 13425" required>
+        </div>
+        <div layout layout-align="start center" style="margin: 1rem;">
+
+            <label style="width:220px;" >Technician's Name:</label>
+            <input ng-model="replication.technician" aria-label="Technician" required>
+
+        </div>
+        <div layout layout-align="start center" style="margin: 1rem;">
+          <label style="width:220px;">Team Leader's Name:</label>
+          <input ng-model="replication.teamleader" type="text" aria-label="Team Leader" required>
+
+        </div>
+        <div layout layout-align="start center" style="margin: 1rem;">
+          <label style="width:220px;">DPS's Name</label>
+          <input ng-model="replication.dps" type="text" aria-label="DPS" required>
+
+        </div>
+
+        <div layout layout-align="start center" style="margin: 1rem;">
+          <label for="equipment" style="width:220px;">Equipment Used to Locate Facility?</label>
+          <div>
+
+              <select ng-model="replication.equipment"id="equipment" required>
+                <option ng-repeat="e in equipment" value="{{ e }}">{{e}}</option>
+              </select>
+
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset style="margin:1rem;background-color:#EEEEEE;">
+      <legend>
+        <h4>Results of Replication</h4>
+      </legend>
+      <div layout="column" id="replication_results">
+
+        <div layout layout-align="start center" style="margin:.5rem;">
+          <span style="margin-right:1rem;width:300px;" >Is this facility currently locatable?</span>
+          <div>
+
+              <select ng-model="replication.facility.condition" id="facility_condition" required>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+
+          </div>
+        </div>
+        <div layout layout-align="start center" style="margin:.5rem;">
+          <span style="margin-right:1rem;width:300px;" >Was the equipment properly connected to the facility?</span>
+          <div>
+            <label for="proper_connection">Connected Properly</label>
+            <select ng-model="replication.connection" name="proper_connection" id="proper_connection">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+        <div layout="column" style="margin:1rem 2rem;">
+          <label for="connection_comments">If no, please provide explanation:</label>
+          <textarea ng-model="replication.connectionComments"  name="connection_comments" id="connection_comments" cols="30" rows="7" ng-required="replication.connection === 'no'"></textarea>
+        </div>
+       <div layout="column">
+         <div layout layout-align="start center" style="margin:.5rem;">
+           <span style="margin-right:1rem;width:300px;" >Are the current readings consistent?</span>
+           <div>
+               <select ng-model="replication.consistency" id="replication_signal" required>
+                 <option value="yes">Yes</option>
+                 <option value="no">No</option>
+               </select>
+
+           </div>
+         </div>
+         <div layout="column" class="md-padding">
+           <div style="margin:.5rem;">
+             <span><small>Current Reading#1</small></span>
+             <input ng-model="replication.currentReadingOne" id="current_reading1" type="number" style="width:40px;" required>
+             <span><small>mA</small></span>
+           </div>
+           <div style="margin:.5rem;">
+             <span><small>Current Reading#2</small></span>
+             <input ng-model="replication.currentReadingTwo" id="current_reading2" type="number" style="width:40px;" required>
+             <span><small>mA</small></span>
+           </div>
+           <div style="margin:.5rem;">
+             <span><small>Current Reading#3</small></span>
+             <input ng-model="replication.currentReadingThree" id="current_reading3" type="number" style="width:40px;" required>
+             <span><small>mA</small></span>
+           </div>
+         </div>
+       </div>
+        <div layout layout-align="start center" style="margin:.5rem;">
+          <span style="margin-right:1rem;width:300px;">Reason determined for signal coupling: </span>
+          <div>
+            <select ng-model="replication.determination" id="determination" required>
+              <option ng-repeat="r in reason" value="{{r}}">{{ r }}</option>
+            </select>
+          </div>
+        </div>
+        <div layout="column" style="margin:1rem 2rem;">
+          <label for="determination_comments">Reason for determination:</label>
+          <textarea ng-model="replication.determinationComment" name="determination_comments" id="determination_comments" cols="30" rows="10" required></textarea>
+        </div>
+      </div>
+    </fieldset>
+    <div>
+      <md-button ng-disabled="replicationForm.$invalid" ng-class="{active:replicationForm.$valid,disabled:replicationForm.$invalid}" class="md-raised" type="ng-submit">Submit</md-button>
+    </div>
+  </form>
+</div>
+
+<!--Bower dependencies-->
+<script src="vendor/angular/angular.min.js"></script>
+<script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="vendor/angular-resource/angular-resource.min.js"></script>
+<script src="vendor/angular-animate/angular-animate.min.js"></script>
+<script src=" vendor/angular-aria/angular-aria.min.js"></script>
+<script src="vendor/angular-messages/angular-messages.min.js"></script>
+<script src="vendor/angular-material/angular-material.min.js"></script>
+<script src="vendor/moment/min/moment.min.js"></script>
+
+<!--application bootstrap-->
+<!--Application bootscript -->
+<script src="js/app.js"></script>
+<script src="js/controller.js"></script>
+<script src="lb-services.js"></script>
+</body>
+</html>
