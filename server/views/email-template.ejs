@@ -1,0 +1,59 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+  <style>
+    h3 {
+      background-color: #2f3661;
+      color: white;
+      padding: .2rem;
+    }
+
+    span {
+      font-weight: bold;
+    }
+
+    small {
+      color: #666666;
+    }
+  </style>
+</head>
+<body>
+<div style="width:auto;">
+
+  <div style="width:98%;">
+    <h4><%= town %> Area - <%= cause %></h4>
+    <% if(does_facility_locate_accurately === 'no'){ %>
+    <small><em>*facility is unable to be located</em></small>
+    <% } %>
+    <br/>
+    <% if(facility_shown_on_map === 'no'){ %>
+    <small><em>*not shown on map</em></small>
+    <% } %>
+    <h3>Meeting Attendees</h3>
+    <p><span>DPS: </span> <%= atmos_rep_fname %> <%= atmos_rep_lname %> </p>
+    <p><span>Team Leader: </span> <%= team_leader_fname %> <%= team_leader_lname %></p>
+    <p><span>Locate Technician: </span> <%= locate_technician_fname %> <%= locate_technician_lname %></p>
+    <h3>Damage Information</h3>
+    <p><span>Heath's Damage Report: </span> <%= heath_report %></p>
+    <p><span>Address: </span> <%= street_number %> <%= street_name %> <%= street_suffix %></p>
+    <% if(intersection != null){ %>
+    <p><span>Nearest Cross Street: </span> <%= intersection %></p>
+    <% } %>
+    <p><span>Diameter: </span> <%= facility_size %></p>
+    <p><span>Material: </span> <%= facility_material %></p>
+  </div>
+  <div>
+    <h3>Replication Results</h3>
+    <p><strong>Determination: </strong> <%= cause %></p>
+    <p><strong>Locate Equipment Used: </strong> <%= equipment_used %></p>
+    <% if(replication_successful === 'no'){ %>
+    <p><strong>Possible actions to better protect the facility:</strong></p>
+    <p>
+      <%= coaching_provided %>
+    </p>
+    <% } %>
+  </div>
+</div>
+</body>
+</html>
+

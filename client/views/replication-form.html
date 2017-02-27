@@ -1,0 +1,208 @@
+<div layout layout-align="space-between center" class="md-padding">
+  <h2>Replication Procedure Form</h2>
+  <a ng-controller="LogOutCtrl" href="" ng-click="logout()">Sign Out</a>
+</div>
+<div>
+  <form name="replicationForm"
+        ng-submit="sendEmail(response)">
+    <fieldset class="field_set">
+      <legend>
+        MEETING ATTENDEES
+      </legend>
+      <div layout layout-align="space-between center" class="row" style="border:solid thin #5c707b;padding:1rem;">
+        <div>ATMOS ENERGY</div>
+        <div>{{ response.Atmos_rep_fname }} {{ response.Atmos_rep_lname }}</div>
+
+      </div>
+      <div layout="column" class="row">
+        <span><em>Team Leader</em></span>
+        <div layout layout-align="start center">
+          <div layout="column" style="margin:1rem;padding:.5rem;">
+            <label for="team_leader_fname">First Name</label>
+            <input ng-model="response.team_leader_fname" id="team_leader_fname" type="text" required>
+          </div>
+          <div layout="column">
+            <label for="team_leader_lname">Last Name</label>
+            <input ng-model="response.team_leader_lname" id="team_leader_lname" type="text" required>
+          </div>
+        </div>
+      </div>
+      <div layout="column" class="row">
+        <span><em>Locate Technician</em></span>
+        <div layout layout-align="start center">
+          <div layout="column" style="margin:1rem;padding:.5rem;">
+            <label for="locate_technician_fname">First Name</label>
+            <input ng-model="response.locate_technician_fname" id="locate_technician_fname" type="text" required>
+          </div>
+          <div layout="column">
+            <label for="locate_technician_lname">Last Name</label>
+            <input ng-model="response.locate_technician_lname" id="locate_technician_lname" type="text" required>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="field_set">
+      <legend>
+        DAMAGE INFORMATION
+      </legend>
+      <div layout="column" class="md-padding">
+        <div class="row">
+          <div layout="column">
+            <label for="heath_report">Heath Report Number</label>
+            <input ng-model="response.heath_report" type="number" id="heath_report" required>
+          </div>
+        </div>
+        <div layout="column" class="row">
+          <span style="margin-bottom:1rem;"><em>Address Information</em></span>
+          <div layout layout-align="space-between center">
+            <div layout="column">
+              <label for="street_number">Number</label>
+              <input ng-model="response.street_number" type="number" id="street_number"
+                     style="width:64px;"
+                     required>
+            </div>
+            <div layout="column">
+              <label for="street">Street</label>
+              <input ng-model="response.street_name" type="text" id="street" required>
+            </div>
+            <div layout="column">
+              <label for="street">Suffix</label>
+              <select ng-model="response.street_suffix" name="street_suffix" id="street_suffix" required>
+                <option value="road">Road</option>
+                <option value="street">Street</option>
+                <option value="drive">Drive</option>
+                <option value="avenue">Avenue</option>
+                <option value="boulevard">Boulevard</option>
+                <option value="lane">Lane</option>
+                <option value="circle">Cirlce</option>
+                <option value="expressway">Expressway</option>
+              </select>
+
+            </div>
+          </div>
+        </div>
+        <div layout class="row" layout-align="space-between center">
+          <div layout="column">
+            <label for="intersection">Nearest Cross Street
+              <small ng-if="!response.street_number"><em style="color:indianred;">*</em></small>
+            </label>
+            <input ng-model="response.intersection" type="text" id="intersection" ng-required="!response.street_number">
+          </div>
+          <div layout="column">
+            <label for="town">Town</label>
+            <input ng-model="response.town" type="text" id="town" required>
+          </div>
+        </div>
+        <div class="row">
+          <span><em>Facility Description</em></span>
+          <div layout style="margin-top:1rem;">
+            <label for="facility_size">Diameter</label>
+            <select ng-model="response.facility_size" name="facility_size" id="facility_size" required>
+              <option ng-repeat="size in diameters" value="{{ size }}">{{ size }}</option>
+
+            </select>
+            <label for="facility_material">Material</label>
+            <select ng-model="response.facility_material" name="facility_material" id="facility_material" required>
+              <option ng-repeat="material in materials" value="{{ material }}">{{ material }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    <fieldset class="field_set">
+      <legend>REPLICATION RESULTS</legend>
+      <div layout="column" class="md-padding">
+        <div class="row">
+          <span>Which equipment was used when this facility was marked?</span>
+          <select ng-model="response.equipment_used" name="equipment" required>
+            <option value="Shurelock">Shure-Lock</option>
+            <option value="Vivax">Vivax</option>
+          </select>
+        </div>
+        <div ng-if="response.equipment_used === 'Shurelock'">
+          <div class="md-body-1" style="background-color:#fffe97;padding:.5rem;" md-whiteframe="4">
+            <div layout layout-align="start center">
+              <i class="material-icons" style="color:#666666;">info_outline</i>
+              <em>Shure-Lock Information</em>
+            </div>
+            <p>
+              While targeting the facility, the technician should be listening for a null response in
+              the receiver's tone and concurrently watching for the maximum signal power indicator (SPI), or the lock
+              symbol.
+            </p>
+          </div>
+          <div class="row">
+            <span>While sweeping over the locate marks, does the receiver indicate the peak SPI and a concurrent null response?</span>
+            <select ng-model="response.replication_successful" name="replication_successful"
+                    ng-required="response.equipment_used === 'Shurelock'">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+        <div ng-if="response.equipment_used === 'Vivax'">
+          <div layout="column" class="md-body-1 " style="background-color:#fffe97;padding:.5rem;" md-whiteframe="4">
+            <div layout layout-align="start center">
+              <i class="material-icons" style="color:#666666;">info_outline</i>
+              <em>Vivax Information</em>
+            </div>
+            <p>
+              While targeting the facility, the receiver should be in peak mode. When directly
+              over the signal the receiver will indicate a peak signal response with the highest amount
+              of current (mA). Once the signal is pin-pointed, the techincian should compare the peak and
+              null response. If the responses are not closley aligned, signal distortion is present. Signals
+              with large amount of distrotion should not be trusted.
+            </p>
+          </div>
+          <div class="row">
+            <span>While sweeping over the locate marks, is the receiver indicating a peak response with the highest
+              amount of current and a low amount of signal distortion?</span>
+            <select ng-model="response.replication_successful" name="replication_successful_with_vivax"
+                    ng-required="response.equipment_used === 'Vivax'">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+        <div ng-if="response.replication_successful === 'no'" class="row">
+          <div layout="column">
+            <label for="unsuccessful_replication_coaching">What actions could have been performed to better protect this
+              facility?</label>
+            <textarea ng-model="response.coaching_provided"
+                      ng-required="response.replication_successful === 'no'"
+                      name="unsuccessful_replication_coaching" id="unsuccessful_replication_coaching" cols="30"
+                      rows="7"></textarea>
+            <div layout style="margin-top:1rem;">
+              <span>After repairs were made, does this facility locate accurately?</span>
+              <select ng-model="response.does_facility_locate_accurately" name="does_facility_locate_accurately"
+                      id="does_facility_locate_accurately" ng-required="response.replication_successful === 'no'">
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div ng-if="response.replication_successful" class="row">
+          <div layout>
+            <span>Is this facility shown on map?</span>
+            <select ng-model="response.facility_shown_on_map" name="facility_shown_on_map"
+                    id="facility_shown_on_map" required>
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+        </div>
+
+
+      </div>
+    </fieldset>
+    <div layout layout-align="center" style="width:700px;">
+      <md-button type="submit" ng-disabled="replicationForm.$invalid"
+                 ng-class="{disabled:replicationForm.$invalid,active:replicationForm.$valid}"
+                 ng-dblclick="false"
+                 style="height: 48px; width:240px;">
+        SEND RESULTS
+      </md-button>
+    </div>
+  </form>
+</div>
