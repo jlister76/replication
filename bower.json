@@ -1,0 +1,24 @@
+{
+  "name": "replication",
+  "description": "replication",
+  "main": "server/server.js",
+  "authors": [
+    "John <jlister76@gmail.com>"
+  ],
+  "license": "UNLICENSED",
+  "homepage": "https://github.com/jlister76/replication",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "client/vendor",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-ui-router": "^0.4.2",
+    "angular-material": "^1.1.3",
+    "angular-resource": "^1.6.2",
+    "moment": "^2.17.1"
+  }
+}
