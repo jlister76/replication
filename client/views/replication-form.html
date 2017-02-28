@@ -2,6 +2,14 @@
   <h2>Replication Procedure Form</h2>
   <a ng-controller="LogOutCtrl" href="" ng-click="logout()">Sign Out</a>
 </div>
+<div layout layout-align="end center" class row style="margin:1rem; width:720px;">
+  <div layout="column">
+    <label for="dlist">Distribution List</label>
+    <select ng-model="response.distribution_list" name="ditribution_list" id="dlist">
+      <!--<option ng-repeat="(key,val) in distribution_lists" value="{{ list }}">{{ key }} - {{ val }}</option>-->
+    </select>
+  </div>
+</div>
 <div>
   <form name="replicationForm"
         ng-submit="sendEmail(response)">
@@ -10,7 +18,7 @@
         MEETING ATTENDEES
       </legend>
       <div layout layout-align="space-between center" class="row" style="border:solid thin #849eaa;padding:1rem;">
-        <div>ATMOS ENERGY REPRESENATIVE - {{ response.atmos_rep_fname }} {{ response.atmos_rep_lname }}</div>
+        <div>ATMOS ENERGY REPRESENATIVE - {{ Atmos_rep }}</div>
         <div></div>
 
       </div>

@@ -61,13 +61,17 @@
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user);
-
+          //persist username beyond $pristine()
+          $scope.Atmos_rep = user.fname + " " + user.lname;
           $scope.response = {
             atmos_rep_fname: user.fname,
             atmos_rep_lname: user.lname
           };
         });
-
+        $scope.distribution_lists = [
+          {heath: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'f.pinales@heathus.com', 'j.kouba@heathus.com']},
+          {midtx: ['peter.pedersen@atmosenergy.com', 'julie.campbell@atmosenergy.com']}
+        ];
         $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
         $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
         $scope.towns = ['Addison', 'Balch Springs', 'Carrollton', 'Cedar Hill', 'Cockrell Hill',
