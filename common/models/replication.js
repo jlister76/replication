@@ -21,7 +21,7 @@ module.exports = function(Replication) {
       cause = 'Technician Error';
     }
     var messageVars = {
-      town: _.capitalize(d.town),
+      town: d.town,
       cause: cause,
       atmos_rep_fname: d.atmos_rep_fname,
       atmos_rep_lname: d.atmos_rep_lname,
