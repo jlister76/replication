@@ -47,9 +47,9 @@ module.exports = function(Replication) {
     var html_body = renderer(messageVars);
 
     Replication.app.models.Email.send({
-      to: 'jlister76@gmail.com',
+      to: 'j.lister@heathus.com',
       from: 'noreply@heathus.com',
-      subject: 'Line Locate Replication',
+      subject: 'Heath Locate Replication',
       html: html_body
     }, function(err, mail) {
       if(err){console.error(err)}

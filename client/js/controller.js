@@ -65,8 +65,16 @@
           $scope.Atmos_rep_lname = user.lname;
         });
 
-        $scope.diameters = ['1/2"', '3/4"', '1"', '1.25"', '1.50"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
+        $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
         $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
+        $scope.towns = [
+          'Addison', 'Balch Springs', 'Carrollton', 'Cedar Hill', 'Cockrell Hill',
+          'Combine', 'Coppell', 'Dallas', 'DeSoto', 'Duncanville', 'Farmers Branch', 'Ferris',
+          'Garland', 'Glenn Heights', 'Grand Prairie', 'Grapevine', 'Highland Park', 'Hutchins',
+          'Irving', 'Lancaster', 'Lewisville', 'Mesquite', 'Ovilla', 'Richardson', 'Rowlett', 'Sachse',
+          'Seagoville', 'Sunnyvale', 'University Park', 'Wilmer', 'Wylie', 'Argyle', 'Aubrey', 'Bartonville',
+          'Celina', 'Copper Canyon', 'Conrinth', 'Corral City'
+        ];
         $scope.response = {};
         $scope.sendEmail = function (response) {
           console.log(response);
