@@ -61,8 +61,11 @@
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user);
-          $scope.Atmos_rep_fname = user.fname;
-          $scope.Atmos_rep_lname = user.lname;
+
+          $scope.response = {
+            atmos_rep_fname: user.fname,
+            atmos_rep_lname: user.lname
+          };
         });
 
         $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
@@ -75,7 +78,7 @@
           'Seagoville', 'Sunnyvale', 'University Park', 'Wilmer', 'Wylie', 'Argyle', 'Aubrey', 'Bartonville',
           'Celina', 'Copper Canyon', 'Conrinth', 'Corral City'
         ];
-        $scope.response = {};
+
         $scope.sendEmail = function (response) {
           console.log(response);
           $http.post('api/replications/sendemail', {formData: response});
