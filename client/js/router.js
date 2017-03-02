@@ -7,7 +7,7 @@
       $stateProvider
         .state('router', {
           url: '/router',
-          template: '<div style="background-color:#000; height: 100%">test</div>',
+          template: '<div style="background-color:white;"></div>',
           controller: 'AuthCtrl'
         })
         .state('form', {
