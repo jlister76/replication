@@ -57,15 +57,15 @@
     })
     .controller('MainCtrl', function ($scope) {
     })
-    .controller('FormCtrl', function ($scope, $http, AuthService) {
+    .controller('FormCtrl', function ($scope, $http, AuthService, Replication) {
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user);
           //persist username beyond $pristine()
-          $scope.Atmos_rep = user.fname + " " + user.lname;
+          $scope.atmos_employee = user.fname + " " + user.lname;
           $scope.response = {
-            atmos_rep_fname: user.fname,
-            atmos_rep_lname: user.lname
+            atmos_employee_fname: user.fname,
+            atmos_employee_lname: user.lname
           };
         });
         $scope.distribution_lists = [
@@ -97,9 +97,39 @@
 
         $scope.sendEmail = function (response) {
           console.log(response);
-          $http.post('api/replications/sendemail', {formData: response});
-          $scope.response = {};
-          $scope.replicationForm.$setPristine();
+          var date = moment();
+          Replication.create({
+            meeting_date: date,
+            atmos_employee: response.atmos_employee_fname + response.atmos_employee_lname,
+            team_leader: response.team_leader_fname + response.team_leader_lname,
+            locate_technician: response.locate_technician_fname + response.locate_technician_lname,
+            heath_report: response.heath_report,
+            facility_size: response.facility_size,
+            facility_material: response.facility_material,
+            street_number: response.street_number,
+            street_name: response.street_name,
+            street_suffix: response.street_suffix,
+            cross_street: response.cross_street,
+            town: response.town,
+            isReplicated: response.able_to_replicate,
+            atmos_determination: response.determination,
+            atmos_comments: response.atmos_comments,
+            heath_comments: null,
+            video_url: null
+          })
+            .$promise
+            .then(function (response) {
+              console.log(response);
+              //$http.post('api/replications/sendemail', {formData: response});
+              $scope.response = {};
+              $scope.replicationForm.$setPristine();
+            })
+            .catch(function (err) {
+              if (err) {
+                console.error(err)
+              }
+            })
+
         }
 
       }

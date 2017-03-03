@@ -36,7 +36,7 @@
     "public": false
   },
   "replication": {
-    "dataSource": "db",
+    "dataSource": "mssql",
     "public": true
   },
   "Email": {

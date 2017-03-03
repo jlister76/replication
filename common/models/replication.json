@@ -6,24 +6,24 @@
     "validateUpsert": true
   },
   "properties": {
-    "damage_month": {
+    "meeting_date": {
+      "type": "date",
+      "required": true
+    },
+    "atmos_employee": {
       "type": "string",
       "required": true
     },
-    "damage_date": {
+    "team_leader": {
+      "type": "string",
+      "required": true
+    },
+    "locate_technician": {
+      "type": "string",
+      "required": true
+    },
+    "heath_report": {
       "type": "number",
-      "required": true
-    },
-    "location": {
-      "type": "string",
-      "required": true
-    },
-    "town": {
-      "type": "string",
-      "required": true
-    },
-    "facility_type": {
-      "type": "string",
       "required": true
     },
     "facility_size": {
@@ -34,62 +34,40 @@
       "type": "string",
       "required": true
     },
-    "print": {
-      "type": "string",
-      "required": true
-    },
-    "heath_report": {
+    "street_number": {
       "type": "number",
       "required": true
     },
-    "technician_name": {
+    "street_name": {
       "type": "string",
       "required": true
     },
-    "teamleader_name": {
+    "street_suffix": {
       "type": "string",
       "required": true
     },
-    "dps_name": {
-      "type": "string",
-      "required": true
-    },
-    "locate_equipment": {
-      "type": "string",
-      "required": true
-    },
-    "currently_locatable": {
-      "type": "boolean",
-      "required": true
-    },
-    "proper_connection": {
-      "type": "boolean",
-      "required": true
-    },
-    "consistent_readings": {
-      "type": "boolean",
-      "required": true
-    },
-    "current_reading1": {
-      "type": "number",
-      "required": true
-    },
-    "current_reading2": {
-      "type": "number",
-      "required": true
-    },
-    "current_reading3": {
-      "type": "number",
-      "required": true
-    },
-    "determination": {
-      "type": "string",
-      "required": true
-    },
-    "determination_comments": {
+    "cross_street": {
       "type": "string"
     },
-    "connection_comments": {
+    "town": {
+      "type": "string",
+      "required": true
+    },
+    "isReplicated": {
+      "type": "boolean",
+      "required": true
+    },
+    "atmos_determination": {
+      "type": "string",
+      "required": true
+    },
+    "atmos_comments": {
+      "type": "string"
+    },
+    "heath_comments": {
+      "type": "string"
+    },
+    "video_url": {
       "type": "string"
     }
   },

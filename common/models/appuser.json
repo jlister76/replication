@@ -13,6 +13,13 @@
     "lname": {
       "type": "string",
       "required": true
+    },
+    "company": {
+      "type": "string",
+      "required": true
+    },
+    "access_type": {
+      "type": "string"
     }
   },
   "validations": [],
