@@ -56,9 +56,9 @@ textarea {
 }
 
 input, select {
-  height: 36px;
+  height: 32px;
   border: solid thin #b8b8b8;
-  border-radius: .5rem;
+
 }
 
 input {
@@ -84,4 +84,10 @@ select {
 
 label, span {
   margin-right: 1rem;
+}
+
+.view span {
+  width: 200px;
+  text-align: left;
+  margin: .5rem;
 }

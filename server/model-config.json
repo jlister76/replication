@@ -45,5 +45,9 @@
   "appuser": {
     "dataSource": "mssql",
     "public": true
+  },
+  "meeting": {
+    "dataSource": "mssql",
+    "public": true
   }
 }

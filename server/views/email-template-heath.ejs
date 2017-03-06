@@ -57,7 +57,7 @@
         </tr>
         <tr>
           <td>
-            <table cellpadding="5" cellspacing="0">
+            <table cellpadding="5" cellspacing="0" width="100%">
               <tr>
                 <td>
                   <h4><%= reason %></h4>
@@ -71,6 +71,12 @@
                     empty comments
                     <% } %>
                     <%= comments %></p>
+                </td>
+              </tr>
+              <tr>
+                <td width="100%" style="text-align:right;">
+                  <a href="http://localhost:3000/#/replication/<%= id %>/response" style="color:#145ea9;">Click to Add
+                    Response</a>
                 </td>
               </tr>
             </table>
@@ -110,4 +116,3 @@
 </table>
 </body>
 </html>
-

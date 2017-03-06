@@ -66,11 +66,13 @@
               <tr>
                 <td style="width:95%;">
                   <strong>Comments:</strong>
-                  <p>
-                    <% if(comments === null){ %>
-                    empty comments
-                    <% } %>
-                    <%= comments %></p>
+                  <p><%= heath_comments %></p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <strong>Video: </strong>
+                  <p><%= video_url %></p>
                 </td>
               </tr>
             </table>
@@ -83,9 +85,7 @@
                 <h4>Meeting Attendees</h4>
                 <p><strong>ATMOS REP: </strong><span><%= atmos_employee %></span></p>
                 <p><strong>Team Leader: </strong><span><%= team_leader %></span></p>
-                <p>
-                  <strong>Technician: </strong><span><%= locate_technician_fname %> <%= locate_technician_lname %></span>
-                </p>
+                <p><strong>Technician: </strong><span><%= locate_technician %></span></p>
               </td>
             </tr>
             <tr>

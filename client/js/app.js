@@ -9,7 +9,6 @@
       'ngMessages'
     ])
     .config(function ($httpProvider) {
-
       // Inside app config block
       $httpProvider.interceptors.push(function ($q, $location, LoopBackAuth) {
         return {

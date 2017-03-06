@@ -1,0 +1,115 @@
+<style>
+  table {
+    border-collapse: collapse;
+  }
+
+  th {
+    font-family: 'Droid Sans', sans-serif;
+    font-size: 14px;
+  }
+
+  td {
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+  }
+
+  tbody tr:nth-child(1) {
+    background-color: #eaeaea;
+  }
+</style>
+<div layout layout-align="space-around start">
+  <div class="md-padding" style="width:700px;">
+    <table cellpadding="2" cellspacing="0" border="0" width="700">
+      <thead>
+      <th>Replication Date</th>
+      <th>ATMOS REP.</th>
+      <th>Address</th>
+      <th>Determination</th>
+      <th>View</th>
+      </thead>
+      <tbody>
+      <tr ng-repeat="replication in replications" ng-init="isFormOpen = false">
+        <td>{{ replication.meeting_date | date:'MM/dd/yyyy'}}</td>
+        <td>{{ replication.atmos_employee }}</td>
+        <td>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }}</td>
+        <td>{{ replication.atmos_determination }}</td>
+        <td>
+          <md-button ng-click="sendData(replication)" layout layout-align="center center"><i class="material-icons">pageview</i>
+          </md-button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <div style="background-color: #CCCCCC;margin:1rem;padding:.5rem;border-radius:2px;width:150px;">
+      <a href="" ui-sref="app.meeting">Request a Meeting</a>
+    </div>
+  </div>
+</div>
+<div ng-if="replication" layout="column" class="view md-padding" style="width:700px;">
+  <div layout>
+    <span>Replication Date: </span>
+    <span>{{ replication.meeting_date | date:'MM/dd/yyyy' }}</span>
+  </div>
+  <div layout>
+    <span>ATMOS REP.: </span>
+    <span>{{ replication.atmos_employee }}</span>
+  </div>
+  <div layout>
+    <span>Locate Technician: </span>
+    <span>{{ replication.locate_technician }}</span>
+  </div>
+  <div layout>
+    <span>Heath Damage Report: </span>
+    <span>{{ replication.heath_report }}</span>
+  </div>
+  <div layout>
+    <span>Facility: </span>
+    <span>{{ replication.facility_size }} {{ replication.facility_material }}</span>
+  </div>
+  <div layout>
+    <span>Address: </span>
+    <span>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }} <span
+      ng-if="replication.cross_street">@ {{ replication.cross_street }}</span></span>
+  </div>
+  <div layout>
+    <span>Town: </span>
+    <span>{{ replication.town }}</span>
+  </div>
+  <div layout>
+    <span>Determination: </span>
+    <span>{{ replication.atmos_determination }}</span>
+  </div>
+  <div layout>
+    <span>Comments: </span>
+    <span>{{ replication.atmos_comments }}</span>
+  </div>
+  <div layout layout-align="end" style="width:100%;">
+    <md-button ng-click="showForm=!showForm">Add Response</md-button>
+  </div>
+  <div ng-if="showForm" ng-init="showForm = false" class="md-padding">
+    <form name="heathResponseForm" ng-submit="addResponse(id,heath_response,video_url)">
+      <input ng-model="id" ng-init="id = replication.id" type="hidden">
+      <fieldset>
+        <legend>Add Your Response</legend>
+        <div layout="column" style="margin:1rem;">
+          <label for="heath_response">Comments:</label>
+          <textarea ng-model="heath_response" name="heath_response" id="heath_response" cols="30" rows="5"
+                    required></textarea>
+        </div>
+        <div layout="column" style="margin:1rem;">
+          <label for="video_url">Paste video URL here</label>
+          <input ng-model="video_url" id="video_url" type="text">
+        </div>
+        <div layout layout-align="end" style="width:100%;">
+          <md-button type="submit">SAVE</md-button>
+        </div>
+      </fieldset>
+    </form>
+  </div>
+</div>
+<div ng-if="replication" style="width:700px;">
+  <div>{{ replication.heath_comments }}</div>
+  <a href="{{ withResponse.video_url }}">Watch Video</a></div>
+</div>

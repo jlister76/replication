@@ -1,0 +1,68 @@
+{
+  "name": "meeting",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "emailList": {
+      "type": [
+        "string"
+      ]
+    },
+    "month": {
+      "type": "string",
+      "required": true
+    },
+    "date": {
+      "type": "number",
+      "required": true
+    },
+    "hour": {
+      "type": "number",
+      "required": true
+    },
+    "minute": {
+      "type": "number",
+      "required": true
+    },
+    "location_name": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "required": true
+    },
+    "cross_street": {
+      "type": "string"
+    },
+    "town": {
+      "type": "string",
+      "required": true
+    },
+    "heath_report": {
+      "type": "number",
+      "required": true
+    },
+    "facility": {
+      "type": "string",
+      "required": true
+    },
+    "locate_technician": {
+      "type": "string",
+      "required": true
+    },
+    "team_leader": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

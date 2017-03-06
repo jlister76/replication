@@ -14,6 +14,10 @@
       "type": "string",
       "required": true
     },
+    "atmos_employeeId": {
+      "type": "number",
+      "required": true
+    },
     "team_leader": {
       "type": "string",
       "required": true
@@ -54,7 +58,7 @@
       "required": true
     },
     "isReplicated": {
-      "type": "boolean",
+      "type": "string",
       "required": true
     },
     "atmos_determination": {
