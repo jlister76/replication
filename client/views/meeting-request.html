@@ -1,132 +1,134 @@
-<div layout="column" layout-align="start center">
-  <div layout layout-align="space-between center" class="md-padding" style="width:720px;margin:1rem;">
-    <h2>Meeting Request</h2>
-    <a ng-controller="LogOutCtrl" href="" ng-click="logout()">Sign Out</a>
-  </div>
-  <div layout>
-    <div>
-      <form name="meetingRequestForm" ng-submit="sendMeetingRequest(request)">
-        <input ng-model="request.team_leader" type="hidden">
-        <fieldset>
-          <legend>SELECT DPS</legend>
-          <select ng-model="request.selected_dps" id="dps" required>
-            <option ng-repeat="dps in atmos" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
-          </select>
-        </fieldset>
-        <fieldset>
-          <legend>DATE & TIME</legend>
-          <div layout>
-            <select ng-model="request.selected_month" required>
-              <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
+<div layout layout-align="center">
+  <div layout="column" layout-align="start center" style="width:960px;">
+    <div layout layout-align="space-between center" class="md-padding" style="width:720px;margin:1rem;">
+      <h2>Meeting Request</h2>
+      <a ng-controller="LogOutCtrl" href="" ng-click="logout()">Sign Out</a>
+    </div>
+    <div layout>
+      <div>
+        <form name="meetingRequestForm" ng-submit="sendMeetingRequest(request)">
+          <input ng-model="request.team_leader" type="hidden">
+          <fieldset>
+            <legend>SELECT DPS</legend>
+            <select ng-model="request.selected_dps" id="dps" required>
+              <option ng-repeat="dps in atmos" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
             </select>
-            <select ng-model="request.selected_date" required>
-              <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
-            </select>
-            <span> @ </span>
-            <select ng-model="request.selected_hour" required>
-              <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
-            </select>
-            <select ng-model="request.selected_minute" required>
-              <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
-            </select>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>LOCATION</legend>
-          <div layout="column" class="row">
-            <span style="margin-bottom:1rem;">Location</span>
-            <div layout layout-align="start center" style="margin-bottom:1rem;">
-              <div layout="column">
-                <label for="street_number">Location Name</label>
-                <input ng-model="request.location_name" type="text" id="location_name">
-              </div>
-            </div>
-            <div layout layout-align="space-between center">
-              <div layout="column">
-                <label for="street_number">Number</label>
-                <input ng-model="request.street_number" type="number" id="street_number"
-                       style="width:84px;"
-                       required>
-              </div>
-              <div layout="column">
-                <label for="street">Street</label>
-                <input ng-model="request.street_name" type="text" id="street" required>
-              </div>
-              <div layout="column">
-                <label for="street">Suffix</label>
-                <select ng-model="request.street_suffix" name="street_suffix" id="street_suffix" required>
-                  <option ng-repeat="suffix in suffixes | orderBy:'title'" value="{{ suffix.abrv }}">{{ suffix.label
-                    }}
-                  </option>
-                </select>
-
-              </div>
-            </div>
-          </div>
-          <div layout layout-align="space-between center" class="row">
-            <div layout="column">
-              <label for="cross_street">Nearest Cross Street
-                <small ng-if="!request.street_number"><em style="color:indianred;">*</em></small>
-              </label>
-              <input ng-model="request.cross_street" type="text" id="cross_street" ng-required="!request.street_number">
-            </div>
-            <div layout="column">
-              <label for="town">Town</label>
-              <select ng-model="request.town" type="text" id="town" required>
-                <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}</option>
+          </fieldset>
+          <fieldset>
+            <legend>DATE & TIME</legend>
+            <div layout>
+              <select ng-model="request.selected_month" required>
+                <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
+              </select>
+              <select ng-model="request.selected_date" required>
+                <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
+              </select>
+              <span> @ </span>
+              <select ng-model="request.selected_hour" required>
+                <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
+              </select>
+              <select ng-model="request.selected_minute" required>
+                <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
               </select>
             </div>
-          </div>
-        </fieldset>
-        <fieldset>
-          <legend>DAMAGE INFORMATION</legend>
-          <div layout layout-align="space-between center">
+          </fieldset>
+          <fieldset>
+            <legend>LOCATION</legend>
             <div layout="column" class="row">
-              <span>Damge Report</span>
-              <div layout layout-align="start center">
-                <div layout="column" style="margin:1rem;padding:.5rem;">
-                  <label for="heath_report">Number</label>
-                  <input ng-model="request.heath_report" type="number" id="heath_report" style="width:84px;" required>
+              <span style="margin-bottom:1rem;">Location</span>
+              <div layout layout-align="start center" style="margin-bottom:1rem;">
+                <div layout="column">
+                  <label for="street_number">Location Name</label>
+                  <input ng-model="request.location_name" type="text" id="location_name">
                 </div>
               </div>
-            </div>
-            <div layout="column" class="row">
-              <span>Facility</span>
-              <div layout layout-align="start center">
-                <div layout="column" style="margin:1rem;padding:.5rem;">
-                  <label for="facility_size">Diameter</label>
-                  <select ng-model="request.facility_size" name="facility_size" id="facility_size" required>
-                    <option ng-repeat="size in diameters" value="{{ size }}">{{ size }}</option>
-                  </select>
+              <div layout layout-align="space-between center">
+                <div layout="column">
+                  <label for="street_number">Number</label>
+                  <input ng-model="request.street_number" type="number" id="street_number"
+                         style="width:84px;"
+                         required>
                 </div>
                 <div layout="column">
-                  <label for="facility_material">Material</label>
-                  <select ng-model="request.facility_material" name="facility_material" id="facility_material" required>
-                    <option ng-repeat="material in materials" value="{{ material }}">{{ material }}</option>
+                  <label for="street">Street</label>
+                  <input ng-model="request.street_name" type="text" id="street" required>
+                </div>
+                <div layout="column">
+                  <label for="street">Suffix</label>
+                  <select ng-model="request.street_suffix" name="street_suffix" id="street_suffix" required>
+                    <option ng-repeat="suffix in suffixes | orderBy:'title'" value="{{ suffix.abrv }}">{{ suffix.label
+                      }}
+                    </option>
                   </select>
+
                 </div>
               </div>
             </div>
-          </div>
-          <div layout="column" class="row">
-            <span>Locate Technician</span>
-            <div layout layout-align="start center">
-              <div layout="column" style="margin:1rem;padding:.5rem;">
-                <label for="locate_technician_fname">First Name</label>
-                <input ng-model="request.locate_technician_fname" id="locate_technician_fname" type="text" required>
+            <div layout layout-align="space-between center" class="row">
+              <div layout="column">
+                <label for="cross_street">Nearest Cross Street
+                  <small ng-if="!request.street_number"><em style="color:indianred;">*</em></small>
+                </label>
+                <input ng-model="request.cross_street" type="text" id="cross_street" ng-required="!request.street_number">
               </div>
               <div layout="column">
-                <label for="locate_technician_lname">Last Name</label>
-                <input ng-model="request.locate_technician_lname" id="locate_technician_lname" type="text" required>
+                <label for="town">Town</label>
+                <select ng-model="request.town" type="text" id="town" required>
+                  <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}</option>
+                </select>
               </div>
             </div>
-          </div>
+          </fieldset>
+          <fieldset>
+            <legend>DAMAGE INFORMATION</legend>
+            <div layout layout-align="space-between center">
+              <div layout="column" class="row">
+                <span>Damge Report</span>
+                <div layout layout-align="start center">
+                  <div layout="column" style="margin:1rem;padding:.5rem;">
+                    <label for="heath_report">Number</label>
+                    <input ng-model="request.heath_report" type="number" id="heath_report" style="width:84px;" required>
+                  </div>
+                </div>
+              </div>
+              <div layout="column" class="row">
+                <span>Facility</span>
+                <div layout layout-align="start center">
+                  <div layout="column" style="margin:1rem;padding:.5rem;">
+                    <label for="facility_size">Diameter</label>
+                    <select ng-model="request.facility_size" name="facility_size" id="facility_size" required>
+                      <option ng-repeat="size in diameters" value="{{ size }}">{{ size }}</option>
+                    </select>
+                  </div>
+                  <div layout="column">
+                    <label for="facility_material">Material</label>
+                    <select ng-model="request.facility_material" name="facility_material" id="facility_material" required>
+                      <option ng-repeat="material in materials" value="{{ material }}">{{ material }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div layout="column" class="row">
+              <span>Locate Technician</span>
+              <div layout layout-align="start center">
+                <div layout="column" style="margin:1rem;padding:.5rem;">
+                  <label for="locate_technician_fname">First Name</label>
+                  <input ng-model="request.locate_technician_fname" id="locate_technician_fname" type="text" required>
+                </div>
+                <div layout="column">
+                  <label for="locate_technician_lname">Last Name</label>
+                  <input ng-model="request.locate_technician_lname" id="locate_technician_lname" type="text" required>
+                </div>
+              </div>
+            </div>
 
-        </fieldset>
-        <div layout layout-align="center" style="width:720px;">
-          <md-button ng-disabled="meetingRequestForm.$invalid" type="submit">SEND</md-button>
-        </div>
-      </form>
+          </fieldset>
+          <div layout layout-align="center" style="width:720px;">
+            <md-button ng-disabled="meetingRequestForm.$invalid" class="md-raised" ng-class="{'active':meetingRequestForm.$valid}" type="submit">SEND</md-button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </div>

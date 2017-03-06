@@ -71,12 +71,12 @@
 
         $scope.sendData = function (replication) {
           sessionStorage.removeItem('data');
-          sessionStorage.setItem('data', JSON.stringify(replication))
+          sessionStorage.setItem('data', JSON.stringify(replication));
           persistObj();
           $scope.showReplication = true;
         };
         $scope.addResponse = function (id, comments, url) {
-          console.log(id, comments, url)
+
           Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
             .$promise
             .then(function (response) {
@@ -92,8 +92,8 @@
       }
 
     })
-    .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http) {
-      console.log(atmos);
+    .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http,lodash) {
+      var _ = lodash;
 
       //set date & time
       var dates = [];
@@ -241,7 +241,8 @@
       };
 
     })
-    .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication) {
+    .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication,lodash) {
+      var _ = lodash;
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user.id);

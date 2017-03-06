@@ -6,7 +6,8 @@
       'ui.router',
       'lbServices',
       'ngMaterial',
-      'ngMessages'
+      'ngMessages',
+      'ngLodash'
     ])
     .config(function ($httpProvider) {
       // Inside app config block

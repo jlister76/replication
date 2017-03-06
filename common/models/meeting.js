@@ -13,7 +13,7 @@ module.exports = function (Meeting) {
     var d = request,
       emailTo;
 
-    if (d.emailList != null) {
+    if (d.emailList !== null) {
       emailTo = d.emailList;
     } else if (d.emailList === null) {
       emailTo = d.email;

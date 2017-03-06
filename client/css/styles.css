@@ -24,7 +24,8 @@ h1, h2 {
   margin: 1rem;
 }
 .active.md-button {
-  /* background-color: limegreen;*/
+  background-color: #005EB8;
+  color:white;
   border: solid thin darkslategray;
   border-radius: .2rem;
 
@@ -42,9 +43,8 @@ h1, h2 {
 }
 
 fieldset {
-  width: 700px;
   margin: 1rem;
-  background-color: rgba(229, 229, 229, 0.6);
+  /*background-color: rgba(229, 229, 229, 0.6);*/
 }
 
 .field_set {
@@ -90,4 +90,8 @@ label, span {
   width: 200px;
   text-align: left;
   margin: .5rem;
+}
+
+.divBorder {
+  border: solid thin lightgrey;
 }
