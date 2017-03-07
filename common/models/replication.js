@@ -15,23 +15,28 @@ module.exports = function(Replication) {
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
 
     var id = d.id;
+
+    if (d.atmos_determination === 'facility_issue') {
+      var reason = 'Technician replicated locate';
+    } else if (d.atmos_determination === 'locate_error') {
+      reason = "Technician was unable to replicate locate due to a locate error."
+    } else if (d.atmos_determination === 'replaced') {
+      reason = "Technician was unable to replicate locate prior to the facility being altered or replaced."
+    }
+    var locate_technician = d.locate_technician_fname +" "+ d.locate_technician_lname;
+    var facility = d.facility_size +" "+ facility_material;
+    var location = d.street_number +" "+ d.street_name +" "+ d.street_suffix;
     var messageVars = {
-      id: id,
       meeting_date: d.meeting_date,
       town: d.town,
       atmos_employee: d.atmos_employee,
       team_leader: d.team_leader,
-      locate_technician_fname: _.capitalize(d.locate_technician_fname),
-      locate_technician_lname: _.capitalize(d.locate_technician_lname),
+      locate_technician: locate_technician,
       heath_report: d.heath_report,
-      street_number: d.street_number,
-      street_name: _.capitalize(d.street_name),
-      street_suffix: d.street_suffix,
+      location: location,
       cross_street: d.cross_street,
-      facility_size: d.facility_size,
-      facility_material: d.facility_material,
-      replication_successful: d.isReplicated,
-      reason: d.atmos_determination,
+      facility: facility,
+      reason: reason,
       comments: d.atmos_comments
     };
     // prepare a loopback template renderer
@@ -55,24 +60,30 @@ module.exports = function(Replication) {
 
     var date = moment().format('dddd, MMMM, Do, YYYY');
     var d = response;
+
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
+    if (d.atmos_determination === 'facility_issue') {
+      var reason = 'Technician replicated locate';
+    } else if (d.atmos_determination === 'locate_error') {
+      reason = "Technician was unable to replicate locate due to a locate error."
+    } else if (d.atmos_determination === 'replaced') {
+      reason = "Technician was unable to replicate locate prior to the facility being altered or replaced."
+    }
+    var locate_technician = d.locate_technician_fname +" "+ d.locate_technician_lname;
+    var facility = d.facility_size +" "+ d.facility_material;
+    var location = d.street_number +" "+ d.street_name +" "+ d.street_suffix;
+
     var messageVars = {
-      id: d.id,
       meeting_date: d.meeting_date,
       town: d.town,
       atmos_employee: d.atmos_employee,
       team_leader: d.team_leader,
-      locate_technician_fname: _.capitalize(d.locate_technician_fname),
-      locate_technician_lname: _.capitalize(d.locate_technician_lname),
+      locate_technician: locate_technician,
       heath_report: d.heath_report,
-      street_number: d.street_number,
-      street_name: _.capitalize(d.street_name),
-      street_suffix: d.street_suffix,
+      location: location,
       cross_street: d.cross_street,
-      facility_size: d.facility_size,
-      facility_material: d.facility_material,
-      replication_successful: d.isReplicated,
-      reason: d.atmos_determination,
+      facility: facility,
+      reason: reason,
       comments: d.atmos_comments
     };
     // prepare a loopback template renderer
@@ -132,7 +143,7 @@ module.exports = function(Replication) {
 
   Replication.sendemail = function (msg, next) {
     console.log("in model", msg);
-    Replication.sendHeathEmail(msg);
+    //Replication.sendHeathEmail(msg);
     Replication.sendATMOSEmail(msg);
     next();
   };
