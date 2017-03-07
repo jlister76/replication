@@ -63,6 +63,7 @@
     })
     .controller('MyReplicationsCtrl', function (replications, userCtx, $scope, Replication, $http) {
 
+
       showHeathPage();
 
       function showHeathPage() {
@@ -73,8 +74,13 @@
           sessionStorage.removeItem('data');
           sessionStorage.setItem('data', JSON.stringify(replication));
           persistObj();
-          $scope.showReplication = true;
+          $scope.dataObj = {
+            id: replication.id,
+            heath_comments: null,
+            video_url: null
+          };
         };
+
         $scope.addResponse = function (id, comments, url) {
 
           Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
@@ -83,6 +89,7 @@
               console.log(response);
               $http.post('api/Replications/sendResponse', {formData: response});
               $scope.withResponse = response;
+              $scope.data = {};
             })
         };
         function persistObj() {
@@ -243,13 +250,15 @@
     })
     .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication,lodash) {
       var _ = lodash;
+
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user.id);
           //persist username beyond $pristine()
           $scope.response = {
             atmos_employee: user.fname + " " + user.lname,
-            employeeId: user.id
+            employeeId: user.id,
+            cross_street: null
           }
 
 
@@ -299,6 +308,12 @@
         ];
         $scope.sendEmail = function (response) {
 
+          var recipent = _.pick(JSON.parse(response.team_leader), 'email'),
+            team_leader_fname = _.pick(JSON.parse(response.team_leader), 'fname'),
+            team_leader_lname = _.pick(JSON.parse(response.team_leader), 'lname'),
+            team_leader = team_leader_fname.fname + team_leader_lname.lname;
+
+
           var date = moment(),
             tech_name = _.capitalize(response.locate_technician_fname) + " " + _.capitalize(response.locate_technician_lname),
             street_name = _.capitalize(response.street_name),
@@ -308,7 +323,8 @@
             meeting_date: date,
             atmos_employee: response.atmos_employee,
             atmos_employeeId: response.employeeId,
-            team_leader: response.team_leader,
+            team_leader: team_leader,
+            team_leader_email: recipent.email,
             locate_technician: tech_name,
             heath_report: response.heath_report,
             facility_size: response.facility_size,

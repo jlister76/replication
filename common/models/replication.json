@@ -22,6 +22,10 @@
       "type": "string",
       "required": true
     },
+    "team_leader_email": {
+      "type": "string",
+      "required": true
+    },
     "locate_technician": {
       "type": "string",
       "required": true

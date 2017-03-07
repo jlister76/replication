@@ -13,6 +13,7 @@
       </div>
     </div>
     <div>
+
       <form name="replicationForm"
             ng-submit="sendEmail(response)">
         <fieldset class="field_set">
@@ -25,7 +26,7 @@
               <input ng-model="response.employeeId" type="hidden">
               <label for="team_leader">Team Leader</label>
               <select ng-model="response.team_leader" id="team_leader">
-                <option ng-repeat="teamleader in teamleaders" value="{{ teamleader.fname }} {{ teamleader.lname }}">{{
+                <option ng-repeat="teamleader in teamleaders" value="{{ teamleader }}">{{
                   teamleader.fname }} {{ teamleader.lname }}
                 </option>
               </select>
