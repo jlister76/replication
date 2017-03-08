@@ -31,7 +31,15 @@ h1, h2 {
 
 }
 
-.active.md-button:hover {
+button.md-raised.md-button.md-ink-ripple.active.md-focused {
+  background-color: #007bda;
+  color: white;
+  border: solid thin darkslategray;
+  border-radius: .2rem;
+}
+
+button.md-raised.md-button.md-ink-ripple.active:hover {
+  background-color: #007bda;
   border: solid thin darkslateblue;
 
 }
@@ -94,4 +102,20 @@ label, span {
 
 .divBorder {
   border: solid thin lightgrey;
+}
+
+nav a {
+  text-decoration: none;
+  color: #333;
+  margin-right: 1rem;
+  font-size: .8rem;
+  font-weight: 600;
+}
+
+nav a:focus {
+  border-bottom: solid 4px darkcyan;
+}
+
+nav a:hover {
+  border-bottom: solid 4px darkcyan;
 }

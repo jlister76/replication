@@ -21,14 +21,11 @@
   <div layout="column" layout-align="" style="width:960px;">
     <div layout layout-align="start" >
       <div class="md-padding">
-        <div layout layout-align="space-between center" style="margin-bottom:2rem;color:#1e90ff;">
-          <div>
+        <div layout layout-align="end center" style="margin-bottom:2rem;color:#9C9C9C;">
+          <div layout layout-align="center">
             <span>Click the </span>
-            <span><i class="material-icons">pageview</i></span>
-            <span>icon to view replication.</span>
-          </div>
-          <div>
-            <md-button class="md-raised md-warn md-hue-2"  ui-sref="app.meeting">Request a Meeting</md-button>
+            <span><i class="material-icons" style="color:#1e84f2;">pageview</i></span>
+            <span>icon to view replication</span>
           </div>
         </div>
         <table cellpadding="2" cellspacing="0" border="0" width="900">
@@ -46,7 +43,8 @@
             <td>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }}</td>
             <td>{{ replication.atmos_determination }}</td>
             <td>
-              <md-button ng-click="sendData(replication)" layout layout-align="center center"><i class="material-icons">pageview</i>
+              <md-button ng-click="sendData(replication)" layout layout-align="center center"><i class="material-icons"
+                                                                                                 style="color:#1e84f2;">pageview</i>
               </md-button>
             </td>
           </tr>
@@ -96,19 +94,24 @@
           <span>{{ replication.atmos_comments }}</span>
         </div>
       </div>
-      <div ng-if="replication" ng-init="showForm = false">
-        <form name="heathResponseForm" ng-submit="addResponse(id,heath_response,video_url)">
+      <div ng-if="showSuccess" layout layout-align="center">
+        <div style="padding:.5rem; background-color:lightblue">
+          <span>Your response has been emailed.</span>
+        </div>
+      </div>
+      <div ng-hide="!replication">
+        <form name="heathResponseForm" ng-submit="addResponse(id,tl.comments,tl.url)">
           <input ng-model="id" ng-init="id = replication.id" type="hidden">
           <fieldset class="field_set md-padding" style="background-color:white;">
-            <legend>Add Your Response</legend>
+            <legend>Add Response</legend>
             <div layout="column" style="margin:1rem;">
               <label for="heath_response">Comments:</label>
-              <textarea ng-model="heath_response" name="heath_response" id="heath_response" cols="10" rows="5"
+              <textarea ng-model="tl.comments" name="heath_response" id="heath_response" cols="10" rows="5"
                         required></textarea>
             </div>
             <div layout="column" style="margin:1rem;">
               <label for="video_url">Paste video URL here</label>
-              <input ng-model="video_url" id="video_url" type="text">
+              <input ng-model="tl.url" id="video_url" type="text">
             </div>
             <div layout style="">
               <md-button class="md-raised" ng-disabled="heathResponseForm.$invalid" ng-class="{'active':heathResponseForm.$valid}" type="submit">SAVE</md-button>

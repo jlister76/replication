@@ -1,9 +1,69 @@
-<%= meeting_date %>
-<%= team_leader %>
-<%= location_name %>
-<%= location %>
-<%= cross_street %>
-<%= town %>
-<%= heath_report %>
-<%= facility %>
-<%= locate_technician %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+
+    h1 {
+      color: #005EB8;
+    }
+
+    p, h3 {
+      color: #444444;
+    }
+
+    strong {
+      color: #2e2e2e;
+    }
+
+  </style>
+
+</head>
+<body style="margin: 0; padding: 0;">
+<table border="0" cellpadding="5" cellspacing="10" width="500">
+  <thead>
+  <th>
+    <h1>Meeting Request</h1>
+    <h3><%= town %> Area</h3>
+  </th>
+  </thead>
+  <tbody>
+  <tr>
+    <td align="center" style="padding: 10px 10px 8px 5px; font-size:1.2rem;">
+      <p
+        style="height: 1.8em; width:200px; padding: 10px 10px 8px 5px; background-color: green;border:solid thin darkgreen;text-align: center;">
+        <strong>
+          <a href="https://rpf.heathfieldapp.com" style="text-decoration:none;color:white;">
+            Schedule Meeting
+          </a>
+        </strong>
+      </p>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.2rem;">
+      <p>Team Leader: <%= team_leader %></p>
+      <p>Date & Time: <%= meeting_date %></p>
+      <% if (location_name) { %>
+      <p>Location Name: <%= location_name %></p>
+      <% } %>
+      <p>Location: <%= location %>
+        <% if (cross_street) { %>
+        near <%= cross_street %>
+        <% } %>
+        in <%= town %></p>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding: 10px 10px 8px 5px;font-size:1.2rem;border:solid 1px #666666;">
+      <strong>DAMAGE INFORMATION</strong>
+      <p><strong>Damage Report #:</strong> <%= heath_report %></p>
+      <p><strong>Locate Technician:</strong> <span><%= locate_technician %></span></p>
+      <p><strong>Facility:</strong> <%= facility %></p>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>

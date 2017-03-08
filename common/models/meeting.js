@@ -18,10 +18,11 @@ module.exports = function (Meeting) {
     } else if (d.emailList === null) {
       emailTo = d.email;
     }
+    var proposed_schedule = d.selected_month + " " + d.selected_date + " @ " + d.selected_hour + ":" + d.selected_minute;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: d.id,
-      meeting_date: d.meeting_date,
+      meeting_date: proposed_schedule,
       team_leader: d.team_leader,
       location_name: d.location_name,
       location: d.location,
@@ -35,7 +36,7 @@ module.exports = function (Meeting) {
     var html_body = renderer(messageVars);
 
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', emailTo],
+      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
       subject: 'Replication Meeting Request from  ' + d.team_leader,
       html: html_body

@@ -8,6 +8,9 @@
       console.log("Checking for authentication...");
       AuthService.getCurrent();
     })
+    .controller('NavCtrl', function ($rootScope, $state, $scope) {
+
+    })
     .controller('RouterCtrl', function (userCtx, $state) {
       console.log('Routing...');
       switch (userCtx.company) {
@@ -23,7 +26,7 @@
       }
 
     })
-    .controller('LogInCtrl', function (AuthService, $scope, $location, $state, $rootScope) {
+    .controller('LogInCtrl', function (AuthService, $scope, $location) {
       $scope.login = function (email, password) {
         AuthService.login(email, password)
           .$promise
@@ -61,35 +64,43 @@
           });
       };
     })
-    .controller('MyReplicationsCtrl', function (replications, userCtx, $scope, Replication, $http) {
-
+    .controller('ReplicationsCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state) {
+      //set pagetitle
+      $rootScope.title = $state.current.title;
 
       showHeathPage();
 
       function showHeathPage() {
+
         $scope.replications = replications;
         persistObj();
+        $scope.tl = {};
+
 
         $scope.sendData = function (replication) {
           sessionStorage.removeItem('data');
           sessionStorage.setItem('data', JSON.stringify(replication));
           persistObj();
-          $scope.dataObj = {
-            id: replication.id,
-            heath_comments: null,
-            video_url: null
-          };
+
         };
 
         $scope.addResponse = function (id, comments, url) {
+
+          console.log(id, comments, url);
+
 
           Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
             .$promise
             .then(function (response) {
               console.log(response);
               $http.post('api/Replications/sendResponse', {formData: response});
-              $scope.withResponse = response;
-              $scope.data = {};
+              //$scope.withResponse = response;
+              $scope.tl = {};
+              $scope.showSuccess = true;
+
+              $timeout(function () {
+                $scope.showSuccess = false
+              }, 5000)
             })
         };
         function persistObj() {
@@ -99,8 +110,10 @@
       }
 
     })
-    .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http,lodash) {
+    .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
+      //set pagetitle
+      $rootScope.title = $state.current.title;
 
       //set date & time
       var dates = [];
@@ -118,11 +131,10 @@
           hours.push(h);
         }
       }
-      //combine all emails
+      //combine all emails to send as group list
       var groupList = [];
       for (var obj in atmos) {
         if (atmos[obj].hasOwnProperty('email')) {
-          console.log(atmos[obj].email)
           groupList.push(atmos[obj].email);
         }
 
@@ -181,14 +193,17 @@
 
       $scope.sendMeetingRequest = function (request) {
         //check for single email adrs or list of email adrs and set property
-        if (typeof(request.selected_dps) === 'object') {
-          console.log(request.selected_dps);
-          request.emailList = request.selected_dps;
-          request.email = null;
-        } else if (typeof(request.selected_dps) === 'string') {
-          request.email = request.selected_dps;
-          request.emailList = null;
+        switch (typeof(request.selected_dps)) {
+          case 'object':
+            request.emailList = request.selected_dps;
+            request.email = null;
+            break;
+          case 'string':
+            request.email = request.selected_dps;
+            request.emailList = null;
+            break;
         }
+
         request.locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
         request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
         request.facility = request.facility_size + " " + request.facility_material;
@@ -214,27 +229,44 @@
             console.log(meeting);
             $http.post('api/Meetings/sendrequest', {formData: request})
               .then(function (meeting) {
-                console.log(meeting)
-                $scope.request = {
-                  team_leader: userCtx.fname + " " + userCtx.lname,
-                  selected_month: moment().format('MMMM'),
-                  selected_date: moment().format('D'),
-                  selected_hour: moment().format('HH'),
-                  selected_minute: '00',
-                  selected_dps: null,
-                  location_name: null,
-                  location_street_number: null,
-                  location_street_name: null,
-                  location_street_suffix: null,
-                  cross_street: null,
-                  town: null,
-                  heath_report: null,
-                  facility_size: null,
-                  facility_material: null,
-                  locate_technician_fname: null,
-                  locate_technician_lname: null
-                };
-                $scope.meetingRequestForm.$setPristine();
+
+                $scope.showSuccessMsg = true;
+
+                $timeout(function () {
+                  // set the location.hash to the id of
+                  // the element you wish to scroll to.
+                  $location.hash('successMsg');
+                  // call $anchorScroll()
+                  $anchorScroll();
+                }, 1000);
+
+                $timeout(function () {
+                  $scope.showSuccessMsg = false;
+                  $scope.request = {
+                    team_leader: userCtx.fname + " " + userCtx.lname,
+                    selected_month: moment().format('MMMM'),
+                    selected_date: moment().format('D'),
+                    selected_hour: moment().format('HH'),
+                    selected_minute: '00',
+                    selected_dps: null,
+                    location_name: null,
+                    location_street_number: null,
+                    location_street_name: null,
+                    location_street_suffix: null,
+                    cross_street: null,
+                    town: null,
+                    heath_report: null,
+                    facility_size: null,
+                    facility_material: null,
+                    locate_technician_fname: null,
+                    locate_technician_lname: null
+                  };
+                }, 5000);
+
+
+
+
+
               })
               .catch(function (err) {
                 if (err) {
@@ -248,9 +280,10 @@
       };
 
     })
-    .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication,lodash) {
+    .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state) {
       var _ = lodash;
-
+      //set pagetitle
+      $rootScope.title = $state.current.title;
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user.id);

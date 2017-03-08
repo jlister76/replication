@@ -27,4 +27,10 @@
         };
       });
     })
+    .run(function ($rootScope, $state, $stateParams) {
+      console.log($rootScope.title);
+      $rootScope.title = $state.current.title;
+
+    })
+
 })();

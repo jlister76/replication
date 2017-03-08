@@ -1,20 +1,19 @@
 <div layout layout-align="center">
   <div layout="column" layout-align="start center" style="width:960px;">
-    <div layout layout-align="space-between center" class="md-padding" style="width:720px;margin:1rem;">
-      <h2>Meeting Request</h2>
-      <a ng-controller="LogOutCtrl" href="" ng-click="logout()">Sign Out</a>
+    <div ng-if="showSuccessMsg" layout layout-align="center" id="successMsg">
+      <span style="background: lightblue; padding:.5rem;margin:1rem;">Email sent to {{ request.selected_dps }}</span>
     </div>
     <div layout>
       <div>
         <form name="meetingRequestForm" ng-submit="sendMeetingRequest(request)">
           <input ng-model="request.team_leader" type="hidden">
-          <fieldset>
+          <fieldset class="field_set">
             <legend>SELECT DPS</legend>
             <select ng-model="request.selected_dps" id="dps" required>
               <option ng-repeat="dps in atmos" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
             </select>
           </fieldset>
-          <fieldset>
+          <fieldset class="field_set">
             <legend>DATE & TIME</legend>
             <div layout>
               <select ng-model="request.selected_month" required>
@@ -32,7 +31,7 @@
               </select>
             </div>
           </fieldset>
-          <fieldset>
+          <fieldset class="field_set">
             <legend>LOCATION</legend>
             <div layout="column" class="row">
               <span style="margin-bottom:1rem;">Location</span>
@@ -79,7 +78,7 @@
               </div>
             </div>
           </fieldset>
-          <fieldset>
+          <fieldset class="field_set">
             <legend>DAMAGE INFORMATION</legend>
             <div layout layout-align="space-between center">
               <div layout="column" class="row">

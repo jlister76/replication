@@ -7,8 +7,16 @@
       $stateProvider
         .state('app', {
           url: '',
-          template: '<div ui-view></div>',
-          controller: 'AppCtrl'
+          views: {
+            'navigation': {
+              templateUrl: 'views/navigation.html',
+              controller: 'NavCtrl'
+            },
+            '': {
+              template: '<div ui-view></div>',
+              controller: 'AppCtrl'
+            }
+          }
         })
         .state('router', {
           url: '/router',
@@ -21,7 +29,7 @@
           controller: 'RouterCtrl'
         })
         .state('app.heath', {
-          url: '/my-replications',
+          url: '/replications',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -31,7 +39,8 @@
             }
           },
           templateUrl: 'views/heath-page.html',
-          controller: 'MyReplicationsCtrl'
+          controller: 'ReplicationsCtrl',
+          title: 'Replications'
         })
         .state('app.meeting', {
           url: '/meeting-request',
@@ -44,12 +53,14 @@
             }
           },
           templateUrl: 'views/meeting-request.html',
-          controller: 'MeetingCtrl'
+          controller: 'MeetingCtrl',
+          title: 'Meeting Request'
         })
         .state('app.replication-form', {
           url: '/replication-form',
           templateUrl: 'views/replication-form.html',
-          controller: 'FormCtrl'
+          controller: 'FormCtrl',
+          title: 'Replication Procedure Form'
         })
         .state('app.error', {
           url: '/error',

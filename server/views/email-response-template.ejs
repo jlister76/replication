@@ -23,17 +23,17 @@
 <table border="0" cellpadding="5" cellspacing="10" width="400" style="">
   <thead>
   <th>
-    <h1>Replication Results - Response</h1>
+    <h1>Replication Results</h1>
+
     <h3><%= town %> Area</h3>
   </th>
   </thead>
   <tbody>
   <tr>
     <td bgcolor="#F4F4F4" align="left" style="padding: 10px 10px 8px 5px; font-size:1.2rem;border:solid 1px #666666;">
-      <p><%= team_leader %> is sending a response about the replication results sent by <%= atmos_employee %>
-        on <%= meeting_date %>
-        relating to damage report <%= heath_report %>.
-      </p>
+      <h3>Response From: </h3> <span><%= team_leader %></span>
+      <p> Re: replication results sent by <%= atmos_employee %> on <%= meeting_date %></p>
+
       <span>original response:</span>
       <p style="color:#999999;font-style: italic;">
         <%= reason %>

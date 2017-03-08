@@ -54,7 +54,7 @@ module.exports = function(Replication) {
 
 
     Replication.app.models.Email.send({
-      to: ['j.lister@heathus.com', 'jlister469@outlook.com'],
+      to: ['jlister469@outlook.com'],
       from: 'j.lister@heathus.com',
       subject: 'Locate Replication - ' + d.town,
       html: html_body
@@ -65,7 +65,7 @@ module.exports = function(Replication) {
 
     //send email with heath link
     Replication.app.models.Email.send({
-      to: ['j.lister@heathus.com', d.team_leader_email],
+      to: ['jlister469@outlook.com', d.team_leader_email],
       from: 'j.lister@heathus.com',
       subject: 'Locate Replication - ' + d.town,
       html: html_body2
@@ -116,7 +116,7 @@ module.exports = function(Replication) {
     var html_body = renderer(messageVars);
 
     Replication.app.models.Email.send({
-      to: ['j.lister@heathus.com', 'jlister469@outlook.com'],
+      to: ['jlister469@outlook.com'],
       from: 'j.lister@heathus.com',
       subject: 'Locate Replication Response From ' + d.team_leader,
       html: html_body
