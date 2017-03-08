@@ -29,7 +29,7 @@
           controller: 'RouterCtrl'
         })
         .state('app.heath', {
-          url: '/replications',
+          url: '/main',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -39,11 +39,17 @@
             }
           },
           templateUrl: 'views/heath-page.html',
-          controller: 'ReplicationsCtrl',
-          title: 'Replications'
+          controller: 'HeathCtrl',
+          title: 'Main Page'
+        })
+        .state('app.atmos', {
+          url: '/main',
+          templateUrl: 'views/atmos-page.html',
+          controller: 'AtmosCtrl',
+          title: 'Main Page'
         })
         .state('app.meeting', {
-          url: '/meeting-request',
+          url: '/my-meetings',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -54,13 +60,13 @@
           },
           templateUrl: 'views/meeting-request.html',
           controller: 'MeetingCtrl',
-          title: 'Meeting Request'
+          title: 'Meetings / Scheduler'
         })
         .state('app.replication-form', {
           url: '/replication-form',
           templateUrl: 'views/replication-form.html',
           controller: 'FormCtrl',
-          title: 'Replication Procedure Form'
+          title: 'Replication Form'
         })
         .state('app.error', {
           url: '/error',

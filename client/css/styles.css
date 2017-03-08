@@ -119,3 +119,13 @@ nav a:focus {
 nav a:hover {
   border-bottom: solid 4px darkcyan;
 }
+
+@media screen and (min-width: 0px) and (max-width: 599px) {
+  #heath_img {
+    display: none;
+  }
+
+  /* show it on small screens */
+}
+
+

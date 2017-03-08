@@ -21,7 +21,7 @@
           }
           break;
         case 'ATMOS':
-          $state.go('app.replication-form');
+          $state.go('app.atmos');
           break;
       }
 
@@ -64,7 +64,7 @@
           });
       };
     })
-    .controller('ReplicationsCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state) {
+    .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state) {
       //set pagetitle
       $rootScope.title = $state.current.title;
 
@@ -109,6 +109,8 @@
         }
       }
 
+    })
+    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout) {
     })
     .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
