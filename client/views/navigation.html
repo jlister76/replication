@@ -1,15 +1,17 @@
 <div layout layout-align="center">
   <div layout="" layout-align="space-between center" class="md-padding" style="width:960px;">
     <div>
-      <h2 style="color:#00468b">{{ title }}</h2>
+      <h2 layout layout-align="center center" style="color:#00468b">{{ title }}
+        <i class="material-icons" style="color:cadetblue;margin-left:.5rem;">{{ icon }}</i>
+      </h2>
     </div>
     <nav>
       <div layout layout-align="center center">
         <span>
-          <a href="">REPLICATIONS</a>
+          <a href="">MAIN</a>
         </span>
         <span>
-          <a href="">MEETINGS</a>
+          <a href="">SCHEDULING</a>
         </span>
         <span>
           <a ng-controller="LogOutCtrl" href="" ng-click="logout()">LOG OUT</a>

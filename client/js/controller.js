@@ -115,11 +115,14 @@
 
     })
     .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout) {
+      $rootScope.title = $state.current.title;
+      $rootScope.icon = $state.current.icon;
     })
-    .controller('MeetingCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
+    .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
       //set pagetitle
       $rootScope.title = $state.current.title;
+      $rootScope.icon = $state.current.icon;
 
       //set date & time
       var dates = [];
@@ -286,10 +289,11 @@
       };
 
     })
-    .controller('FormCtrl', function ($scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state) {
+    .controller('AtmosFormCtrl', function ($scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state) {
       var _ = lodash;
       //set pagetitle
       $rootScope.title = $state.current.title;
+      $rootScope.icon = $state.current.icon;
       if (AuthService.getCurrent()) {
         AuthService.getCurrent().$promise.then(function (user) {
           console.log(user.id);

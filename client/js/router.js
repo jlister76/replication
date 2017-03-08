@@ -29,7 +29,7 @@
           controller: 'RouterCtrl'
         })
         .state('app.heath', {
-          url: '/heath',
+          url: '/heath/my-replications',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -47,10 +47,11 @@
           },
           templateUrl: 'views/heath-page.html',
           controller: 'HeathCtrl',
-          title: 'Replications'
+          title: 'Replications',
+          icon: ''
         })
         .state('app.atmos', {
-          url: '/atmos',
+          url: '/ATMOS/my-replications',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -67,10 +68,11 @@
           },
           templateUrl: 'views/atmos-page.html',
           controller: 'AtmosCtrl',
-          title: '...'
+          title: 'Replications',
+          icon: ''
         })
         .state('app.meeting', {
-          url: '/my-meetings',
+          url: '/heath/scheduler',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -81,16 +83,17 @@
             access: function (userCtx, $state) {
               if (userCtx.company === "ATMOS") {
                 console.error('403 Forbidden Access');
-                $state.go('app.atmos');
+                $state.transitionTo('app.atmos');
               }
             }
           },
-          templateUrl: 'views/meeting-request.html',
-          controller: 'MeetingCtrl',
-          title: 'Meetings / Scheduler'
+          templateUrl: 'views/heath-scheduler.html',
+          controller: 'HeathSchedulerCtrl',
+          title: 'Scheduler',
+          icon: 'schedule'
         })
         .state('app.replication-form', {
-          url: '/replication-form',
+          url: '/ATMOS/forms/replication',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -104,13 +107,13 @@
             }
           },
           templateUrl: 'views/replication-form.html',
-          controller: 'FormCtrl',
-          title: 'Replication Form'
+          controller: 'AtmosFormCtrl',
+          title: 'Replication Form',
+          icon: 'library_books'
         })
         .state('app.error', {
           url: '/error',
           templateUrl: 'views/location-error.html'
-
         })
         .state('login', {
           url: '/login',
