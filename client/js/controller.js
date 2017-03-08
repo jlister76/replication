@@ -4,13 +4,8 @@
 
   angular
     .module('Replication')
-    .controller('AppCtrl', function (AuthService, $state) {
+    .controller('AppCtrl', function () {
       console.log("Checking for authentication...");
-      AuthService.getCurrent().$promise.then(function (user) {
-
-      });
-
-
     })
     .controller('NavCtrl', function ($rootScope, $state, $scope) {
 

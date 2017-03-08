@@ -1,12 +1,17 @@
 (function () {
   'use strict';
-
   angular
     .module('Replication')
     .config(function ($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('app', {
           url: '',
+          resolve: {
+            auth: function(AuthService){
+              AuthService.getCurrent();
+
+            }
+          },
           views: {
             'navigation': {
               templateUrl: 'views/navigation.html',
@@ -16,7 +21,8 @@
               template: '<div ui-view></div>',
               controller: 'AppCtrl'
             }
-          }
+          },
+          template: '<div ui-view="navigation"></div><div ui-view="content"></div>'
         })
         .state('router', {
           url: '/router',
