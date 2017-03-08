@@ -29,24 +29,45 @@
           controller: 'RouterCtrl'
         })
         .state('app.heath', {
-          url: '/main',
+          url: '/heath',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
+
             },
             replications: function (Replication, userCtx) {
               return Replication.find({filter: {where: {teamleader: userCtx.fname + " " + userCtx.lname}}})
+            },
+            access: function (userCtx, $state) {
+              if (userCtx.company === "ATMOS") {
+                console.error('403 Forbidden Access');
+                $state.go('app.atmos');
+              }
             }
           },
           templateUrl: 'views/heath-page.html',
           controller: 'HeathCtrl',
-          title: 'Main Page'
+          title: 'Replications'
         })
         .state('app.atmos', {
-          url: '/main',
+          url: '/atmos',
+          resolve: {
+            userCtx: function (AuthService) {
+              return AuthService.getCurrent().$promise
+            },
+            atmos: function (Appuser) {
+              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+            },
+            access: function (userCtx, $state) {
+              if (userCtx.company === "HEATH") {
+                console.error('403 Forbidden Access');
+                $state.go('app.heath');
+              }
+            }
+          },
           templateUrl: 'views/atmos-page.html',
           controller: 'AtmosCtrl',
-          title: 'Main Page'
+          title: '...'
         })
         .state('app.meeting', {
           url: '/my-meetings',
@@ -56,6 +77,12 @@
             },
             atmos: function (Appuser) {
               return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+            },
+            access: function (userCtx, $state) {
+              if (userCtx.company === "ATMOS") {
+                console.error('403 Forbidden Access');
+                $state.go('app.atmos');
+              }
             }
           },
           templateUrl: 'views/meeting-request.html',
@@ -64,6 +91,18 @@
         })
         .state('app.replication-form', {
           url: '/replication-form',
+          resolve: {
+            userCtx: function (AuthService) {
+              return AuthService.getCurrent().$promise
+
+            },
+            access: function (userCtx, $state) {
+              if (userCtx.company === "HEATH") {
+                console.error('403 Forbidden Access');
+                $state.go('app.heath');
+              }
+            }
+          },
           templateUrl: 'views/replication-form.html',
           controller: 'FormCtrl',
           title: 'Replication Form'
