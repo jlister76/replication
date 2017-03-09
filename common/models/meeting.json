@@ -59,6 +59,10 @@
     "team_leader": {
       "type": "string",
       "required": true
+    },
+    "schedule_status": {
+      "type": "string",
+      "required": true
     }
   },
   "validations": [],

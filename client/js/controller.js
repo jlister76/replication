@@ -72,6 +72,8 @@
       function showHeathPage() {
 
         $scope.replications = replications;
+        $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
+        console.log($scope.replications.meeting_date);
         persistObj();
         $scope.tl = {};
 
@@ -226,7 +228,8 @@
           heath_report: request.heath_report,
           facility: request.facility,
           locate_technician: request.locate_technician,
-          team_leader: request.team_leader
+          team_leader: request.team_leader,
+          schedule_status: 'pending'
         })
           .$promise
           .then(function (meeting) {
@@ -266,11 +269,6 @@
                     locate_technician_lname: null
                   };
                 }, 5000);
-
-
-
-
-
               })
               .catch(function (err) {
                 if (err) {
@@ -279,7 +277,8 @@
               });
 
 
-          });
+          })
+          .catch(function(err){if(err){console.error(err)}});
 
       };
 
