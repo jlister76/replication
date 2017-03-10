@@ -10,18 +10,18 @@
 
   td {
     text-align: center;
-    font-family: 'Roboto', sans-serif;
+    font-family: 'opnes sans', sans-serif;
   }
 
   tbody tr:nth-child(odd) {
     background-color: #eaeaea;
   }
 </style>
-<div layout layout-align="center" id="container">
-  <div layout="column" layout-align="" style="width:960px;">
+<div layout layout-align="center">
+  <div layout="column">
     <div layout layout-align="start" >
       <div class="md-padding">
-        <div layout layout-align="end center" style="margin-bottom:2rem;color:#9C9C9C;">
+        <div layout layout-align="end end" style="margin-bottom:1rem;">
           <div layout layout-align="center">
             <span>Click the </span>
             <span><i class="material-icons" style="color:#1e84f2;">pageview</i></span>
@@ -43,8 +43,8 @@
             <td>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }}</td>
             <td>{{ replication.atmos_determination }}</td>
             <td>
-              <md-button ng-click="sendData(replication)" layout layout-align="center center"><i class="material-icons"
-                                                                                                 style="color:#1e84f2;">pageview</i>
+              <md-button ng-click="sendData(replication)" layout layout-align="center center">
+                <i class="material-icons" style="color:#1e84f2;">pageview</i>
               </md-button>
             </td>
           </tr>
@@ -55,45 +55,50 @@
       </div>
     </div>
     <div ng-if="replication" ng-init="showForm = false" layout="column" class="view" style="padding:1rem;">
-      <div style="margin:1rem;">
-        <div layout>
-          <span>Replication Datet: </span>
-          <span>{{ replication.meeting_date  }}</span>
+
+      <fieldset class="field_set">
+        <legend>Replication</legend>
+        <div style="margin:1rem;">
+          <div layout>
+            <span>Replication Date: </span>
+            <span>{{ replication.meeting_date | date:'MM/dd/yyyy' }}</span>
+          </div>
+          <div layout>
+            <span>ATMOS REP.: </span>
+            <span>{{ replication.atmos_employee }}</span>
+          </div>
+          <div layout>
+            <span>Locate Technician: </span>
+            <span>{{ replication.locate_technician }}</span>
+          </div>
+          <div layout>
+            <span>Heath Damage Report: </span>
+            <span>{{ replication.heath_report }}</span>
+          </div>
+          <div layout>
+            <span>Facility: </span>
+            <span>{{ replication.facility_size }} {{ replication.facility_material }}</span>
+          </div>
+          <div layout>
+            <span>Address: </span>
+            <span>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }} <span
+              ng-if="replication.cross_street">@ {{ replication.cross_street }}</span></span>
+          </div>
+          <div layout>
+            <span>Town: </span>
+            <span>{{ replication.town }}</span>
+          </div>
+          <div layout>
+            <span>Determination: </span>
+            <span>{{ replication.atmos_determination }}</span>
+          </div>
+          <div layout>
+            <span>Comments: </span>
+            <span>{{ replication.atmos_comments }}</span>
+          </div>
         </div>
-        <div layout>
-          <span>ATMOS REP.: </span>
-          <span>{{ replication.atmos_employee }}</span>
-        </div>
-        <div layout>
-          <span>Locate Technician: </span>
-          <span>{{ replication.locate_technician }}</span>
-        </div>
-        <div layout>
-          <span>Heath Damage Report: </span>
-          <span>{{ replication.heath_report }}</span>
-        </div>
-        <div layout>
-          <span>Facility: </span>
-          <span>{{ replication.facility_size }} {{ replication.facility_material }}</span>
-        </div>
-        <div layout>
-          <span>Address: </span>
-          <span>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }} <span
-            ng-if="replication.cross_street">@ {{ replication.cross_street }}</span></span>
-        </div>
-        <div layout>
-          <span>Town: </span>
-          <span>{{ replication.town }}</span>
-        </div>
-        <div layout>
-          <span>Determination: </span>
-          <span>{{ replication.atmos_determination }}</span>
-        </div>
-        <div layout>
-          <span>Comments: </span>
-          <span>{{ replication.atmos_comments }}</span>
-        </div>
-      </div>
+      </fieldset>
+
       <div ng-if="showSuccess" layout layout-align="center">
         <div style="padding:.5rem; background-color:lightblue">
           <span>Your response has been emailed.</span>

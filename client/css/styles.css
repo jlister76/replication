@@ -2,7 +2,7 @@ body{
   height: auto;
   background-color: white;
   color: #333333;
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Open Sans', sans-serif;
 }
 
 h3 {
@@ -17,30 +17,42 @@ h4 {
 
 h1, h2 {
   color: #2f3661;
-  font-family: 'Droid Sans', sans-serif;
+  font-family: 'Open Sans Condensed', sans-serif;
+  line-height: 200%;
 }
 
 .row {
   margin: 1rem;
 }
+
+button.md-button.info {
+  background-color: #666666;
+  color: white;
+  border-radius: .2rem;
+}
+
+button.md-raised.md-button.md-ink-ripple.info:hover {
+  background-color: #7c7c7c;
+}
+
+button.md-raised.md-button.md-ink-ripple.info.md-focused {
+  background-color: #7c7c7c;
+}
+
+
 .active.md-button {
   background-color: #005EB8;
   color:white;
-  border: solid thin darkslategray;
   border-radius: .2rem;
-
 }
 
 button.md-raised.md-button.md-ink-ripple.active.md-focused {
-  background-color: #007bda;
+  background-color: #006cc7;
   color: white;
-  border: solid thin darkslategray;
-  border-radius: .2rem;
 }
 
 button.md-raised.md-button.md-ink-ripple.active:hover {
-  background-color: #007bda;
-  border: solid thin darkslateblue;
+  background-color: #006cc7;
 
 }
 
@@ -112,13 +124,22 @@ nav a {
   font-weight: 600;
 }
 
-nav a:focus {
-  border-bottom: solid 4px darkcyan;
+.active_link {
+  padding-bottom: .1rem;
+  border-bottom: solid 2px #e74200;
+
 }
 
 nav a:hover {
-  border-bottom: solid 4px darkcyan;
+  padding-bottom: .1rem;
+  border-bottom: solid 2px darkcyan;
 }
+
+md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
+
+  background-color: #e74200 !important;
+}
+
 
 @media screen and (min-width: 0px) and (max-width: 599px) {
   #heath_img {

@@ -5,10 +5,11 @@
     .config(function ($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('app', {
+          abstract: true,
           url: '',
           resolve: {
             auth: function(AuthService){
-              AuthService.getCurrent();
+              AuthService.getCurrent().$promise;
 
             }
           },
@@ -17,12 +18,13 @@
               templateUrl: 'views/navigation.html',
               controller: 'NavCtrl'
             },
+            'page-title': {
+              templateUrl: 'views/page-title.html'
+            },
             '': {
-              template: '<div ui-view></div>',
-              controller: 'AppCtrl'
+              template: '<ui-view></ui-view>'
             }
-          },
-          template: '<div ui-view="navigation"></div><div ui-view="content"></div>'
+          }
         })
         .state('router', {
           url: '/router',
@@ -42,7 +44,7 @@
 
             },
             replications: function (Replication, userCtx) {
-              return Replication.find({filter: {where: {teamleader: userCtx.fname + " " + userCtx.lname}}})
+              return Replication.find({filter: {where: {team_leader_email: userCtx.email}}})
             },
             access: function (userCtx, $state) {
               if (userCtx.company === "ATMOS") {
@@ -57,13 +59,13 @@
           icon: ''
         })
         .state('app.atmos', {
-          url: '/ATMOS/my-replications',
+          url: '/ATMOS/schedules',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
             },
-            atmos: function (Appuser) {
-              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+            meetingRequests: function (Meeting, userCtx) {
+              return Meeting.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
             },
             access: function (userCtx, $state) {
               if (userCtx.company === "HEATH") {
@@ -74,8 +76,7 @@
           },
           templateUrl: 'views/atmos-page.html',
           controller: 'AtmosCtrl',
-          title: 'Replications',
-          icon: ''
+          title: 'Schedule Manager'
         })
         .state('app.meeting', {
           url: '/heath/scheduler',
@@ -95,8 +96,8 @@
           },
           templateUrl: 'views/heath-scheduler.html',
           controller: 'HeathSchedulerCtrl',
-          title: 'Scheduler',
-          icon: 'schedule'
+          title: 'Meeting Invite'
+
         })
         .state('app.replication-form', {
           url: '/ATMOS/forms/replication',
@@ -114,8 +115,8 @@
           },
           templateUrl: 'views/replication-form.html',
           controller: 'AtmosFormCtrl',
-          title: 'Replication Form',
-          icon: 'library_books'
+          title: 'Replication Form'
+
         })
         .state('app.error', {
           url: '/error',

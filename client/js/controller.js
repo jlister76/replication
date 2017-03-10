@@ -7,7 +7,23 @@
     .controller('AppCtrl', function () {
       console.log("Checking for authentication...");
     })
-    .controller('NavCtrl', function ($rootScope, $state, $scope) {
+    .controller('NavCtrl', function (AuthService, $rootScope, $state, $scope) {
+      AuthService.getCurrent()
+        .$promise
+        .then(function (user) {
+          console.log(user.company);
+          switch (user.company) {
+            case 'HEATH':
+              if (user.access_type = 'group') {
+                $scope.company = 'HEATH';
+              }
+              break;
+            case 'ATMOS':
+              $scope.company = 'ATMOS';
+              break;
+          }
+        });
+
 
     })
     .controller('RouterCtrl', function (userCtx, $state) {
@@ -17,10 +33,12 @@
           if (userCtx.access_type = 'group') {
             //set start page
             $state.go('app.heath');
+
           }
           break;
         case 'ATMOS':
           $state.go('app.atmos');
+
           break;
       }
 
@@ -67,10 +85,6 @@
       //set pagetitle
       $rootScope.title = $state.current.title;
 
-      showHeathPage();
-
-      function showHeathPage() {
-
         $scope.replications = replications;
         $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
         console.log($scope.replications.meeting_date);
@@ -108,18 +122,28 @@
           var replicationObj = sessionStorage.getItem('data');
           $scope.replication = JSON.parse(replicationObj);
         }
-      }
+
 
     })
-    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout) {
+    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout, meetingRequests) {
       $rootScope.title = $state.current.title;
-      $rootScope.icon = $state.current.icon;
+      $scope.requests = meetingRequests;
+
+      $scope.sendData = function (request) {
+        sessionStorage.removeItem('data');
+        sessionStorage.setItem('data', JSON.stringify(request));
+        persistObj();
+      };
+      function persistObj() {
+        var requestObj = sessionStorage.getItem('data');
+        $scope.request = JSON.parse(requestObj);
+      }
     })
     .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
       //set pagetitle
       $rootScope.title = $state.current.title;
-      $rootScope.icon = $state.current.icon;
+
 
       //set date & time
       var dates = [];
@@ -348,7 +372,7 @@
           var recipent = _.pick(JSON.parse(response.team_leader), 'email'),
             team_leader_fname = _.pick(JSON.parse(response.team_leader), 'fname'),
             team_leader_lname = _.pick(JSON.parse(response.team_leader), 'lname'),
-            team_leader = team_leader_fname.fname + team_leader_lname.lname;
+            team_leader = team_leader_fname.fname + " " + team_leader_lname.lname;
 
 
           var date = moment(),

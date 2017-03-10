@@ -1,5 +1,7 @@
-<div layout layout-align="center">
-  <div layout="column" layout-align="start center" style="width:960px;">
+<div layout layout-align="center" id="container">
+
+  <div layout="column" layout-align="start" style="width:960px;">
+
     <div ng-if="showSuccessMsg" layout layout-align="center" id="successMsg">
       <span style="background: lightblue; padding:.5rem;margin:1rem;">Email sent to {{ request.selected_dps }}</span>
     </div>

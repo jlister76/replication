@@ -1,10 +1,161 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>ATMOS PAGE</title>
-</head>
-<body>
+<style>
+  table {
+    border-collapse: collapse;
+  }
 
-</body>
-</html>
+  th {
+    font-family: 'Droid Sans', sans-serif;
+    font-size: 14px;
+  }
+
+  td {
+    text-align: left;
+    padding: .5rem;
+    font-family: 'opnes sans', sans-serif;
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #eaeaea;
+  }
+</style>
+<div layout layout-align="center">
+  <div layout="column">
+    <div layout layout-align="start">
+      <div class="md-padding">
+        <div layout layout-align="end end" style="margin-bottom:2rem;">
+          <div layout layout-align="center">
+            <span>Click the </span>
+            <span><i class="material-icons" style="color:#1e84f2;">schedule</i></span>
+            <span>icon to schedule meeting</span>
+          </div>
+        </div>
+        <md-content>
+          <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="requested">
+              <table cellpadding="2" cellspacing="0" border="0" width="900">
+                <thead>
+                <th>Date / Time</th>
+                <th>Team Leader</th>
+                <th>Place</th>
+                <th>Address</th>
+                <th>Town</th>
+                <th>Schedule</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="request in requests">
+                  <td>{{ request.month}} {{ request.date }}th @ {{ request.hour }}<span ng-if="request.hour < 1"
+                                                                                        style="margin-right:0;">0</span>:<span
+                    ng-if="request.minute > 9">{{ request.minute }}</span><span ng-if="request.minute < 10">00</span>
+                  </td>
+                  <td>{{ request.team_leader }}</td>
+                  <td>{{ request.location_name }}</td>
+                  <td>{{ request.location }}</td>
+                  <td>{{ request.town }}</td>
+                  <td>
+                    <md-button ng-click="sendData(request)" layout layout-align="center center">
+                      <i class="material-icons" style="color:#1e84f2;">schedule</i>
+                    </md-button>
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+            </md-tab>
+            <md-tab label="Scheduled">
+              <table cellpadding="2" cellspacing="0" border="0" width="900">
+                <thead>
+                <th>Date / Time</th>
+                <th>Team Leader</th>
+                <th>Place</th>
+                <th>Address</th>
+                <th>Town</th>
+                <th>View</th>
+                </thead>
+                <tbody>
+                <tr ng-repeat="request in requests">
+                  <td>{{ request.month}} {{ request.date }}th @ {{ request.hour }}<span ng-if="request.hour < 1"
+                                                                                        style="margin-right:0;">0</span>:<span
+                    ng-if="request.minute > 9">{{ request.minute }}</span><span ng-if="request.minute < 10">00</span>
+                  </td>
+                  <td>{{ request.team_leader }}</td>
+                  <td>{{ request.location_name }}</td>
+                  <td>{{ request.location }}</td>
+                  <td>{{ request.town }}</td>
+                  <td>
+                    <md-button ng-click="showAll = !showAll" layout layout-align="center center">
+                      <i class="material-icons" style="color:#1e84f2;">pageview</i>
+                    </md-button>
+                  </td>
+                </tr>
+
+                </tbody>
+              </table>
+            </md-tab>
+          </md-tabs>
+        </md-content>
+      </div>
+      <div>
+      </div>
+    </div>
+    <div ng-if="request" layout="column" class="view" style="padding:1rem;">
+
+      <div>
+        <fieldset class="field_set">
+          <legend>Meeting Details</legend>
+          <div layout>
+            <div style="margin:1rem;">
+              <div layout>
+                <span>Date: </span>
+                <span>{{ request.month }} {{ request.date }}th</span>
+              </div>
+              <div layout>
+                <span>Time: </span>
+                <span><span ng-if="request.hour < 1" style="margin-right:0;">0</span>{{ request.hour }}:<span
+                  ng-if="request.minute > 9" style="margin-left:0;">{{ request.minute }}</span><span
+                  ng-if="request.minute < 10" style="margin-left:0;">00</span></span>
+              </div>
+              <div layout>
+                <span>Team Leader: </span>
+                <span>{{ request.team_leader }}</span>
+              </div>
+              <div layout>
+                <span>Locate Technician: </span>
+                <span>{{ request.locate_technician }}</span>
+              </div>
+              <div layout>
+                <span>Heath Damage Report: </span>
+                <span>{{ request.heath_report }}</span>
+              </div>
+              <div layout>
+                <span>Facility: </span>
+                <span>{{ request.facility }}</span>
+              </div>
+              <div ng-if="request.location_name" layout>
+                <span>Meeting Location: </span>
+                <span>{{ request.location_name }}</span>
+              </div>
+              <div layout>
+                <span>Address: </span>
+                <span>{{ request.location }}
+                <span ng-if="request.cross_street">@ {{ replication.cross_street }}</span>
+              </span>
+              </div>
+              <div layout>
+                <span>Town: </span>
+                <span>{{ request.town }}</span>
+              </div>
+            </div>
+            <div>
+              <div layout layout-align="start center" style="margin-top:1rem;">
+                <!--html-->
+                <md-button class="md-raised active">CONFIRM</md-button>
+                <md-button class="md-raised info">PROPOSE NEW SCHEDULE</md-button>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </div>
+</div>
+
+

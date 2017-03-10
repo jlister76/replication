@@ -7,11 +7,17 @@
   <link rel="stylesheet" href="vendor/angular-material/angular-material.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="css/styles.css">
-  <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Roboto" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans|Open+Sans+Condensed:300|Droid+Sans|Roboto"
+        rel="stylesheet">
 </head>
 <body ng-cloak>
-<nav ui-view="navigation"></nav>
-<section ui-view style="height:auto;width:auto;"></section>
+<div id="page">
+  <div id="container">
+    <nav ui-view="navigation"></nav>
+    <section ui-view="page-title"></section>
+    <section ui-view style="height:auto;width:auto;"></section>
+  </div>
+</div>
 <!--Bower dependencies-->
 <script src="vendor/angular/angular.min.js"></script>
 <script src="vendor/angular-ui-router/release/angular-ui-router.min.js"></script>
