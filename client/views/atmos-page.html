@@ -23,14 +23,18 @@
     <div layout layout-align="start">
       <div class="md-padding">
         <div layout layout-align="end end" style="margin-bottom:2rem;">
-          <div ng-if="request" layout layout-align="center">
-            <span>Click the </span>
-            <span><i class="material-icons" style="color:#1e84f2;">schedule</i></span>
-            <span>icon to schedule meeting</span>
+          <div layout layout-align="center">
+
+            <span>
+              <i ng-if="selectedIndex === 0" class="material-icons" style="color:#1e84f2;">schedule</i>
+              <i ng-if="selectedIndex === 1" class="material-icons" style="color:#1e84f2;">edit</i>
+            </span>
+            <span ng-if="selectedIndex === 0">schedule meeting</span>
+            <span ng-if="selectedIndex === 1">enter replication result</span>
           </div>
         </div>
         <md-content>
-          <md-tabs md-dynamic-height md-border-bottom>
+          <md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
             <md-tab label="Requested">
               <table cellpadding="2" cellspacing="0" border="0" width="900">
                 <thead>
@@ -273,7 +277,7 @@
       <div>
       </div>
     </div>
-    <div ng-if="request" layout="column" class="view" style="padding:1rem;">
+    <div ng-if="selectedIndex === 0 && request" layout="column" class="view" style="padding:1rem;">
 
       <div>
         <fieldset class="field_set">
@@ -374,7 +378,7 @@
         </fieldset>
       </div>
     </div>
-    <div ng-if="meeting" layout="column" class="view" style="padding:1rem;">
+    <div ng-if="selectedIndex === 1 && meeting" layout="column" class="view" style="padding:1rem;">
       <div>
         <fieldset class="field_set">
           <legend>Replication Results</legend>
@@ -442,7 +446,7 @@
                                ng-init="response.atmos_determination = 'facility_issue'"
                                type="hidden">
                         <label for="facility_issue"><strong>Primary reason for this facility issue?</strong></label>
-                        <textarea ng-model="response.atmos_comments" name="facility_issue" id="facility_issue" cols="30"
+                        <textarea ng-model="response.atmos_comments" name="facility_issue" id="unscheduled_facility_issue" cols="30"
                                   rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
                       </div>
                     </div>
@@ -467,7 +471,7 @@
                     </div>
                     <div layout="column" class="row">
                       <strong>Comments</strong>
-                      <textarea ng-model="response.atmos_comments" name="additional_comments" id="additional_comments"
+                      <textarea ng-model="response.atmos_comments" name="additional_comments" id="unscheduled_additional_comments"
                                 cols="30"
                                 rows="7"></textarea>
                     </div>

@@ -146,7 +146,7 @@
       $rootScope.title = $state.current.title;
       $scope.requests = meetingRequests;
       $scope.meetings = confirmedMeetings;
-
+      console.log($scope.selectedIndex );
       $scope.sendData = function (request) {
         sessionStorage.removeItem('data');
         sessionStorage.setItem('data', JSON.stringify(request));

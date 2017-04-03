@@ -132,6 +132,7 @@
             AuthService.logout()
               .$promise
               .then(function (logout) {
+                sessionStorage.clear();
                 console.info("logging out");
                 $state.go('app');
               })
