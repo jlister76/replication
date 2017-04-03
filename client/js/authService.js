@@ -6,6 +6,7 @@
     .factory('AuthService', function (Appuser) {
 
       function login(email, password) {
+
         var creds = {
           email: email,
           password: password

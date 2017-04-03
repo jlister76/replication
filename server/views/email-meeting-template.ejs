@@ -22,7 +22,7 @@
 </head>
 <body style="margin: 0; padding: 0;">
 <table border="0" cellpadding="5" cellspacing="10" width="500">
-  <thead>
+  <thead style="border-bottom: solid 6px #666666;">
   <th>
     <h1>Meeting Request</h1>
     <h3><%= town %> Area</h3>
@@ -30,14 +30,14 @@
   </thead>
   <tbody>
   <tr>
-    <td width="200" style="font-size:1.2rem;">
-      <p style="color:dodgerblue;">
-        Click <a href="https://rpf.heathfieldapp.com";>here</a> to schedule this meeting or propose a new date & time.
+    <td width="200" style="font-size:1.2em;text-align: center">
+      <p style="">
+        <a href="https://rpf.heathfieldapp.com" style="text-decoration: none;">SCHEDULE THIS MEETING</a>
       </p>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.2rem;">
+    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;border-top:solid 1px #666666;">
       <p><strong>Team Leader:</strong> <%= team_leader %></p>
       <p><strong>Date & Time:</strong> <%= meeting_date %></p>
       <% if (location_name) { %>
@@ -51,7 +51,8 @@
     </td>
   </tr>
   <tr>
-    <td width="300" style="padding: 10px 10px 8px 5px;font-size:1.2rem;border-top:solid 1px #666666;">
+    <td width="300"
+        style="padding: 10px 10px 8px 5px;font-size:1.4rem;border-top:solid 1px #666666;border-bottom:solid 1px #666666;">
 
       <h3>DAMAGE INFORMATION</h3>
       <p><strong>Damage Report #:</strong> <%= heath_report %></p>

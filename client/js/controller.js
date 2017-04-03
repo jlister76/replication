@@ -8,6 +8,7 @@
       console.log("Checking for authentication...");
     })
     .controller('NavCtrl', function (AuthService, $rootScope, $state, $scope) {
+      console.log("In the NAV Ctrl");
       AuthService.getCurrent()
         .$promise
         .then(function (user) {
@@ -26,41 +27,54 @@
 
 
     })
-    .controller('RouterCtrl', function (userCtx, $state) {
-      console.log('Routing...');
-      switch (userCtx.company) {
-        case 'HEATH':
-          if (userCtx.access_type = 'group') {
-            //set start page
-            $state.go('app.heath');
+    .controller('RouterCtrl', function (AuthService, $state) {
+      console.log('Routing...', AuthService.getCurrent().$promise);
+      var ctx = AuthService.getCurrent()
+        .$promise
+        .then(function (ctx) {
+          switch (ctx.company) {
+            case 'HEATH':
+              if (ctx.access_type = 'group') {
+                //set start page
+                $state.go('authenticated.page.heath');
 
+              }
+              break;
+            case 'ATMOS':
+              console.log('Is ATMOS');
+              $state.go('authenticated.page.atmos');
+
+              break;
           }
-          break;
-        case 'ATMOS':
-          $state.go('app.atmos');
+        });
 
-          break;
-      }
 
     })
     .controller('LogInCtrl', function (AuthService, $scope, $location) {
+
       $scope.login = function (email, password) {
         AuthService.login(email, password)
           .$promise
           .then(function () {
             console.log("Log-in successful. Redirecting to router.");
+            var next;
+            if ($location.nextAfterLogin === '/') {
+              next = '/router';
+              $location.nextAfterLogin = null;
+              console.log(next);
+              $location.path(next);
+            } else {
+              next = $location.nextAfterLogin || '/router';
 
-            var next = $location.nextAfterLogin || '/router';
-            $location.nextAfterLogin = null;
-            console.log(next);
-            $location.path(next);
+              $location.nextAfterLogin = null;
+              console.log(next);
+              $location.path(next);
+            }
 
-
-            //$state.go('router');
           })
           .catch(function (e) {
             if (e) {
-              console.log(e);
+              console.log("auth error ", e);
               $scope.err = e;
 
             }
@@ -70,16 +84,18 @@
           })
       };
     })
-    .controller('LogOutCtrl', function (AuthService, $scope, $location) {
+    .controller('LogOutCtrl', function (AuthService, $scope, $location, $state) {
+
       $scope.logout = function () {
         console.log('Signing out...');
         AuthService.logout()
           .$promise
           .then(function () {
-            $location.path('/login');
+            console.log('Signing out2...');
             sessionStorage.clear();
           });
-      };
+        $location.path('/');
+      }
     })
     .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state) {
       //set pagetitle
@@ -126,6 +142,7 @@
 
     })
     .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout, meetingRequests) {
+      console.log('in this ctrl');
       $rootScope.title = $state.current.title;
       $scope.requests = meetingRequests;
 

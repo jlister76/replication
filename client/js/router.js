@@ -5,39 +5,35 @@
     .config(function ($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('app', {
-          abstract: true,
           url: '',
-          resolve: {
-            auth: function(AuthService){
-              AuthService.getCurrent().$promise;
-
-            }
-          },
+          controller: 'LogInCtrl',
+          templateUrl: 'views/login-form.html'
+        })
+        .state('router', {
+          url: '/router',
+          controller: 'RouterCtrl',
+        })
+        .state('authenticated', {
+          abstract: true,
+          templateUrl: 'views/page-template.html'
+        })
+        .state('authenticated.page', {
           views: {
             'navigation': {
               templateUrl: 'views/navigation.html',
               controller: 'NavCtrl'
             },
-            'page-title': {
+            title: {
               templateUrl: 'views/page-title.html'
             },
             '': {
-              template: '<ui-view></ui-view>'
+              template: '<div ui-view></div>'
+
             }
           }
         })
-        .state('router', {
-          url: '/router',
-          resolve: {
-            userCtx: function (AuthService) {
-              return AuthService.getCurrent().$promise
-            }
-          },
-          template: '<div style="background-color:white;"></div>',
-          controller: 'RouterCtrl'
-        })
-        .state('app.heath', {
-          url: '/heath/my-replications',
+        .state('authenticated.page.heath', {
+          url: '/my-replications',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -58,14 +54,16 @@
           title: 'Replications',
           icon: ''
         })
-        .state('app.atmos', {
-          url: '/ATMOS/schedules',
+        .state('authenticated.page.atmos', {
+          url: '/schedules',
+          controller: 'AtmosCtrl',
+          title: 'Schedule Manager',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
             },
             meetingRequests: function (Meeting, userCtx) {
-              return Meeting.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
+              return Meeting.find({filter: {where: {email: userCtx.email}}}).$promise
             },
             access: function (userCtx, $state) {
               if (userCtx.company === "HEATH") {
@@ -74,11 +72,10 @@
               }
             }
           },
-          templateUrl: 'views/atmos-page.html',
-          controller: 'AtmosCtrl',
-          title: 'Schedule Manager'
+          templateUrl: 'views/atmos-page.html'
+
         })
-        .state('app.meeting', {
+        .state('authenticated.page.heath-meeting', {
           url: '/heath/scheduler',
           resolve: {
             userCtx: function (AuthService) {
@@ -99,8 +96,8 @@
           title: 'Meeting Invite'
 
         })
-        .state('app.replication-form', {
-          url: '/ATMOS/forms/replication',
+        .state('authenticated.page.replication-form', {
+          url: '/forms/replication',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -124,14 +121,20 @@
         })
         .state('login', {
           url: '/login',
-          templateUrl: 'views/login-form.html',
           controller: 'LogInCtrl'
         })
-        .state('logout', {
+        .state('authenticated.page.logout', {
           url: '/logout',
-          controller: 'LogOutCtrl'
+          controller: function (AuthService, $state) {
+            AuthService.logout()
+              .$promise
+              .then(function (logout) {
+                console.info("logging out");
+                $state.go('app');
+              })
+          }
         });
-      $urlRouterProvider.otherwise('/router');
+      $urlRouterProvider.otherwise('/');
 
     })
 })();
