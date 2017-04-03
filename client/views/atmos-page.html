@@ -23,7 +23,7 @@
     <div layout layout-align="start">
       <div class="md-padding">
         <div layout layout-align="end end" style="margin-bottom:2rem;">
-          <div layout layout-align="center">
+          <div ng-if="request" layout layout-align="center">
             <span>Click the </span>
             <span><i class="material-icons" style="color:#1e84f2;">schedule</i></span>
             <span>icon to schedule meeting</span>
@@ -31,7 +31,7 @@
         </div>
         <md-content>
           <md-tabs md-dynamic-height md-border-bottom>
-            <md-tab label="requested">
+            <md-tab label="Requested">
               <table cellpadding="2" cellspacing="0" border="0" width="900">
                 <thead>
                 <th>Date / Time</th>
@@ -71,24 +71,201 @@
                 <th>View</th>
                 </thead>
                 <tbody>
-                <tr ng-repeat="request in requests">
-                  <td>{{ request.month}} {{ request.date }}th @ {{ request.hour }}<span ng-if="request.hour < 1"
+                <tr ng-repeat="meeting in meetings">
+                  <td>{{ meeting.month}} {{ meeting.date }}th @ {{ meeting.hour }}<span ng-if="meeting.hour < 1"
                                                                                         style="margin-right:0;">0</span>:<span
-                    ng-if="request.minute > 9">{{ request.minute }}</span><span ng-if="request.minute < 10">00</span>
+                    ng-if="meeting.minute > 9">{{ meeting.minute }}</span><span ng-if="meeting.minute < 10">00</span>
                   </td>
-                  <td>{{ request.team_leader }}</td>
-                  <td>{{ request.location_name }}</td>
-                  <td>{{ request.location }}</td>
-                  <td>{{ request.town }}</td>
+                  <td>{{ meeting.team_leader }}</td>
+                  <td>{{ meeting.location_name }}</td>
+                  <td>{{ meeting.location }}</td>
+                  <td>{{ meeting.town }}</td>
                   <td>
                     <md-button ng-click="showAll = !showAll" layout layout-align="center center">
-                      <i class="material-icons" style="color:#1e84f2;">pageview</i>
+                      <i class="material-icons" style="color:#1e84f2;" ng-click="viewMeeting(meeting)">edit</i>
                     </md-button>
                   </td>
                 </tr>
 
                 </tbody>
               </table>
+            </md-tab>
+            <md-tab label="Unscheduled">
+              <div layout layout-align="center">
+                <div layout="column" layout-align="start center" style="width:960px;">
+                  <div layout layout-align="end center" class="row" style="margin:1rem; width:720px;">
+                    <div layout="column">
+                      <label for="dlist">Distribution List</label>
+                      <select ng-model="response.distribution_list" name="ditribution_list" id="dlist">
+                        <!--<option ng-repeat="(key,val) in distribution_lists" value="{{ list }}">{{ key }} - {{ val }}</option>-->
+                      </select>
+                    </div>
+                  </div>
+                  <div>
+
+                    <form name="replicationForm"
+                          ng-submit="sendEmail(response)">
+                      <fieldset class="field_set">
+                        <legend>
+                          HEATH EMPLOYEES
+                        </legend>
+                        <div layout="column" class="row">
+                          <div layout layout-align="start center" style="padding:1rem;">
+                            <input ng-model="response.atmos_employee" type="hidden">
+                            <input ng-model="response.employeeId" type="hidden">
+                            <label for="team_leader">Team Leader</label>
+                            <select ng-model="response.team_leader" id="team_leader">
+                              <option ng-repeat="teamleader in teamleaders" value="{{ teamleader }}">{{
+                                teamleader.fname }} {{ teamleader.lname }}
+                              </option>
+                            </select>
+                          </div>
+                          <div layout="column" class="row">
+                            <span>Locate Technician</span>
+                            <div layout layout-align="start center">
+                              <div layout="column" style="margin:1rem;padding:.5rem;">
+                                <label for="locate_technician_fname">First Name</label>
+                                <input ng-model="response.locate_technician_fname" id="locate_technician_fname"
+                                       type="text" required>
+                              </div>
+                              <div layout="column">
+                                <label for="locate_technician_lname">Last Name</label>
+                                <input ng-model="response.locate_technician_lname" id="locate_technician_lname"
+                                       type="text" required>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <fieldset class="field_set">
+                        <legend>
+                          DAMAGE INFORMATION
+                        </legend>
+                        <div layout="column" class="md-padding">
+                          <div class="row">
+                            <div layout="column">
+                              <label for="heath_report">Heath Report Number</label>
+                              <input ng-model="response.heath_report" type="number" id="heath_report" required>
+                            </div>
+                          </div>
+                          <div layout="column" class="row">
+                            <span style="margin-bottom:1rem;"><em>Address Information</em></span>
+                            <div layout layout-align="space-between center">
+                              <div layout="column">
+                                <label for="street_number">Number</label>
+                                <input ng-model="response.street_number" type="number" id="street_number"
+                                       style="width:64px;"
+                                       required>
+                              </div>
+                              <div layout="column">
+                                <label for="street">Street</label>
+                                <input ng-model="response.street_name" type="text" id="street" required>
+                              </div>
+                              <div layout="column">
+                                <label for="street">Suffix</label>
+                                <select ng-model="response.street_suffix" name="street_suffix" id="street_suffix"
+                                        required>
+                                  <option ng-repeat="suffix in suffixes | orderBy:'title'" value="{{ suffix.abrv }}">{{
+                                    suffix.label
+                                    }}
+                                  </option>
+                                </select>
+
+                              </div>
+                            </div>
+                          </div>
+                          <div layout class="row" layout-align="space-between center">
+                            <div layout="column">
+                              <label for="cross_street">Nearest Cross Street
+                                <small ng-if="!response.street_number"><em style="color:indianred;">*</em></small>
+                              </label>
+                              <input ng-model="response.cross_street" type="text" id="cross_street"
+                                     ng-required="!response.street_number">
+                            </div>
+                            <div layout="column">
+                              <label for="town">Town</label>
+                              <select ng-model="response.town" type="text" id="town" required>
+                                <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}
+                                </option>
+                              </select>
+                            </div>
+                          </div>
+                          <div class="row">
+                            <span><em>Facility Description</em></span>
+                            <div layout style="margin-top:1rem;">
+                              <label for="facility_size">Diameter</label>
+                              <select ng-model="response.facility_size" name="facility_size" id="facility_size"
+                                      required>
+                                <option ng-repeat="size in diameters" value="{{ size }}">{{ size }}</option>
+
+                              </select>
+                              <label for="facility_material">Material</label>
+                              <select ng-model="response.facility_material" name="facility_material"
+                                      id="facility_material" required>
+                                <option ng-repeat="material in materials" value="{{ material }}">{{ material }}</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                      </fieldset>
+                      <fieldset class="field_set">
+                        <legend>REPLICATION RESULTS</legend>
+                        <div layout="column" class="md-padding">
+                          <div class="row">
+                            <span>Were the locate marks able to be replicated?</span>
+                            <select ng-model="response.able_to_replicate" name="able_to_replicate" required>
+                              <option value="Yes">Yes</option>
+                              <option value="No">No</option>
+                            </select>
+                          </div>
+                          <div ng-if="response.able_to_replicate === 'Yes'">
+                            <div class="row">
+                              <div layout="column">
+                                <input ng-model="response.atmos_determination"
+                                       ng-init="response.atmos_determination = 'facility_issue'"
+                                       type="hidden">
+                                <label for="facility_issue">Please describe the facility issue.</label>
+                                <textarea ng-model="response.atmos_comments" name="facility_issue" id="facility_issue"
+                                          cols="30"
+                                          rows="7"
+                                          ng-required="response.atmos_determination === 'facility_issue'"></textarea>
+                              </div>
+                            </div>
+                          </div>
+                          <div ng-if="response.able_to_replicate === 'No'">
+                            <div class="row">
+                              <span>Please select the reason which best describes the root-cause?</span>
+                              <select ng-model="response.atmos_determination" name="unable_to_replicate"
+                                      ng-required="response.able_to_replicate === 'No'">
+                                <option value="replaced">Facility was altered or replaced</option>
+                                <option value="locate_error">Locate Error</option>
+                              </select>
+                            </div>
+                            <div layout="column" class="row">
+                              <span>Additional Comments?</span>
+                              <textarea ng-model="response.atmos_comments" name="additional_comments"
+                                        id="additional_comments" cols="30"
+                                        rows="7"></textarea>
+                            </div>
+                          </div>
+
+                        </div>
+                      </fieldset>
+                      <div layout layout-align="center" style="width:700px;">
+                        <md-button type="submit"
+                                   ng-disabled="replicationForm.$invalid"
+                                   class="md-raised"
+                                   ng-class="{'active':replicationForm.$valid}"
+                                   ng-dblclick="false"
+                                   style="height: 48px; width:240px;">
+                          SEND RESULTS
+                        </md-button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
             </md-tab>
           </md-tabs>
         </md-content>
@@ -102,53 +279,206 @@
         <fieldset class="field_set">
           <legend>Meeting Details</legend>
           <div layout>
-            <div style="margin:1rem;">
-              <div layout>
-                <span>Date: </span>
-                <span>{{ request.month }} {{ request.date }}th</span>
+            <div layout="column">
+              <div>
+                <div layout>
+                  <span>Date: </span>
+                  <span>{{ request.month }} {{ request.date }}th</span>
+                </div>
+                <div layout>
+                  <span>Time: </span>
+                  <span><span ng-if="request.hour < 1" style="margin-right:0;">0</span>{{ request.hour }}:<span
+                    ng-if="request.minute > 9" style="margin-left:0;">{{ request.minute }}</span><span
+                    ng-if="request.minute < 10" style="margin-left:0;">00</span></span>
+                </div>
+                <div layout>
+                  <span>Team Leader: </span>
+                  <span>{{ request.team_leader }}</span>
+                </div>
+                <div layout>
+                  <span>Locate Technician: </span>
+                  <span>{{ request.locate_technician }}</span>
+                </div>
+                <div layout>
+                  <span>Heath Damage Report: </span>
+                  <span>{{ request.heath_report }}</span>
+                </div>
+                <div layout>
+                  <span>Facility: </span>
+                  <span>{{ request.facility }}</span>
+                </div>
+                <div ng-if="request.location_name" layout>
+                  <span>Meeting Location: </span>
+                  <span>{{ request.location_name }}</span>
+                </div>
+                <div layout>
+                  <span>Address: </span>
+                  <span>{{ request.location }}
+                <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
+                </span>
+                </div>
+                <div layout>
+                  <span>Town: </span>
+                  <span>{{ request.town }}</span>
+                </div>
               </div>
-              <div layout>
-                <span>Time: </span>
-                <span><span ng-if="request.hour < 1" style="margin-right:0;">0</span>{{ request.hour }}:<span
-                  ng-if="request.minute > 9" style="margin-left:0;">{{ request.minute }}</span><span
-                  ng-if="request.minute < 10" style="margin-left:0;">00</span></span>
-              </div>
-              <div layout>
-                <span>Team Leader: </span>
-                <span>{{ request.team_leader }}</span>
-              </div>
-              <div layout>
-                <span>Locate Technician: </span>
-                <span>{{ request.locate_technician }}</span>
-              </div>
-              <div layout>
-                <span>Heath Damage Report: </span>
-                <span>{{ request.heath_report }}</span>
-              </div>
-              <div layout>
-                <span>Facility: </span>
-                <span>{{ request.facility }}</span>
-              </div>
-              <div ng-if="request.location_name" layout>
-                <span>Meeting Location: </span>
-                <span>{{ request.location_name }}</span>
-              </div>
-              <div layout>
-                <span>Address: </span>
-                <span>{{ request.location }}
-                <span ng-if="request.cross_street">@ {{ replication.cross_street }}</span>
-              </span>
-              </div>
-              <div layout>
-                <span>Town: </span>
-                <span>{{ request.town }}</span>
+              <div>
+                <div layout layout-align="start center" style="margin-top:1rem;">
+                  <!--html-->
+                  <md-button class="md-raised active" ng-click="confirmMeeting(request)">CONFIRM MEETING</md-button>
+                </div>
               </div>
             </div>
-            <div>
-              <div layout layout-align="start center" style="margin-top:1rem;">
-                <!--html-->
-                <md-button class="md-raised active">CONFIRM</md-button>
-                <md-button class="md-raised info">PROPOSE NEW SCHEDULE</md-button>
+            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;">
+              <div style="height:100%;">
+                <div layout="column">
+                  <p><strong>Need to reschedule</strong></p>
+                  <p style="width:100%;margin:1rem;"><strong>When would you be able to meet?</strong></p>
+
+                  <div layout>
+
+                    <span>Month: </span>
+                    <select ng-model="proposed.selected_month" ng-init="request.selected_month = proposed.month"
+                            required>
+                      <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
+                    </select>
+                  </div>
+                  <div layout>
+                    <span>Date: </span>
+                    <select ng-model="proposed.selected_date" required>
+                      <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
+                    </select>
+                  </div>
+                  <div layout>
+                    <span>Hour: </span>
+                    <select ng-model="proposed.selected_hour" required>
+                      <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
+                    </select>
+                  </div>
+                  <div layout>
+                    <span>Minute: </span>
+                    <select ng-model="proposed.selected_minute" required>
+                      <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div layout layout-align="end center" style="margin-top:1rem;">
+                  <!--html-->
+                  <md-button class="md-raised info" ng-click="propose(request)">PROPOSE NEW SCHEDULE</md-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </div>
+    </div>
+    <div ng-if="meeting" layout="column" class="view" style="padding:1rem;">
+      <div>
+        <fieldset class="field_set">
+          <legend>Replication Results</legend>
+          <div layout>
+            <div layout="column">
+              <div>
+                <div layout>
+                  <span>Date: </span>
+                  <span>{{ meeting.month }} {{ meeting.date }}th</span>
+                </div>
+                <div layout>
+                  <span>Time: </span>
+                  <span><span ng-if="meeting.hour < 1" style="margin-right:0;">0</span>{{ meeting.hour }}:<span
+                    ng-if="meeting.minute > 9" style="margin-left:0;">{{ meeting.minute }}</span><span
+                    ng-if="meeting.minute < 10" style="margin-left:0;">00</span></span>
+                </div>
+                <div layout>
+                  <span>Team Leader: </span>
+                  <span>{{ meeting.team_leader }}</span>
+                </div>
+                <div layout>
+                  <span>Locate Technician: </span>
+                  <span>{{ meeting.locate_technician }}</span>
+                </div>
+                <div layout>
+                  <span>Heath Damage Report: </span>
+                  <span>{{ meeting.heath_report }}</span>
+                </div>
+                <div layout>
+                  <span>Facility: </span>
+                  <span>{{ meeting.facility }}</span>
+                </div>
+                <div ng-if="meeting.location_name" layout>
+                  <span>Meeting Location: </span>
+                  <span>{{ meeting.location_name }}</span>
+                </div>
+                <div layout>
+                  <span>Address: </span>
+                  <span>{{ meeting.location }}
+                <span ng-if="meeting.cross_street">@ {{ meeting.cross_street }}</span>
+                </span>
+                </div>
+                <div layout>
+                  <span>Town: </span>
+                  <span>{{ meeting.town }}</span>
+                </div>
+              </div>
+            </div>
+            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;">
+              <div style="height:100%;">
+                <div layout="column">
+
+                  <div layout="column">
+                    <span style="width:100%;"><strong>Were the locate marks able to be replicated?</strong></span>
+                    <select ng-model="response.able_to_replicate" name="able_to_replicate" required
+                            style="margin:1rem;">
+                      <option value="Yes">Yes</option>
+                      <option value="No">No</option>
+                    </select>
+                  </div>
+                  <div ng-if="response.able_to_replicate === 'Yes'">
+                    <div class="row">
+                      <div layout="column">
+                        <input ng-model="response.atmos_determination"
+                               ng-init="response.atmos_determination = 'facility_issue'"
+                               type="hidden">
+                        <label for="facility_issue"><strong>Primary reason for this facility issue?</strong></label>
+                        <textarea ng-model="response.atmos_comments" name="facility_issue" id="facility_issue" cols="30"
+                                  rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div layout="column">
+                        <label for="actions_taken"><strong>What actions are being taken to resolve this issue?</strong></label>
+                        <textarea ng-model="response.actions_taken" name="actions_taken" id="actions_taken" cols="30"
+                                  rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div ng-if="response.able_to_replicate === 'No'">
+                    <div layout="column" class="row">
+                      <strong>Reason</strong>
+                      <select ng-model="response.atmos_determination" name="unable_to_replicate"
+                              ng-required="response.able_to_replicate === 'No'" style="">
+                        <option value="replaced">Facility was altered or replaced</option>
+                        <option value="locate_error">Locate Error</option>
+                      </select>
+
+                    </div>
+                    <div layout="column" class="row">
+                      <strong>Comments</strong>
+                      <textarea ng-model="response.atmos_comments" name="additional_comments" id="additional_comments"
+                                cols="30"
+                                rows="7"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div layout layout-align="end center" style="margin-top:1rem;">
+                  <!--html-->
+                  <md-button class="md-raised info" ng-click="propose(request)">SEND RESULTS</md-button>
+                </div>
               </div>
             </div>
           </div>

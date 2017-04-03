@@ -63,7 +63,10 @@
               return AuthService.getCurrent().$promise
             },
             meetingRequests: function (Meeting, userCtx) {
-              return Meeting.find({filter: {where: {email: userCtx.email}}}).$promise
+              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'pending'}}}).$promise
+            },
+            confirmedMeetings: function (Meeting, userCtx) {
+              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'confirmed'}}}).$promise
             },
             access: function (userCtx, $state) {
               if (userCtx.company === "HEATH") {

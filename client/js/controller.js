@@ -141,19 +141,66 @@
 
 
     })
-    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout, meetingRequests) {
+    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout, meetingRequests, confirmedMeetings, Meeting) {
       console.log('in this ctrl');
       $rootScope.title = $state.current.title;
       $scope.requests = meetingRequests;
+      $scope.meetings = confirmedMeetings;
 
       $scope.sendData = function (request) {
         sessionStorage.removeItem('data');
         sessionStorage.setItem('data', JSON.stringify(request));
-        persistObj();
+        getRequest();
+        $scope.proposed = {
+          selected_month: request.month,
+          selected_date: request.date.toString(),
+          selected_hour: request.hour.toString(),
+          selected_minute: "00"
+        }
       };
-      function persistObj() {
+      $scope.viewMeeting = function (meeting) {
+        sessionStorage.removeItem('meeting');
+        sessionStorage.setItem('meeting', JSON.stringify(meeting));
+        getMeeting();
+      };
+      $scope.confirmMeeting = function (request) {
+        Meeting
+          .updateAttributes({id: request.id, schedule_status: 'confirmed'})
+          .$promise
+          .then(function (meeting) {
+            $scope.request = null;
+            console.log(meeting);
+          })
+      };
+      var dates = [];
+      var hours = [];
+      var minutes = ['00', '15', '30', '45'];
+      for (var d = 1; d <= 31; d++) {
+        if (d != undefined) {
+          dates.push(d);
+        }
+      }
+      for (var h = 0; h <= 24; h++) {
+        if (h < 10) {
+          hours.push('0' + h);
+        } else if (h != undefined) {
+          hours.push(h);
+        }
+      }
+      $scope.months = moment.months();
+      $scope.dates = dates;
+      $scope.hours = hours;
+      $scope.minutes = minutes;
+
+      function getRequest() {
         var requestObj = sessionStorage.getItem('data');
         $scope.request = JSON.parse(requestObj);
+      }
+
+      function getMeeting() {
+        var requestObj = sessionStorage.getItem('meeting');
+        $scope.meeting = JSON.parse(requestObj);
+
       }
     })
     .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
