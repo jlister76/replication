@@ -24,7 +24,13 @@
       <div class="md-padding">
         <div layout layout-align="end end" style="margin-bottom:2rem;">
           <div layout layout-align="center">
-
+            <!---success messages--->
+            <div ng-if="meeting_confirmed" id="meeting_confirmed">
+              <span style="background: lightblue; padding:.5rem;margin:1rem;">Meeting confirmed. Email sent to {{ meeting.team_leader_email }}</span>
+            </div>
+            <div ng-if="meeting_proposed" id="new_proposal">
+              <span style="background: lightblue; padding:.5rem;margin:1rem;">Email sent to {{ request.team_leader_email }}</span>
+            </div>
             <span>
               <i ng-if="selectedIndex === 0" class="material-icons" style="color:#1e84f2;">schedule</i>
               <i ng-if="selectedIndex === 1" class="material-icons" style="color:#1e84f2;">edit</i>
@@ -277,6 +283,7 @@
       <div>
       </div>
     </div>
+    <!---show meeting details-->
     <div ng-if="selectedIndex === 0 && request" layout="column" class="view" style="padding:1rem;">
 
       <div>
@@ -328,7 +335,7 @@
               </div>
               <div>
                 <div layout layout-align="start center" style="margin-top:1rem;">
-                  <!--html-->
+
                   <md-button class="md-raised active" ng-click="confirmMeeting(request)">CONFIRM MEETING</md-button>
                 </div>
               </div>
@@ -337,7 +344,7 @@
               <div style="height:100%;">
                 <div layout="column">
                   <p><strong>Need to reschedule</strong></p>
-                  <p style="width:100%;margin:1rem;"><strong>When would you be able to meet?</strong></p>
+                  <p style="width:100%;margin:1rem;"><strong>When will you be able to meet?</strong></p>
 
                   <div layout>
 
@@ -370,7 +377,8 @@
               <div>
                 <div layout layout-align="end center" style="margin-top:1rem;">
                   <!--html-->
-                  <md-button class="md-raised info" ng-click="propose(request)">PROPOSE NEW SCHEDULE</md-button>
+                  <md-button class="md-raised info" ng-click="propose(request,proposed)">PROPOSE NEW SCHEDULE
+                  </md-button>
                 </div>
               </div>
             </div>

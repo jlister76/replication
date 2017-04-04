@@ -9,6 +9,7 @@
       <div>
         <form name="meetingRequestForm" ng-submit="sendMeetingRequest(request)">
           <input ng-model="request.team_leader" type="hidden">
+          <input ng-model="request.team_leader_email" type="hidden">
           <fieldset class="field_set">
             <legend>SELECT DPS</legend>
             <select ng-model="request.selected_dps" id="dps" required>
@@ -70,7 +71,8 @@
                 <label for="cross_street">Nearest Cross Street
                   <small ng-if="!request.street_number"><em style="color:indianred;">*</em></small>
                 </label>
-                <input ng-model="request.cross_street" type="text" id="cross_street" ng-required="!request.street_number">
+                <input ng-model="request.cross_street" ng-init="request.cross_street = null;" type="text"
+                       id="cross_street" ng-required="!request.street_number">
               </div>
               <div layout="column">
                 <label for="town">Town</label>

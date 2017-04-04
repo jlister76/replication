@@ -141,7 +141,7 @@
 
 
     })
-    .controller('AtmosCtrl', function ($scope, $rootScope, $state, $http, $timeout, meetingRequests, confirmedMeetings, Meeting) {
+    .controller('AtmosCtrl', function ($scope, userCtx, $rootScope, $state, $http, $timeout, meetingRequests, confirmedMeetings, Meeting, $anchorScroll, $location) {
       console.log('in this ctrl');
       $rootScope.title = $state.current.title;
       $scope.requests = meetingRequests;
@@ -164,13 +164,59 @@
         getMeeting();
       };
       $scope.confirmMeeting = function (request) {
+        $scope.meeting = request;
         Meeting
-          .updateAttributes({id: request.id, schedule_status: 'confirmed'})
+          .updateAttributes({id: request.id, schedule_status: 'confirmed', fname: userCtx.fname, lname: userCtx.lname})
           .$promise
           .then(function (meeting) {
-            $scope.request = null;
-            console.log(meeting);
+            console.log(meeting, request);
+            $http.post('api/Meetings/confirmed', {formData: meeting})
+              .then(function (meeting) {
+                console.log(meeting);
+                $scope.request = null;
+                $timeout(function () {
+                  $scope.meeting_confirmed = true;
+                  // set the location.hash to the id of
+                  // the element you wish to scroll to.
+                  $location.hash('meeting_confirmed');
+                  // call $anchorScroll()
+                  $anchorScroll();
+                  $state.reload();
+                }, 1000);
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              });
+          });
+        $scope.propose = function (request, proposed) {
+          Meeting.updateAttributes({
+            id: request.id, schedule_status: 'proposed',
+            month: proposed.selected_month, date: proposed.selected_date, hour: proposed.selected_hour,
+            minute: proposed.selected_minute
           })
+            .$promise
+            .then(function (proposed) {
+              $scope.request = null;
+
+              $timeout(function () {
+                $scope.meeting_proposed = true;
+                // set the location.hash to the id of
+                // the element you wish to scroll to.
+                $location.hash('meeting_proposed');
+                // call $anchorScroll()
+                $anchorScroll();
+                $state.reload();
+              }, 1000);
+
+            })
+            .catch(function (err) {
+              if (err) {
+                console.error(err)
+              }
+            })
+        }
       };
       var dates = [];
       var hours = [];
@@ -240,11 +286,13 @@
       //$scope variables
       $scope.request = {
         team_leader: userCtx.fname + " " + userCtx.lname,
+        team_leader_email: userCtx.email,
         selected_month: moment().format('MMMM'),
         selected_date: moment().format('D'),
         selected_hour: moment().format('HH'),
         selected_minute: '00'
       };
+
       $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
       $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
       $scope.suffixes = [
@@ -287,6 +335,8 @@
 
       $scope.sendMeetingRequest = function (request) {
         //check for single email adrs or list of email adrs and set property
+
+
         switch (typeof(request.selected_dps)) {
           case 'object':
             request.emailList = request.selected_dps;
@@ -317,6 +367,7 @@
           facility: request.facility,
           locate_technician: request.locate_technician,
           team_leader: request.team_leader,
+          team_leader_email: userCtx.email,
           schedule_status: 'pending'
         })
           .$promise
@@ -324,7 +375,7 @@
             console.log(meeting);
             $http.post('api/Meetings/sendrequest', {formData: request})
               .then(function (meeting) {
-
+                console.log(meeting);
                 $scope.showSuccessMsg = true;
 
                 $timeout(function () {
@@ -334,7 +385,7 @@
                   // call $anchorScroll()
                   $anchorScroll();
                 }, 1000);
-
+                //clear fields in form
                 $timeout(function () {
                   $scope.showSuccessMsg = false;
                   $scope.request = {
