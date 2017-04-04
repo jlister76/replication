@@ -144,6 +144,7 @@
     .controller('AtmosCtrl', function ($scope, userCtx, $rootScope, $state, $http, $timeout, meetingRequests, confirmedMeetings, Meeting, $anchorScroll, $location) {
       console.log('in this ctrl');
       $rootScope.title = $state.current.title;
+
       $scope.requests = meetingRequests;
       $scope.meetings = confirmedMeetings;
       console.log($scope.selectedIndex );
@@ -341,6 +342,85 @@
           case 'object':
             request.emailList = request.selected_dps;
             request.email = null;
+
+            for (var e = 0; e < request.emailList.length; e++){
+              console.log(request.emailList[e])
+
+              request.locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
+              request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
+              request.facility = request.facility_size + " " + request.facility_material;
+
+              //create instance
+              Meeting.create({
+                email: request.emailList[e],
+                emailList: null,
+                fname: null,
+                lname: null,
+                month: request.selected_month,
+                date: request.selected_date,
+                hour: request.selected_hour,
+                minute: request.selected_minute,
+                location_name: _.capitalize(request.location_name),
+                location: request.location,
+                cross_street: _.capitalize(request.cross_street),
+                town: request.town,
+                heath_report: request.heath_report,
+                facility: request.facility,
+                locate_technician: request.locate_technician,
+                team_leader: request.team_leader,
+                team_leader_email: userCtx.email,
+                schedule_status: 'pending'
+              })
+                .$promise
+                .then(function (meeting) {
+                  console.log(meeting);
+                  $http.post('api/Meetings/sendrequest', {formData: request})
+                    .then(function (meeting) {
+                      console.log(meeting);
+                      $scope.showSuccessMsg = true;
+
+                      $timeout(function () {
+                        // set the location.hash to the id of
+                        // the element you wish to scroll to.
+                        $location.hash('successMsg');
+                        // call $anchorScroll()
+                        $anchorScroll();
+                      }, 1000);
+                      //clear fields in form
+                      $timeout(function () {
+                        $scope.showSuccessMsg = false;
+                        $scope.request = {
+                          team_leader: userCtx.fname + " " + userCtx.lname,
+                          selected_month: moment().format('MMMM'),
+                          selected_date: moment().format('D'),
+                          selected_hour: moment().format('HH'),
+                          selected_minute: '00',
+                          selected_dps: null,
+                          location_name: null,
+                          location_street_number: null,
+                          location_street_name: null,
+                          location_street_suffix: null,
+                          cross_street: null,
+                          town: null,
+                          heath_report: null,
+                          facility_size: null,
+                          facility_material: null,
+                          locate_technician_fname: null,
+                          locate_technician_lname: null
+                        };
+                      }, 5000);
+                    })
+                    .catch(function (err) {
+                      if (err) {
+                        console.error(err)
+                      }
+                    });
+
+
+                })
+                .catch(function(err){if(err){console.error(err)}});
+
+            }
             break;
           case 'string':
             request.email = request.selected_dps;
@@ -351,6 +431,8 @@
         request.locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
         request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
         request.facility = request.facility_size + " " + request.facility_material;
+
+
         //create instance
         Meeting.create({
           email: request.email,

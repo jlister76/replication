@@ -33,7 +33,7 @@
             </div>
             <span>
               <i ng-if="selectedIndex === 0" class="material-icons" style="color:#1e84f2;">schedule</i>
-              <i ng-if="selectedIndex === 1" class="material-icons" style="color:#1e84f2;">edit</i>
+              <i ng-if="selectedIndex === 1" class="material-icons" style="color:#1e84f2;">assessment</i>
             </span>
             <span ng-if="selectedIndex === 0">schedule meeting</span>
             <span ng-if="selectedIndex === 1">enter replication result</span>
@@ -92,7 +92,7 @@
                   <td>{{ meeting.town }}</td>
                   <td>
                     <md-button ng-click="showAll = !showAll" layout layout-align="center center">
-                      <i class="material-icons" style="color:#1e84f2;" ng-click="viewMeeting(meeting)">edit</i>
+                      <i class="material-icons" style="color:#1e84f2;" ng-click="viewMeeting(meeting)">assessment</i>
                     </md-button>
                   </td>
                 </tr>
