@@ -7,7 +7,8 @@
       'lbServices',
       'ngMaterial',
       'ngMessages',
-      'ngLodash'
+      'ngLodash',
+      'moment-picker'
     ])
     .config(function ($httpProvider) {
       // Inside app config block

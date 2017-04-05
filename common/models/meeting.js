@@ -1,28 +1,21 @@
-/* eslint-disable camelcase,comma-dangle,space-in-parens */
+/* eslint-disable camelcase,comma-dangle,space-in-parens,max-len */
 'use strict';
 
 var http = require('http');
 var loopback = require('loopback');
 var app = require('../../server/server');
 var path = require('path');
+var moment = require('moment');
 
 module.exports = function (Meeting) {
   Meeting.sendMeetingRequest = function (request, cb) {
-    console.log(request);
+    console.log('sending meeting ...', moment(request.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'));
     var d = request;
-    var emailTo;
-
-    if (d.emailList !== null) {
-      emailTo = d.emailList;
-    } else if (d.emailList === null) {
-      emailTo = d.email;
-    }
-    var proposedSchedule = d.selected_month + ' ' + d.selected_date +
-      ' @ ' + d.selected_hour + ':' + d.selected_minute;
+    var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: d.id,
-      meeting_date: proposedSchedule,
+      meeting_date: moment(request.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
       team_leader: d.team_leader,
       location_name: d.location_name,
       location: d.location,
@@ -50,21 +43,12 @@ module.exports = function (Meeting) {
   Meeting.confirm = function (meeting, cb) {
     console.log('Inside confirmed', meeting);
     var m = meeting;
-    var emailTo;
-
-    if (m.emailList !== null) {
-      emailTo = m.emailList;
-    } else if (m.emailList === null) {
-      emailTo = m.email;
-    }
-    var schedule = m.month + ' ' + m.date +
-      ' @ ' + m.hour + ':' + m.minute;
-    console.log(schedule);
+    var emailTo = m.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: m.id,
       dps: m.fname + m.lname,
-      meeting_date: schedule,
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
       team_leader: m.team_leader,
       location_name: m.location_name,
       location: m.location,
@@ -91,7 +75,40 @@ module.exports = function (Meeting) {
       console.log('email sent!');
     });
   };
-  Meeting.propose = function (request, cb) {
+  Meeting.propose = function (meeting, cb) {
+    console.log('Inside propose', meeting);
+    var m = meeting;
+    var emailTo = m.email;
+    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
+    var messageVars = {
+      id: m.id,
+      dps: m.fname + m.lname,
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      team_leader: m.team_leader,
+      location_name: m.location_name,
+      location: m.location,
+      cross_street: m.cross_street,
+      town: m.town,
+      heath_report: m.heath_report,
+      facility: m.facility,
+      locate_technician: m.locate_technician
+    };
+    var renderer = loopback
+      .template(path
+        .resolve(__dirname, '../../server/views/email-meeting-proposed.ejs'));
+    var html_body = renderer(messageVars);
+    console.log('Before send');
+    Meeting.app.models.Email.send({
+      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      from: 'j.lister@heathus.com',
+      subject: 'Proposed Meeting Request from  ' + m.email,
+      html: html_body
+    }, function (err, mail) {
+      if (err) {
+        console.error(err);
+      }
+      console.log('email sent!');
+    });
   };
 
   Meeting.confirmed = function (msg, next) {
@@ -103,14 +120,14 @@ module.exports = function (Meeting) {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/confirmed', verb: 'post'}
   });
-  Meeting.propose = function (msg, next) {
+  Meeting.proposed = function (msg, next) {
     console.log('sending meeting proposal', msg);
     Meeting.propose(msg);
     next();
   };
-  Meeting.remoteMethod('propose', {
+  Meeting.remoteMethod('proposed', {
     accepts: {arg: 'formData', type: 'Object'},
-    http: {path: '/propose', verb: 'post'}
+    http: {path: '/proposed', verb: 'post'}
   });
   Meeting.sendRequest = function (msg, next) {
     console.log('Sending request', msg);

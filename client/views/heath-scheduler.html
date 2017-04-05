@@ -18,20 +18,19 @@
           </fieldset>
           <fieldset class="field_set">
             <legend>DATE & TIME</legend>
-            <div layout>
-              <select ng-model="request.selected_month" required>
-                <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
-              </select>
-              <select ng-model="request.selected_date" required>
-                <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
-              </select>
-              <span> @ </span>
-              <select ng-model="request.selected_hour" required>
-                <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
-              </select>
-              <select ng-model="request.selected_minute" required>
-                <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
-              </select>
+            <div layout style="width:100%;">
+              <input class="form-control"
+                     placeholder="Select a date..."
+                     moment-picker="request.stringDate"
+                     locale="en"
+                     format="lll"
+                     min-view="month"
+                     autoclose="true"
+                     today="true"
+                     keyboard="true"
+                     ng-model="request.momentDate"
+                     ng-model-options="{ updateOn: 'blur' }"
+                     width="100%"/>
             </div>
           </fieldset>
           <fieldset class="field_set">

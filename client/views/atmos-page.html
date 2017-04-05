@@ -14,9 +14,7 @@
     font-family: 'opnes sans', sans-serif;
   }
 
-  tbody tr:nth-child(odd) {
-    background-color: #eaeaea;
-  }
+
 </style>
 <div layout layout-align="center">
   <div layout="column">
@@ -31,39 +29,51 @@
             <div ng-if="meeting_proposed" id="new_proposal">
               <span style="background: lightblue; padding:.5rem;margin:1rem;">Email sent to {{ request.team_leader_email }}</span>
             </div>
-            <span>
-              <i ng-if="selectedIndex === 0" class="material-icons" style="color:#1e84f2;">schedule</i>
-              <i ng-if="selectedIndex === 1" class="material-icons" style="color:#1e84f2;">assessment</i>
-            </span>
-            <span ng-if="selectedIndex === 0">schedule meeting</span>
-            <span ng-if="selectedIndex === 1">enter replication result</span>
+            <div layout>
+              <div layout layout-align="start center">
+                <div
+                  style="display:inline-block;margin:.5rem;height:12px;width:12px;border-radius:50px;background-color: #2db82b;"></div>
+                <span class="md-caption">new</span>
+              </div>
+              <div layout layout-align="start center">
+                <div
+                  style="display:inline-block;margin:.5rem;height:12px;width:12px;border-radius:50px;background-color: #006cc7;"></div>
+                <span class="md-caption">proposed</span>
+              </div>
+            </div>
           </div>
         </div>
+
         <md-content>
           <md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
             <md-tab label="Requested">
               <table cellpadding="2" cellspacing="0" border="0" width="900">
                 <thead>
+                <th>Status</th>
                 <th>Date / Time</th>
                 <th>Team Leader</th>
                 <th>Place</th>
                 <th>Address</th>
                 <th>Town</th>
-                <th>Schedule</th>
+                <th>Action</th>
                 </thead>
                 <tbody>
-                <tr ng-repeat="request in requests">
-                  <td>{{ request.month}} {{ request.date }}th @ {{ request.hour }}<span ng-if="request.hour < 1"
-                                                                                        style="margin-right:0;">0</span>:<span
-                    ng-if="request.minute > 9">{{ request.minute }}</span><span ng-if="request.minute < 10">00</span>
+                <tr ng-repeat="request in requests | orderBy: 'month'" class="table_body">
+                  <td>
+                    <div
+                      ng-class="{new:request.schedule_status==='pending',proposed:request.schedule_status==='proposed'}"></div>
+                  </td>
+                  <td>{{ request.meeting_datetime | date: 'medium'}}
                   </td>
                   <td>{{ request.team_leader }}</td>
                   <td>{{ request.location_name }}</td>
                   <td>{{ request.location }}</td>
                   <td>{{ request.town }}</td>
                   <td>
-                    <md-button ng-click="sendData(request)" layout layout-align="center center">
-                      <i class="material-icons" style="color:#1e84f2;">schedule</i>
+                    <md-button class="md-raised md-warn"
+                               style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
+                               ng-click="sendData(request)" layout layout-align="center center">
+                      view
                     </md-button>
                   </td>
                 </tr>
@@ -82,9 +92,8 @@
                 </thead>
                 <tbody>
                 <tr ng-repeat="meeting in meetings">
-                  <td>{{ meeting.month}} {{ meeting.date }}th @ {{ meeting.hour }}<span ng-if="meeting.hour < 1"
-                                                                                        style="margin-right:0;">0</span>:<span
-                    ng-if="meeting.minute > 9">{{ meeting.minute }}</span><span ng-if="meeting.minute < 10">00</span>
+                  <td>{{reqest.meeting_datetime || date }} style="margin-right:0;">0</span>:<span
+
                   </td>
                   <td>{{ meeting.team_leader }}</td>
                   <td>{{ meeting.location_name }}</td>
@@ -284,7 +293,7 @@
       </div>
     </div>
     <!---show meeting details-->
-    <div ng-if="selectedIndex === 0 && request" layout="column" class="view" style="padding:1rem;">
+    <div ng-if="selectedIndex === 0 && request" layout="column" class="view">
 
       <div>
         <fieldset class="field_set">
@@ -294,13 +303,7 @@
               <div>
                 <div layout>
                   <span>Date: </span>
-                  <span>{{ request.month }} {{ request.date }}th</span>
-                </div>
-                <div layout>
-                  <span>Time: </span>
-                  <span><span ng-if="request.hour < 1" style="margin-right:0;">0</span>{{ request.hour }}:<span
-                    ng-if="request.minute > 9" style="margin-left:0;">{{ request.minute }}</span><span
-                    ng-if="request.minute < 10" style="margin-left:0;">00</span></span>
+                  <span>{{request.meeting_datetime }}</span>
                 </div>
                 <div layout>
                   <span>Team Leader: </span>
@@ -340,42 +343,55 @@
                 </div>
               </div>
             </div>
-            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;">
+            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
               <div style="height:100%;">
-                <div layout="column">
+                <div layout="column" style="width:100%;height:100%;">
                   <p><strong>Need to reschedule</strong></p>
-                  <p style="width:100%;margin:1rem;"><strong>When will you be able to meet?</strong></p>
+                  <p style="width:100%;"><strong>When will you be able to meet?</strong></p>
 
-                  <div layout>
-
-                    <span>Month: </span>
-                    <select ng-model="proposed.selected_month" ng-init="request.selected_month = proposed.month"
-                            required>
-                      <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
-                    </select>
+                  <div layout style="width:100%;">
+                    <input class="form-control"
+                           placeholder="Select a date..."
+                           moment-picker="input.stringDate"
+                           locale="en"
+                           format="lll"
+                           min-view="month"
+                           autoclose="true"
+                           today="true"
+                           keyboard="true"
+                           ng-model="input.momentDate"
+                           ng-model-options="{ updateOn: 'blur' }"
+                           width="100%"/>
                   </div>
-                  <div layout>
-                    <span>Date: </span>
-                    <select ng-model="proposed.selected_date" required>
-                      <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
-                    </select>
-                  </div>
-                  <div layout>
-                    <span>Hour: </span>
-                    <select ng-model="proposed.selected_hour" required>
-                      <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
-                    </select>
-                  </div>
-                  <div layout>
-                    <span>Minute: </span>
-                    <select ng-model="proposed.selected_minute" required>
-                      <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
-                    </select>
-                  </div>
+                  {{input.momentDate}}
+                  <!-- <span>Month: </span>
+                   <select ng-model="proposed.selected_month" ng-init="request.selected_month = proposed.month"
+                           required>
+                     <option ng-repeat="month in months" value="{{ month }}">{{ month }}</option>
+                   </select>
+                 </div>
+                 <div layout>
+                   <span>Date: </span>
+                   <select ng-model="proposed.selected_date" required>
+                     <option ng-repeat="date in dates" value="{{ date }}">{{ date }}</option>
+                   </select>
+                 </div>
+                 <div layout>
+                   <span>Hour: </span>
+                   <select ng-model="proposed.selected_hour" required>
+                     <option ng-repeat="hour in hours" value="{{ hour }}">{{ hour }}</option>
+                   </select>
+                 </div>
+                 <div layout>
+                   <span>Minute: </span>
+                   <select ng-model="proposed.selected_minute" required>
+                     <option ng-repeat="minute in minutes" value="{{ minute }}">{{ minute }}</option>
+                   </select>
+                 </div>-->
                 </div>
               </div>
               <div>
-                <div layout layout-align="end center" style="margin-top:1rem;">
+                <div layout layout-align="start center" style="margin-top:1rem;">
                   <!--html-->
                   <md-button class="md-raised info" ng-click="propose(request,proposed)">PROPOSE NEW SCHEDULE
                   </md-button>

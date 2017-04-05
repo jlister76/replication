@@ -71,6 +71,10 @@ fieldset {
   border: solid 2px rgb(184, 184, 184);
 
 }
+
+.table_body:nth-child(odd) {
+  background-color: #eaeaea;
+}
 textarea {
   line-height: 1.2rem;
 }
@@ -147,6 +151,22 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
   }
 
   /* show it on small screens */
+}
+
+.new {
+  margin: .5rem;
+  height: 12px;
+  width: 12px;
+  border-radius: 50px;
+  background-color: #2db82b;
+}
+
+.proposed {
+  margin: .5rem;
+  height: 12px;
+  width: 12px;
+  border-radius: 50px;
+  background-color: #006cc7;
 }
 
 

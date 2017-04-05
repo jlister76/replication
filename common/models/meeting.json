@@ -9,11 +9,6 @@
     "email": {
       "type": "string"
     },
-    "emailList": {
-      "type": [
-        "string"
-      ]
-    },
     "fname": {
       "type": "string"
     },
@@ -21,20 +16,8 @@
       "type": "string"
 
     },
-    "month": {
-      "type": "string",
-      "required": true
-    },
-    "date": {
-      "type": "number",
-      "required": true
-    },
-    "hour": {
-      "type": "number",
-      "required": true
-    },
-    "minute": {
-      "type": "number",
+    "meeting_datetime": {
+      "type": "date",
       "required": true
     },
     "location_name": {
