@@ -7,8 +7,8 @@ var app = require('../../server/server');
 var path = require('path');
 var moment = require('moment');
 
-module.exports = function (Meeting) {
-  Meeting.sendMeetingRequest = function (request, cb) {
+module.exports = function(Meeting) {
+  Meeting.sendMeetingRequest = function(request, cb) {
     console.log('sending meeting ...', moment(request.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'));
     var d = request;
     var emailTo = d.email;
@@ -33,14 +33,14 @@ module.exports = function (Meeting) {
       from: 'j.lister@heathus.com',
       subject: 'Replication Meeting Request from  ' + d.team_leader,
       html: html_body
-    }, function (err, mail) {
+    }, function(err, mail) {
       if (err) {
         console.error(err);
       }
       console.log('email sent!');
     });
   };
-  Meeting.confirm = function (meeting, cb) {
+  Meeting.confirm = function(meeting, cb) {
     console.log('Inside confirmed', meeting);
     var m = meeting;
     var emailTo = m.email;
@@ -68,17 +68,17 @@ module.exports = function (Meeting) {
       from: 'j.lister@heathus.com',
       subject: 'Replication Meeting Request from  ' + m.email,
       html: html_body
-    }, function (err, mail) {
+    }, function(err, mail) {
       if (err) {
         console.error(err);
       }
       console.log('email sent!');
     });
   };
-  Meeting.propose = function (meeting, cb) {
+  Meeting.propose = function(meeting, cb) {
     console.log('Inside propose', meeting);
     var m = meeting;
-    var emailTo = m.email;
+    var emailTo = m.team_leader_email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: m.id,
@@ -101,9 +101,9 @@ module.exports = function (Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Proposed Meeting Request from  ' + m.email,
+      subject: 'Proposed Meeting Request from  ' + m.fname + ' ' + m.lname,
       html: html_body
-    }, function (err, mail) {
+    }, function(err, mail) {
       if (err) {
         console.error(err);
       }
@@ -111,7 +111,7 @@ module.exports = function (Meeting) {
     });
   };
 
-  Meeting.confirmed = function (msg, next) {
+  Meeting.confirmed = function(msg, next) {
     console.log('Meeting confirmed', msg);
     Meeting.confirm(msg);
     next();
@@ -120,7 +120,7 @@ module.exports = function (Meeting) {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/confirmed', verb: 'post'}
   });
-  Meeting.proposed = function (msg, next) {
+  Meeting.proposed = function(msg, next) {
     console.log('sending meeting proposal', msg);
     Meeting.propose(msg);
     next();
@@ -129,7 +129,7 @@ module.exports = function (Meeting) {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/proposed', verb: 'post'}
   });
-  Meeting.sendRequest = function (msg, next) {
+  Meeting.sendRequest = function(msg, next) {
     console.log('Sending request', msg);
     Meeting.sendMeetingRequest(msg);
     next();

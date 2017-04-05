@@ -9,13 +9,11 @@
   }
 
   td {
-    text-align: center;
+    text-align: left;
+    padding: .5rem;
     font-family: 'opnes sans', sans-serif;
   }
 
-  tbody tr:nth-child(odd) {
-    background-color: #eaeaea;
-  }
 </style>
 <div layout layout-align="center">
   <div layout="column">
@@ -28,33 +26,68 @@
             <span>icon to view replication</span>
           </div>
         </div>
-        <table cellpadding="2" cellspacing="0" border="0" width="900">
-          <thead>
-          <th>Replication Date</th>
-          <th>ATMOS REP.</th>
-          <th>Address</th>
-          <th>Determination</th>
-          <th>View</th>
-          </thead>
-          <tbody>
-          <tr ng-repeat="replication in replications" ng-init="isFormOpen = false">
-            <td>{{ replication.meeting_date | date:'MM/dd/yyyy'}}</td>
-            <td>{{ replication.atmos_employee }}</td>
-            <td>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }}</td>
-            <td>{{ replication.atmos_determination }}</td>
-            <td>
-              <md-button ng-click="sendData(replication)" layout layout-align="center center">
-                <i class="material-icons" style="color:#1e84f2;">pageview</i>
-              </md-button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
+          <md-content>
+            <md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
+              <md-tab label="requested">
+                <md-tab-body>
+                  <div layout layout-align="end center" class="md-padding" >
+                    <div layout layout-align="start center">
+                      <div class="new"></div>
+                      <span class="md-caption">new</span>
+                    </div>
+                    <div layout layout-align="start center">
+                      <div class="proposed"></div>
+                      <span class="md-caption">proposed</span>
+                    </div>
+                  </div>
+                  <table cellpadding="2" cellspacing="0" border="0" width="900">
+                    <thead>
+                    <th>Status</th>
+                    <th>Date / Time</th>
+                    <th>Team Leader</th>
+                    <th>Place</th>
+                    <th>Address</th>
+                    <th>Town</th>
+                    <th>Action</th>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
+                      <td>
+                        <div ng-class="{new:request.schedule_status==='pending',proposed:request.schedule_status==='proposed'}"></div>
+                      </td>
+                      <td>{{ request.meeting_datetime | date: 'medium'}}
+                      </td>
+                      <td>{{ request.team_leader }}</td>
+                      <td>{{ request.location_name }}</td>
+                      <td>{{ request.location }}</td>
+                      <td>{{ request.town }}</td>
+                      <td>
+                        <md-button class="md-raised md-warn"
+                                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
+                                   ng-click="viewRequest(request)" layout layout-align="center center">
+                          view
+                        </md-button>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </md-tab-body>
+              </md-tab>
+              <md-tab label="scheduled" ui-sref="authenticated.page.heath.completed">
+                <md-tab-body>
+                  <div ui-view></div>
+                </md-tab-body>
+              </md-tab>
+              <md-tab label="completed" ui-sref="authenticated.page.heath.completed">
+                <div ui-view></div>
+              </md-tab>
+            </md-tabs>
+          </md-content>
       </div>
       <div>
       </div>
     </div>
-    <div ng-if="replication" ng-init="showForm = false" layout="column" class="view" style="padding:1rem;">
+    <div ng-if=" selectedIndex === 3 && replication" ng-init="showForm = false" layout="column" class="view" style="padding:1rem;">
 
       <fieldset class="field_set">
         <legend>Replication</legend>
@@ -123,6 +156,89 @@
             </div>
           </fieldset>
         </form>
+      </div>
+    </div>
+    <div ng-if="selectedIndex === 0 && request" layout="column" class="view">
+      <div>
+        <fieldset class="field_set">
+          <legend>Meeting Details</legend>
+          <div layout>
+            <div layout="column">
+              <div>
+                <div layout>
+                  <span>Date: </span>
+                  <span>{{request.meeting_datetime | date:'medium' }}</span>
+                </div>
+                <div layout>
+                  <span>Team Leader: </span>
+                  <span>{{ request.team_leader }}</span>
+                </div>
+                <div layout>
+                  <span>Locate Technician: </span>
+                  <span>{{ request.locate_technician }}</span>
+                </div>
+                <div layout>
+                  <span>Heath Damage Report: </span>
+                  <span>{{ request.heath_report }}</span>
+                </div>
+                <div layout>
+                  <span>Facility: </span>
+                  <span>{{ request.facility }}</span>
+                </div>
+                <div ng-if="request.location_name" layout>
+                  <span>Meeting Location: </span>
+                  <span>{{ request.location_name }}</span>
+                </div>
+                <div layout>
+                  <span>Address: </span>
+                  <span>{{ request.location }}
+                <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
+                </span>
+                </div>
+                <div layout>
+                  <span>Town: </span>
+                  <span>{{ request.town }}</span>
+                </div>
+              </div>
+              <div>
+                <div layout layout-align="start center" style="margin-top:1rem;">
+
+                  <md-button class="md-raised active" ng-click="confirmMeeting(request)">CONFIRM MEETING</md-button>
+                </div>
+              </div>
+            </div>
+            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
+              <div style="height:100%;">
+                <div layout="column" style="width:100%;height:100%;">
+                  <p><strong>Need to reschedule</strong></p>
+                  <p style="width:100%;"><strong>When will you be able to meet?</strong></p>
+
+                  <div layout style="width:100%;">
+                    <input class="form-control"
+                           placeholder="Select a date..."
+                           moment-picker="request.stringDate"
+                           locale="en"
+                           format="lll"
+                           min-view="month"
+                           autoclose="true"
+                           today="true"
+                           keyboard="true"
+                           ng-model="request.momentDate"
+                           ng-model-options="{ updateOn: 'blur' }"
+                           width="100%"/>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div layout layout-align="start center" style="margin-top:1rem;">
+                  <!--html-->
+                  <md-button class="md-raised info" ng-click="propose(request,proposed)">PROPOSE NEW SCHEDULE
+                  </md-button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
       </div>
     </div>
   </div>

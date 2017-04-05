@@ -97,13 +97,35 @@
         $location.path('/');
       }
     })
-    .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state) {
+    .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state, requestedMeetings,proposedMeetings,scheduledMeetings) {
       //set pagetitle
       $rootScope.title = $state.current.title;
+      console.log($scope.selectedIndex);
+        var requests = [];
+      for (var x = 0; x < proposedMeetings.length; x++) {
+        requests.push(proposedMeetings[x]);
+      }
+      for (var i = 0; i < requestedMeetings.length; i++) {
+        requests.push(requestedMeetings[i]);
+      }
 
+        $scope.requests = requests;
+
+      $scope.viewRequest = function (request) {
+        console.log('firing');
+        sessionStorage.removeItem('data');
+        sessionStorage.setItem('data', JSON.stringify(request));
+        getRequest();
+      };
+      function getRequest() {
+        var requestObj = sessionStorage.getItem('data');
+        $scope.request = JSON.parse(requestObj);
+      }
+        console.log($scope.requests);
+        $scope.meetings = scheduledMeetings;
         $scope.replications = replications;
         $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
-        console.log($scope.replications.meeting_date);
+
         persistObj();
         $scope.tl = {};
 
@@ -154,17 +176,11 @@
       }
       $scope.requests = _.uniq(requests);
       $scope.meetings = confirmedMeetings;
-      console.log($scope.selectedIndex );
+
       $scope.sendData = function (request) {
         sessionStorage.removeItem('data');
         sessionStorage.setItem('data', JSON.stringify(request));
         getRequest();
-        $scope.proposed = {
-          selected_month: request.month,
-          selected_date: request.date.toString(),
-          selected_hour: request.hour.toString(),
-          selected_minute: "00"
-        }
       };
       $scope.viewMeeting = function (meeting) {
         sessionStorage.removeItem('meeting');
@@ -199,26 +215,38 @@
               });
           });
       };
-      $scope.propose = function (request, proposed) {
+      $scope.propose = function (request) {
+        console.log(request.team_leader_email);
+       $scope.team_leader_email = request.team_leader_email;
         Meeting.updateAttributes({
-          id: request.id, schedule_status: 'proposed',
-          month: proposed.selected_month, date: proposed.selected_date, hour: proposed.selected_hour,
-          minute: proposed.selected_minute, fname: userCtx.fname, lname: userCtx.lname
+          id: request.id, schedule_status: 'proposed',meeting_datetime:request.momentDate,fname:userCtx.fname,lname:userCtx.lname
         })
           .$promise
-          .then(function (proposed) {
+          .then(function (proposed_schedule) {
             $scope.request = null;
-            $http.post('api/Meetings/proposed', {formData: proposed})
+            $http.post('api/Meetings/proposed', {formData: proposed_schedule})
               .then(function () {
-                $state.reload();
+                var oneMonth = moment().subtract('month',1);
+                Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'pending', meeting_datetime: {gte:oneMonth } }}}).$promise
+                  .then(function(meetings){
+                    $scope.requests = meetings;
+                    Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'proposed', meeting_datetime: {gte:oneMonth } }}}).$promise
+                      .then(function(meetings){
+                        $scope.requests = meetings;
+                      })
+                  });
+                $scope.meeting_proposed = true;
+                //$state.reload();
                 $timeout(function () {
-                  $scope.meeting_proposed = true;
+
                   // set the location.hash to the id of
                   // the element you wish to scroll to.
                   $location.hash('meeting_proposed');
                   // call $anchorScroll()
                   $anchorScroll();
-                }, 1000);
+                  $scope.meeting_proposed = false;
+                }, 5000);
+
 
               })
               .catch(function (err) {

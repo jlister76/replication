@@ -26,7 +26,7 @@
             title: {
               templateUrl: 'views/page-title.html'
             },
-            '': {
+            'page_content': {
               template: '<div ui-view></div>'
 
             }
@@ -35,14 +35,29 @@
         .state('authenticated.page.heath', {
           url: '/my-replications',
           resolve: {
-            userCtx: function (AuthService) {
+            "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
+            },
+            "requestedMeetings": function(Meeting, userCtx){
+              var oneMonth = moment().subtract(1,'months');
+              return Meeting.find({filter: {where: {team_leader_email: userCtx.email, schedule_status: 'pending', meeting_datetime: {gte: oneMonth}}}}).$promise
+            },
+            "proposedMeetings": function(Meeting, userCtx){
+              var oneMonth = moment().subtract(1,'months');
+              return Meeting.find({filter: {where: {team_leader_email: userCtx.email, schedule_status: 'proposed', meeting_datetime: {gte: oneMonth}}}}).$promise
+            },
+            "scheduledMeetings": function(Meeting, userCtx){
+              var oneMonth = moment().subtract(1,'months');
+              return Meeting.find({filter: {where: {team_leader_email: userCtx.email, schedule_status: 'confirmed', meeting_datetime: {gte: oneMonth}}}}).$promise
+            },
+            "replications": function (Replication, userCtx) {
+              return Replication.find({filter: {where: {team_leader_email: userCtx.email}}}).$promise
+            },
+            "confirmedMeetings": function (Meeting, userCtx) {
+
 
             },
-            replications: function (Replication, userCtx) {
-              return Replication.find({filter: {where: {team_leader_email: userCtx.email}}})
-            },
-            access: function (userCtx, $state) {
+            "access": function (userCtx, $state) {
               if (userCtx.company === "ATMOS") {
                 console.error('403 Forbidden Access');
                 $state.go('app.atmos');
@@ -54,39 +69,61 @@
           title: 'Replications',
           icon: ''
         })
+        .state('scheduled', {
+          templateUrl: 'views/atmos-scheduled-view.html',
+          controller: 'HeathCtrl'
+        })
+        .state('authenticated.page.heath.completed', {
+          templateUrl: 'views/heath-completed-view.html',
+          controller: 'HeathCtrl'
+        })
         .state('authenticated.page.atmos', {
           url: '/schedules',
-          controller: 'AtmosCtrl',
           title: 'Schedule Manager',
+          templateUrl: 'views/atmos-page.html',
+          controller: 'AtmosCtrl',
           resolve: {
-            userCtx: function (AuthService) {
+            "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
             },
-            meetingRequests: function (Meeting, userCtx) {
+            "meetingRequests": function (Meeting, userCtx) {
+              var oneMonth = moment().subtract(1,'months');
+              console.log(oneMonth);
               return Meeting.find({
                 filter: {
                   where: {
                     email: userCtx.email,
-                    schedule_status: 'pending' || 'proposed'
+                    schedule_status: 'pending',
+                    meeting_datetime: {gte:oneMonth}
                   }
                 }
               }).$promise
             },
-            proposedRequests: function (Meeting, userCtx) {
-              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'proposed'}}}).$promise
+            "proposedRequests": function (Meeting, userCtx) {
+              var oneMonth = moment().subtract(1,'months');
+              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'proposed', meeting_datetime:{gte: oneMonth}}}}).$promise
             },
-            confirmedMeetings: function (Meeting, userCtx) {
-              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'confirmed'}}}).$promise
+            "confirmedMeetings": function (Meeting, userCtx) {
+              var oneMonth = moment().subtract(1,'months');
+              return Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'confirmed', meeting_datetime: {gte: oneMonth}}}}).$promise
             },
-            access: function (userCtx, $state) {
+            "access": function (userCtx, $state) {
               if (userCtx.company === "HEATH") {
                 console.error('403 Forbidden Access');
                 $state.go('app.heath');
               }
             }
-          },
-          templateUrl: 'views/atmos-page.html'
-
+          }
+        })
+        .state('authenticated.page.atmos.scheduled', {
+          templateUrl: 'views/atmos-scheduled-view.html',
+          controller: 'AtmosCtrl',
+          title: 'Schedule Manager'
+        })
+        .state('authenticated.page.atmos.unscheduled', {
+          templateUrl: 'views/replication-form.html',
+          controller: 'AtmosCtrl',
+          title: 'Schedule Manager'
         })
         .state('authenticated.page.heath-meeting', {
           url: '/heath/scheduler',

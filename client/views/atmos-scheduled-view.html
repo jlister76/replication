@@ -1,0 +1,130 @@
+<table cellpadding="2" cellspacing="0" border="0" width="900">
+  <thead>
+  <th>Date / Time</th>
+  <th>Team Leader</th>
+  <th>Place</th>
+  <th>Address</th>
+  <th>Town</th>
+  <th>View</th>
+  </thead>
+  <tbody>
+  <tr ng-repeat="meeting in meetings">
+    <td>{{meeting.meeting_datetime | date:'medium' }}</td>
+    <td>{{ meeting.team_leader }}</td>
+    <td>{{ meeting.location_name }}</td>
+    <td>{{ meeting.location }}</td>
+    <td>{{ meeting.town }}</td>
+    <td>
+      <md-button ng-click="showAll = !showAll" layout layout-align="center center">
+        <i class="material-icons" style="color:#1e84f2;" ng-click="viewMeeting(meeting)">assessment</i>
+      </md-button>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
+<div ng-if="selectedIndex === 1 && meeting" layout="column" class="view" style="padding:1rem;">
+  <div>
+    <fieldset class="field_set">
+      <legend>Replication Results</legend>
+      <div layout>
+        <div layout="column">
+          <div>
+            <div layout>
+              <span>Date: </span>
+              <span>{{ request.meeting_datetime  | date:'medium'}}</span>
+            </div>
+            <div layout>
+              <span>Team Leader: </span>
+              <span>{{ meeting.team_leader }}</span>
+            </div>
+            <div layout>
+              <span>Locate Technician: </span>
+              <span>{{ meeting.locate_technician }}</span>
+            </div>
+            <div layout>
+              <span>Heath Damage Report: </span>
+              <span>{{ meeting.heath_report }}</span>
+            </div>
+            <div layout>
+              <span>Facility: </span>
+              <span>{{ meeting.facility }}</span>
+            </div>
+            <div ng-if="meeting.location_name" layout>
+              <span>Meeting Location: </span>
+              <span>{{ meeting.location_name }}</span>
+            </div>
+            <div layout>
+              <span>Address: </span>
+              <span>{{ meeting.location }}
+                <span ng-if="meeting.cross_street">@ {{ meeting.cross_street }}</span>
+                </span>
+            </div>
+            <div layout>
+              <span>Town: </span>
+              <span>{{ meeting.town }}</span>
+            </div>
+          </div>
+        </div>
+        <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;">
+          <div style="height:100%;">
+            <div layout="column">
+
+              <div layout="column">
+                <span style="width:100%;"><strong>Were the locate marks able to be replicated?</strong></span>
+                <select ng-model="response.able_to_replicate" name="able_to_replicate" required
+                        style="margin:1rem;">
+                  <option value="Yes">Yes</option>
+                  <option value="No">No</option>
+                </select>
+              </div>
+              <div ng-if="response.able_to_replicate === 'Yes'">
+                <div class="row">
+                  <div layout="column">
+                    <input ng-model="response.atmos_determination"
+                           ng-init="response.atmos_determination = 'facility_issue'"
+                           type="hidden">
+                    <label for="unscheduled_facility_issue"><strong>Primary reason for this facility issue?</strong></label>
+                    <textarea ng-model="response.atmos_comments" name="facility_issue" id="unscheduled_facility_issue" cols="30"
+                              rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
+                  </div>
+                </div>
+                <div class="row">
+                  <div layout="column">
+                    <label for="actions_taken"><strong>What actions are being taken to resolve this issue?</strong></label>
+                    <textarea ng-model="response.actions_taken" name="actions_taken" id="actions_taken" cols="30"
+                              rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
+                  </div>
+                </div>
+
+              </div>
+              <div ng-if="response.able_to_replicate === 'No'">
+                <div layout="column" class="row">
+                  <strong>Reason</strong>
+                  <select ng-model="response.atmos_determination" name="unable_to_replicate"
+                          ng-required="response.able_to_replicate === 'No'" style="">
+                    <option value="replaced">Facility was altered or replaced</option>
+                    <option value="locate_error">Locate Error</option>
+                  </select>
+
+                </div>
+                <div layout="column" class="row">
+                  <strong>Comments</strong>
+                  <textarea ng-model="response.atmos_comments" name="additional_comments" id="unscheduled_additional_comments"
+                            cols="30"
+                            rows="7"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div layout layout-align="end center" style="margin-top:1rem;">
+              <!--html-->
+              <md-button class="md-raised info" ng-click="propose(request)">SEND RESULTS</md-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+</div>

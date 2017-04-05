@@ -1,0 +1,25 @@
+<table cellpadding="2" cellspacing="0" border="0" width="900">
+  <thead>
+  <th>Date / Time</th>
+  <th>Team Leader</th>
+  <th>Place</th>
+  <th>Address</th>
+  <th>Town</th>
+  <th>View</th>
+  </thead>
+  <tbody>
+  <tr ng-repeat="meeting in meetings">
+    <td>{{meeting.meeting_datetime | date:'medium' }}</td>
+    <td>{{ meeting.team_leader }}</td>
+    <td>{{ meeting.location_name }}</td>
+    <td>{{ meeting.location }}</td>
+    <td>{{ meeting.town }}</td>
+    <td>
+      <md-button ng-click="showAll = !showAll" layout layout-align="center center">
+        <i class="material-icons" style="color:#1e84f2;" ng-click="viewMeeting(meeting)">assessment</i>
+      </md-button>
+    </td>
+  </tr>
+
+  </tbody>
+</table>
