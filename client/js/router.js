@@ -67,10 +67,9 @@
           templateUrl: 'views/heath-page.html',
           controller: 'HeathCtrl',
           title: 'Replications',
-          icon: ''
         })
-        .state('scheduled', {
-          templateUrl: 'views/atmos-scheduled-view.html',
+        .state('authenticated.page.heath.scheduled', {
+          templateUrl: 'views/heath-scheduled-view.html',
           controller: 'HeathCtrl'
         })
         .state('authenticated.page.heath.completed', {

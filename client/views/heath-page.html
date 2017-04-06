@@ -44,8 +44,8 @@
                       <td>{{ request.location }}</td>
                       <td>{{ request.town }}</td>
                       <td>
-                        <md-button class="md-raised md-warn"
-                                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
+                        <md-button class="md-raised"
+                                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
                                    ng-click="viewRequest(request)" layout layout-align="center center">
                           view
                         </md-button>
@@ -55,12 +55,15 @@
                   </table>
                 </md-tab-body>
               </md-tab>
-              <md-tab label="scheduled" ui-sref="authenticated.page.heath.completed">
+              <md-tab label="scheduled" ui-sref="authenticated.page.heath.scheduled">
                 <md-tab-body>
                   <div ui-view></div>
                 </md-tab-body>
               </md-tab>
               <md-tab label="completed" ui-sref="authenticated.page.heath.completed">
+                <div ui-view></div>
+              </md-tab>
+              <md-tab label="meeting request form" ui-sref="">
                 <div ui-view></div>
               </md-tab>
             </md-tabs>
@@ -120,12 +123,12 @@
                 </div>
                 <div ng-if="selectedIndex === 0" layout layout-align="start center" style="margin-top:1rem;">
 
-                  <md-button class="md-raised md-warn" ng-click="cancelRequest(request)">CANCEL REQUEST</md-button>
+                  <md-button class="md-raised" ng-click="cancelRequest(request)" style="background-color:#444444;color:white;">CANCEL REQUEST</md-button>
                 </div>
               </div>
             </div>
-            <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
-              <div style="height:100%;background-color: whitesmoke;box-shadow: 2px 2px 1px #888888">
+            <div ng-if="scheduledMeetings.length > 0" layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
+              <div  style="height:100%;background-color: whitesmoke;box-shadow: 2px 2px 1px #888888">
                 <div layout="column" style="width:100%;height:100%;padding:.5rem;">
                   <h4 style="border-bottom: solid thin #888888;">Upcoming Meetings</h4>
                   <div>

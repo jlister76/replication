@@ -12,13 +12,13 @@
   <tr ng-repeat="replication in replications | orderBy: 'meeting_datetime'" class="table_body">
     <td>{{ replication.meeting_date | date: 'short'}}</td>
     <td>{{ replication.atmos_employee}}</td>
-    <td>{{replication.street_number}}{{ replication.street_name }}{{replication.street_suffix}}</td>
+    <td>{{replication.street_number}} {{ replication.street_name }} {{replication.street_suffix}}</td>
     <td>{{ replication.town }}</td>
     <td>{{replication.facility_size}}{{replication.facility_material}}</td>
     <td>{{ replication.locate_technician }}</td>
     <td>
-      <md-button class="md-raised md-warn"
-                 style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
+      <md-button class="md-raised"
+                 style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
                  ng-click="viewReplication(replication)" layout layout-align="center center">
         view
       </md-button>
@@ -67,6 +67,14 @@
         <span>Comments: </span>
         <span>{{ replication.atmos_comments }}</span>
       </div>
+      <div layout ng-if="replication.heath_comments">
+        <span>Team Leader Response: </span>
+        <span>{{ replication.heath_comments }}</span>
+      </div>
+      <div layout  ng-if="replication.video_url">
+        <span>Video: </span>
+        <span style="width:auto;"><a href="{{ replication.video_url }}">{{ replication.video_url }}</a></span>
+      </div>
     </div>
   </fieldset>
 </div>
@@ -76,18 +84,18 @@
   </div>
 </div>
 <div ng-hide="!replication">
-  <form name="heathResponseForm" ng-submit="addResponse(id,tl.comments,tl.url)">
-    <input ng-model="id" ng-init="id = replication.id" type="hidden">
+  <form name="heathResponseForm" ng-submit="addResponse(replication)">
+    <input ng-model=replication.id type="hidden">
     <fieldset class="field_set md-padding" style="background-color:white;">
       <legend>Add Response</legend>
       <div layout="column" style="margin:1rem;">
         <label for="heath_response">Comments:</label>
-        <textarea ng-model="tl.comments" name="heath_response" id="heath_response" cols="10" rows="5"
+        <textarea ng-model="replication.comments" name="heath_response" id="heath_response" cols="10" rows="5"
                   required></textarea>
       </div>
       <div layout="column" style="margin:1rem;">
         <label for="video_url">Paste video URL here</label>
-        <input ng-model="tl.url" id="video_url" type="text">
+        <input ng-model="replication.url" id="video_url" type="text">
       </div>
       <div layout style="">
         <md-button class="md-raised" ng-disabled="heathResponseForm.$invalid"

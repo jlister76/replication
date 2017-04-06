@@ -116,29 +116,46 @@
         sessionStorage.setItem('data', JSON.stringify(request));
         getRequest();
       };
+      $scope.viewMeeting = function (meeting) {
+        sessionStorage.removeItem('meeting');
+        sessionStorage.setItem('meeting', JSON.stringify(meeting));
+        getMeeting();
+      };
       $scope.viewReplication = function (replication) {
         sessionStorage.removeItem('data');
         sessionStorage.setItem('data', JSON.stringify(replication));
         persistObj();
 
       };
-      $scope.addResponse = function (id, comments, url) {
-
-        console.log(id, comments, url);
-
-
-        Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
+      $scope.addResponse = function (replication) {
+        Replication.updateAttributes({
+          id: replication.id,
+          heath_comments: replication.comments,
+          video_url: replication.url
+        })
           .$promise
           .then(function (response) {
             console.log(response);
-            $http.post('api/Replications/sendResponse', {formData: response});
-            //$scope.withResponse = response;
-            $scope.tl = {};
+            $http.post('api/Replications/sendResponse', {formData: response})
+              .then(function (response) {
+                //do something on success
+                console.info('success return');
+              })
+              .catch(function(err){if (err){console.error(err)}});
             $scope.showSuccess = true;
-
             $timeout(function () {
-              $scope.showSuccess = false
-            }, 5000)
+              // set the location.hash to the id of
+              // the element you wish to scroll to.
+              $location.hash('Your response has been emailed for review.');
+              // call $anchorScroll()
+              $anchorScroll();
+              $state.reload();
+            }, 1000);
+          })
+          .catch(function (err) {
+            if (err) {
+              console.error(err);
+            }
           })
       };
       $scope.confirmMeeting = function (request) {
@@ -178,6 +195,20 @@
             $state.reload();
           })
       };
+      $scope.cancelMeeting = function(meeting){
+        Meeting.destroyById({id: meeting.id})
+          .$promise
+          .then(function(){
+            console.log(meeting);
+            $http.post('api/Meetings/cancelMeeting', {formData: meeting})
+              .then(function(){
+                alert('Scheduled meeting cancelled. ' + meeting.fname + ' '+ meeting.lname + ' will be notified via email.');
+                $state.reload();
+              })
+              .catch(function(err){if(err){console.error(err)}});
+          })
+          .catch(function(err){if(err){console.error(err)}})
+      };
       $scope.meetings = scheduledMeetings;
       $scope.replications = replications;
       $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
@@ -186,12 +217,16 @@
       function getRequest() {
         var requestObj = sessionStorage.getItem('data');
         $scope.request = JSON.parse(requestObj);
-      }
+      };
+      function getMeeting() {
+        var requestObj = sessionStorage.getItem('meeting');
+        $scope.meeting = JSON.parse(requestObj);
 
+      };
       function persistObj() {
           var replicationObj = sessionStorage.getItem('data');
           $scope.replication = JSON.parse(replicationObj);
-        }
+        };
 
 
     })
