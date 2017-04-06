@@ -3,6 +3,7 @@ body{
   background-color: white;
   color: #333333;
   font-family: 'Open Sans', sans-serif;
+
 }
 
 h3 {
@@ -72,6 +73,20 @@ fieldset {
 
 }
 
+table {
+  border-collapse: collapse;
+}
+
+th {
+  font-family: 'Droid Sans', sans-serif;
+  font-size: 14px;
+}
+
+td {
+  text-align: left;
+  padding: .5rem;
+  font-family: 'opnes sans', sans-serif;
+}
 .table_body:nth-child(odd) {
   background-color: #eaeaea;
 }
@@ -153,20 +168,22 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
   /* show it on small screens */
 }
 
-.new {
+.response_required {
   margin: .5rem;
   height: 12px;
   width: 12px;
   border-radius: 50px;
-  background-color: #13b517;
+  background-color: #00468b;
+  box-shadow: 1px 1px 1px #888888;
 }
 
-.proposed {
+.pending_response {
   margin: .5rem;
   height: 12px;
   width: 12px;
   border-radius: 50px;
-  background-color: #006cc7;
+  background-color: #8E8E8E;
+  box-shadow: 1px 1px 1px #888888;
 }
 
 

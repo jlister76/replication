@@ -43,7 +43,7 @@ module.exports = function(Meeting) {
   Meeting.confirm = function(meeting, cb) {
     console.log('Inside confirmed', meeting);
     var m = meeting;
-    var emailTo = m.email;
+    var emailTo = m.team_leader_email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: m.id,
@@ -66,9 +66,44 @@ module.exports = function(Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Replication Meeting Request from  ' + m.email,
+      subject: 'Replication Meeting Confirmed by  ' + m.fname + ' ' + m.lname,
       html: html_body
     }, function(err, mail) {
+      if (err) {
+        console.error(err);
+      }
+      console.log('email sent!');
+    });
+  };
+  Meeting.heathConfirm = function (meeting, cb) {
+    console.log('Inside heath confirmed', meeting);
+    var m = meeting;
+    var emailTo = m.email;
+    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
+    var messageVars = {
+      id: m.id,
+      dps: m.fname + m.lname,
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      team_leader: m.team_leader,
+      location_name: m.location_name,
+      location: m.location,
+      cross_street: m.cross_street,
+      town: m.town,
+      heath_report: m.heath_report,
+      facility: m.facility,
+      locate_technician: m.locate_technician
+    };
+    var renderer = loopback
+      .template(path
+        .resolve(__dirname, '../../server/views/email-meeting-heath-confirmed.ejs'));
+    var html_body = renderer(messageVars);
+    console.log('Before send');
+    Meeting.app.models.Email.send({
+      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      from: 'j.lister@heathus.com',
+      subject: 'Replication Meeting Confirmed by  ' + m.team_leader,
+      html: html_body
+    }, function (err, mail) {
       if (err) {
         console.error(err);
       }
@@ -110,7 +145,15 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
-
+  Meeting.heathConfirmed = function (msg, next) {
+    console.log('Meeting confirmed', msg);
+    Meeting.heathConfirm(msg);
+    next();
+  };
+  Meeting.remoteMethod('heathConfirmed', {
+    accepts: {arg: 'formData', type: 'Object'},
+    http: {path: '/heathConfirmed', verb: 'post'}
+  });
   Meeting.confirmed = function(msg, next) {
     console.log('Meeting confirmed', msg);
     Meeting.confirm(msg);

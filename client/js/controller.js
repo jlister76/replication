@@ -97,7 +97,7 @@
         $location.path('/');
       }
     })
-    .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $rootScope, $state, requestedMeetings,proposedMeetings,scheduledMeetings) {
+    .controller('HeathCtrl', function (replications, userCtx, $scope, Replication, $http, $timeout, $location, $rootScope, $anchorScroll, $state, requestedMeetings, proposedMeetings, scheduledMeetings, Meeting) {
       //set pagetitle
       $rootScope.title = $state.current.title;
       console.log($scope.selectedIndex);
@@ -109,54 +109,86 @@
         requests.push(requestedMeetings[i]);
       }
 
-        $scope.requests = requests;
-
+      $scope.scheduledMeetings = scheduledMeetings;
+      $scope.requests = requests;
       $scope.viewRequest = function (request) {
-        console.log('firing');
         sessionStorage.removeItem('data');
         sessionStorage.setItem('data', JSON.stringify(request));
         getRequest();
       };
+      $scope.viewReplication = function (replication) {
+        sessionStorage.removeItem('data');
+        sessionStorage.setItem('data', JSON.stringify(replication));
+        persistObj();
+
+      };
+      $scope.addResponse = function (id, comments, url) {
+
+        console.log(id, comments, url);
+
+
+        Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
+          .$promise
+          .then(function (response) {
+            console.log(response);
+            $http.post('api/Replications/sendResponse', {formData: response});
+            //$scope.withResponse = response;
+            $scope.tl = {};
+            $scope.showSuccess = true;
+
+            $timeout(function () {
+              $scope.showSuccess = false
+            }, 5000)
+          })
+      };
+      $scope.confirmMeeting = function (request) {
+        $scope.meeting = request;
+        Meeting
+          .updateAttributes({id: request.id, schedule_status: 'confirmed'})
+          .$promise
+          .then(function (meeting) {
+            console.log(meeting, request);
+            $http.post('api/Meetings/heathConfirmed', {formData: meeting})
+              .then(function (meeting) {
+                console.log(meeting);
+                $scope.request = null;
+                $scope.meeting_confirmed = true;
+                $timeout(function () {
+                  // set the location.hash to the id of
+                  // the element you wish to scroll to.
+                  $location.hash('meeting_confirmed');
+                  // call $anchorScroll()
+                  $anchorScroll();
+                  $state.reload();
+                }, 1000);
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              });
+          });
+      };
+      $scope.cancelRequest = function (request) {
+
+        Meeting.destroyById({id: request.id})
+          .$promise
+          .then(function (request) {
+            alert('Meeting request was cancelled');
+            $state.reload();
+          })
+      };
+      $scope.meetings = scheduledMeetings;
+      $scope.replications = replications;
+      $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
+
+
       function getRequest() {
         var requestObj = sessionStorage.getItem('data');
         $scope.request = JSON.parse(requestObj);
       }
-        console.log($scope.requests);
-        $scope.meetings = scheduledMeetings;
-        $scope.replications = replications;
-        $scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
 
-        persistObj();
-        $scope.tl = {};
-
-
-        $scope.sendData = function (replication) {
-          sessionStorage.removeItem('data');
-          sessionStorage.setItem('data', JSON.stringify(replication));
-          persistObj();
-
-        };
-
-        $scope.addResponse = function (id, comments, url) {
-
-          console.log(id, comments, url);
-
-
-          Replication.updateAttributes({id: id, heath_comments: comments, video_url: url})
-            .$promise
-            .then(function (response) {
-              console.log(response);
-              $http.post('api/Replications/sendResponse', {formData: response});
-              //$scope.withResponse = response;
-              $scope.tl = {};
-              $scope.showSuccess = true;
-
-              $timeout(function () {
-                $scope.showSuccess = false
-              }, 5000)
-            })
-        };
-        function persistObj() {
+      function persistObj() {
           var replicationObj = sessionStorage.getItem('data');
           $scope.replication = JSON.parse(replicationObj);
         }

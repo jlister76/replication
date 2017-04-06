@@ -1,32 +1,17 @@
-<style>
-  table {
-    border-collapse: collapse;
-  }
-
-  th {
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 14px;
-  }
-
-  td {
-    text-align: left;
-    padding: .5rem;
-    font-family: 'opnes sans', sans-serif;
-  }
-
-</style>
-<div layout layout-align="center">
-  <div layout="column">
-    <div layout layout-align="start">
-      <div class="md-padding">
+<div layout layout-align="center" style="width:100%;">
+  <div layout="column" layout-align="start center" style="width:100%;">
+    <div layout layout-align="center start" style="width:100%;">
+      <div class="md-padding" style="width:900px;">
         <div layout layout-align="end end" style="margin-bottom:2rem;">
-          <div layout layout-align="center">
+          <div layout layout-align="center center" style="width:100%;">
             <!---success messages--->
             <div ng-if="meeting_confirmed" id="meeting_confirmed">
-              <span style="background: rgba(219,255,248,0.61);border:solid thin lightgrey; padding:.5rem;margin:1rem;width:100%;">Meeting confirmed. Email sent to {{ meeting.team_leader_email }}</span>
+              <span
+                style="background: rgba(215,213,211,0.61);border:solid thin #939393; padding:.5rem;margin:1rem;width:100%;">Meeting confirmed. Email sent to {{ meeting.team_leader_email }}</span>
             </div>
             <div ng-if="meeting_proposed" id="new_proposal">
-              <span style="background: rgba(219,255,248,0.61);border:solid thin lightgrey; padding:.5rem;margin:1rem;width:100%;">Email sent to {{ team_leader_email }}</span>
+              <span
+                style="background: rgba(215,213,211,0.61);border:solid thin #939393; padding:.5rem;margin:1rem;width:100%;">Email sent to {{ team_leader_email }}</span>
             </div>
           </div>
         </div>
@@ -36,12 +21,12 @@
               <md-tab-body >
                 <div layout layout-align="end center" class="md-padding" >
                   <div layout layout-align="start center">
-                    <div class="new"></div>
-                    <span class="md-caption">new</span>
+                    <div class="response_required"></div>
+                    <span class="md-caption">atmos response needed</span>
                   </div>
                   <div layout layout-align="start center">
-                    <div class="proposed"></div>
-                    <span class="md-caption">proposed</span>
+                    <div class="pending_response"></div>
+                    <span class="md-caption">pending heath response</span>
                   </div>
                 </div>
                 <table cellpadding="2" cellspacing="0" border="0" width="900">
@@ -58,9 +43,9 @@
                   <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
                     <td>
                       <div
-                        ng-class="{new:request.schedule_status==='pending',proposed:request.schedule_status==='proposed'}"></div>
+                        ng-class="{response_required:request.schedule_status==='pending',pending_response:request.schedule_status==='proposed'}"></div>
                     </td>
-                    <td>{{ request.meeting_datetime | date: 'medium'}}
+                    <td>{{ request.meeting_datetime | date: 'short'}}
                     </td>
                     <td>{{ request.team_leader }}</td>
                     <td>{{ request.location_name }}</td>

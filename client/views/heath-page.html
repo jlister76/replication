@@ -1,29 +1,14 @@
-<style>
-  table {
-    border-collapse: collapse;
-  }
-
-  th {
-    font-family: 'Droid Sans', sans-serif;
-    font-size: 14px;
-  }
-
-  td {
-    text-align: left;
-    padding: .5rem;
-    font-family: 'opnes sans', sans-serif;
-  }
-
-</style>
-<div layout layout-align="center">
-  <div layout="column">
-    <div layout layout-align="start" >
-      <div class="md-padding">
+<div layout layout-align="center" style="width:100%;">
+  <div layout="column" layout-align="start center" style="width:100%;">
+    <div layout layout-align="center start" style="width:100%;">
+      <div class="md-padding" style="width:900px;">
         <div layout layout-align="end end" style="margin-bottom:1rem;">
-          <div layout layout-align="center">
-            <span>Click the </span>
-            <span><i class="material-icons" style="color:#1e84f2;">pageview</i></span>
-            <span>icon to view replication</span>
+          <div layout layout-align="center center" style="width:100%;">
+            <!---success messages--->
+            <div ng-if="meeting_confirmed" id="meeting_confirmed">
+              <span
+                style="background: rgba(215,213,211,0.61);border:solid thin #939393; padding:.5rem;margin:1rem;width:100%;">Meeting confirmed. Email sent to {{ meeting.email }}</span>
+            </div>
           </div>
         </div>
           <md-content>
@@ -32,19 +17,15 @@
                 <md-tab-body>
                   <div layout layout-align="end center" class="md-padding" >
                     <div layout layout-align="start center">
-                      <div class="new"></div>
-                      <span class="md-caption">new</span>
-                    </div>
-                    <div layout layout-align="start center">
-                      <div class="proposed"></div>
-                      <span class="md-caption">proposed</span>
+                      <div class="response_required"></div>
+                      <span class="md-caption">heath response requested</span>
                     </div>
                   </div>
                   <table cellpadding="2" cellspacing="0" border="0" width="900">
                     <thead>
                     <th>Status</th>
                     <th>Date / Time</th>
-                    <th>Team Leader</th>
+                    <th>Sent to</th>
                     <th>Place</th>
                     <th>Address</th>
                     <th>Town</th>
@@ -53,11 +34,12 @@
                     <tbody>
                     <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
                       <td>
-                        <div ng-class="{new:request.schedule_status==='pending',proposed:request.schedule_status==='proposed'}"></div>
+
+                        <div ng-class="{response_required:request.schedule_status==='proposed'}"></div>
                       </td>
-                      <td>{{ request.meeting_datetime | date: 'medium'}}
+                      <td>{{ request.meeting_datetime | date: 'short'}}
                       </td>
-                      <td>{{ request.team_leader }}</td>
+                      <td>{{ request.email}}</td>
                       <td>{{ request.location_name }}</td>
                       <td>{{ request.location }}</td>
                       <td>{{ request.town }}</td>
@@ -87,91 +69,21 @@
       <div>
       </div>
     </div>
-    <div ng-if=" selectedIndex === 3 && replication" ng-init="showForm = false" layout="column" class="view" style="padding:1rem;">
 
-      <fieldset class="field_set">
-        <legend>Replication</legend>
-        <div style="margin:1rem;">
-          <div layout>
-            <span>Replication Date: </span>
-            <span>{{ replication.meeting_date | date:'MM/dd/yyyy' }}</span>
-          </div>
-          <div layout>
-            <span>ATMOS REP.: </span>
-            <span>{{ replication.atmos_employee }}</span>
-          </div>
-          <div layout>
-            <span>Locate Technician: </span>
-            <span>{{ replication.locate_technician }}</span>
-          </div>
-          <div layout>
-            <span>Heath Damage Report: </span>
-            <span>{{ replication.heath_report }}</span>
-          </div>
-          <div layout>
-            <span>Facility: </span>
-            <span>{{ replication.facility_size }} {{ replication.facility_material }}</span>
-          </div>
-          <div layout>
-            <span>Address: </span>
-            <span>{{ replication.street_number }} {{ replication.street_name }} {{ replication.street_suffix }} <span
-              ng-if="replication.cross_street">@ {{ replication.cross_street }}</span></span>
-          </div>
-          <div layout>
-            <span>Town: </span>
-            <span>{{ replication.town }}</span>
-          </div>
-          <div layout>
-            <span>Determination: </span>
-            <span>{{ replication.atmos_determination }}</span>
-          </div>
-          <div layout>
-            <span>Comments: </span>
-            <span>{{ replication.atmos_comments }}</span>
-          </div>
-        </div>
-      </fieldset>
-
-      <div ng-if="showSuccess" layout layout-align="center">
-        <div style="padding:.5rem; background-color:lightblue">
-          <span>Your response has been emailed.</span>
-        </div>
-      </div>
-      <div ng-hide="!replication">
-        <form name="heathResponseForm" ng-submit="addResponse(id,tl.comments,tl.url)">
-          <input ng-model="id" ng-init="id = replication.id" type="hidden">
-          <fieldset class="field_set md-padding" style="background-color:white;">
-            <legend>Add Response</legend>
-            <div layout="column" style="margin:1rem;">
-              <label for="heath_response">Comments:</label>
-              <textarea ng-model="tl.comments" name="heath_response" id="heath_response" cols="10" rows="5"
-                        required></textarea>
-            </div>
-            <div layout="column" style="margin:1rem;">
-              <label for="video_url">Paste video URL here</label>
-              <input ng-model="tl.url" id="video_url" type="text">
-            </div>
-            <div layout style="">
-              <md-button class="md-raised" ng-disabled="heathResponseForm.$invalid" ng-class="{'active':heathResponseForm.$valid}" type="submit">SAVE</md-button>
-            </div>
-          </fieldset>
-        </form>
-      </div>
-    </div>
     <div ng-if="selectedIndex === 0 && request" layout="column" class="view">
       <div>
         <fieldset class="field_set">
           <legend>Meeting Details</legend>
           <div layout>
-            <div layout="column">
+            <div layout="column" style="padding:1rem;">
               <div>
                 <div layout>
                   <span>Date: </span>
-                  <span>{{request.meeting_datetime | date:'medium' }}</span>
+                  <span>{{request.meeting_datetime | date:'short' }}</span>
                 </div>
                 <div layout>
-                  <span>Team Leader: </span>
-                  <span>{{ request.team_leader }}</span>
+                  <span>Sent To: </span>
+                  <span>{{ request.email }}</span>
                 </div>
                 <div layout>
                   <span>Locate Technician: </span>
@@ -200,40 +112,38 @@
                   <span>{{ request.town }}</span>
                 </div>
               </div>
-              <div>
-                <div layout layout-align="start center" style="margin-top:1rem;">
+              <div layout layout-align="start center">
+                <div ng-if="selectedIndex === 0 && request.schedule_status ==='proposed'" layout
+                     layout-align="start center" style="margin-top:1rem;">
 
                   <md-button class="md-raised active" ng-click="confirmMeeting(request)">CONFIRM MEETING</md-button>
+                </div>
+                <div ng-if="selectedIndex === 0" layout layout-align="start center" style="margin-top:1rem;">
+
+                  <md-button class="md-raised md-warn" ng-click="cancelRequest(request)">CANCEL REQUEST</md-button>
                 </div>
               </div>
             </div>
             <div layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
-              <div style="height:100%;">
-                <div layout="column" style="width:100%;height:100%;">
-                  <p><strong>Need to reschedule</strong></p>
-                  <p style="width:100%;"><strong>When will you be able to meet?</strong></p>
-
-                  <div layout style="width:100%;">
-                    <input class="form-control"
-                           placeholder="Select a date..."
-                           moment-picker="request.stringDate"
-                           locale="en"
-                           format="lll"
-                           min-view="month"
-                           autoclose="true"
-                           today="true"
-                           keyboard="true"
-                           ng-model="request.momentDate"
-                           ng-model-options="{ updateOn: 'blur' }"
-                           width="100%"/>
+              <div style="height:100%;background-color: whitesmoke;box-shadow: 2px 2px 1px #888888">
+                <div layout="column" style="width:100%;height:100%;padding:.5rem;">
+                  <h4 style="border-bottom: solid thin #888888;">Upcoming Meetings</h4>
+                  <div>
+                    <table>
+                      <thead>
+                      <th>Date</th>
+                      <th>Location</th>
+                      <th>Town</th>
+                      </thead>
+                      <tbody>
+                      <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'">
+                        <td>{{meeting.meeting_datetime | date:'short'}}</td>
+                        <td>{{meeting.location}}</td>
+                        <td>{{meeting.town}}</td>
+                      </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </div>
-              </div>
-              <div>
-                <div layout layout-align="start center" style="margin-top:1rem;">
-                  <!--html-->
-                  <md-button class="md-raised info" ng-click="propose(request,proposed)">PROPOSE NEW SCHEDULE
-                  </md-button>
                 </div>
               </div>
             </div>

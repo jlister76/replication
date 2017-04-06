@@ -27,7 +27,7 @@
               templateUrl: 'views/page-title.html'
             },
             'page_content': {
-              template: '<div ui-view></div>'
+              template: '<div layout layout-align="center start" ui-view style="width:100%;"></div>'
 
             }
           }
