@@ -11,7 +11,7 @@
         })
         .state('router', {
           url: '/router',
-          controller: 'RouterCtrl',
+          controller: 'RouterCtrl'
         })
         .state('authenticated', {
           abstract: true,
@@ -66,15 +66,17 @@
           },
           templateUrl: 'views/heath-page.html',
           controller: 'HeathCtrl',
-          title: 'Replications',
+          title: 'Replications'
         })
         .state('authenticated.page.heath.scheduled', {
           templateUrl: 'views/heath-scheduled-view.html',
-          controller: 'HeathCtrl'
+          controller: 'HeathCtrl',
+          title: 'Replications'
         })
         .state('authenticated.page.heath.completed', {
           templateUrl: 'views/heath-completed-view.html',
-          controller: 'HeathCtrl'
+          controller: 'HeathCtrl',
+          title: 'Replications'
         })
         .state('authenticated.page.atmos', {
           url: '/schedules',
@@ -124,8 +126,8 @@
           controller: 'AtmosCtrl',
           title: 'Schedule Manager'
         })
-        .state('authenticated.page.heath-meeting', {
-          url: '/heath/scheduler',
+        .state('authenticated.page.heath.scheduling', {
+          url: '',
           resolve: {
             userCtx: function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -142,7 +144,7 @@
           },
           templateUrl: 'views/heath-scheduler.html',
           controller: 'HeathSchedulerCtrl',
-          title: 'Meeting Invite'
+          title: 'Replication'
 
         })
         .state('authenticated.page.replication-form', {
