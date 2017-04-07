@@ -1,11 +1,11 @@
 <table cellpadding="2" cellspacing="0" border="0" width="100%">
   <thead>
-  <th>Date / Time</th>
-  <th>ATMOS DPS</th>
-  <th>Place</th>
-  <th>Address</th>
-  <th>Town</th>
-  <th>View</th>
+  <th align="left">Date / Time</th>
+  <th align="left">ATMOS DPS</th>
+  <th align="left">Place</th>
+  <th align="left">Address</th>
+  <th align="left">Town</th>
+  <th align="left">Action</th>
   </thead>
   <tbody>
   <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'">
@@ -25,56 +25,57 @@
 
   </tbody>
 </table>
-<div ng-if="selectedIndex === 1 && meeting" layout="column" class="view" style="padding:1rem;">
+<div ng-if="selectedIndex === 1 && meeting" layout="column" class="view" style="padding:1rem;margin-top:2rem;">
   <div>
-    <fieldset class="field_set">
-      <legend>Meeting Details</legend>
+    <h4 style="background-color:#0F4A78;padding:1rem;color:white;padding:.5rem;" md-whiteframe="3">Meeting
+      Details</h4>
+    <div layout="column">
       <div layout="column">
-        <div layout="column">
-          <div>
-            <div layout>
-              <span>Date: </span>
-              <span>{{ meeting.meeting_datetime  | date:'short'}}</span>
-            </div>
-            <div layout>
-              <span>ATMOS DPS: </span>
-              <span>{{ meeting.fname }}{{meeting.lname}}</span>
-            </div>
-            <div layout>
-              <span>Locate Technician: </span>
-              <span>{{ meeting.locate_technician }}</span>
-            </div>
-            <div layout>
-              <span>Heath Damage Report: </span>
-              <span>{{ meeting.heath_report }}</span>
-            </div>
-            <div layout>
-              <span>Facility: </span>
-              <span>{{ meeting.facility }}</span>
-            </div>
-            <div ng-if="meeting.location_name" layout>
-              <span>Meeting Location: </span>
-              <span>{{ meeting.location_name }}</span>
-            </div>
-            <div layout>
-              <span>Address: </span>
-              <span>{{ meeting.location }}
+        <div>
+          <div layout>
+            <span>Date: </span>
+            <span>{{ meeting.meeting_datetime  | date:'short'}}</span>
+          </div>
+          <div layout>
+            <span>ATMOS DPS: </span>
+            <span>{{ meeting.fname }}{{meeting.lname}}</span>
+          </div>
+          <div layout>
+            <span>Locate Technician: </span>
+            <span>{{ meeting.locate_technician }}</span>
+          </div>
+          <div layout>
+            <span>Heath Damage Report: </span>
+            <span>{{ meeting.heath_report }}</span>
+          </div>
+          <div layout>
+            <span>Facility: </span>
+            <span>{{ meeting.facility }}</span>
+          </div>
+          <div ng-if="meeting.location_name" layout>
+            <span>Meeting Location: </span>
+            <span>{{ meeting.location_name }}</span>
+          </div>
+          <div layout>
+            <span>Address: </span>
+            <span>{{ meeting.location }}
                 <span ng-if="meeting.cross_street">@ {{ meeting.cross_street }}</span>
                 </span>
-            </div>
-            <div layout>
-              <span>Town: </span>
-              <span>{{ meeting.town }}</span>
-            </div>
+          </div>
+          <div layout>
+            <span>Town: </span>
+            <span>{{ meeting.town }}</span>
           </div>
         </div>
-          <div>
-            <div ng-if="selectedIndex === 1" layout layout-align="start center" style="margin-top:1rem;">
-
-              <md-button class="md-raised" ng-click="cancelMeeting(meeting)" style="background-color:#444444;color:white;">CANCEL MEETING</md-button>
-            </div>
-          </div>
       </div>
-    </fieldset>
+      <div>
+        <div ng-if="selectedIndex === 1" layout layout-align="start center" style="margin-top:1rem;">
+
+          <md-button class="md-raised" ng-click="cancelMeeting(meeting)" style="background-color:#444444;color:white;">
+            CANCEL MEETING
+          </md-button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
