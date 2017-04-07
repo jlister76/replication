@@ -61,7 +61,7 @@
             <td>{{meeting.location_name}}</td>
             <td>{{meeting.location}}</td>
             <td>{{meeting.town}}</td>
-            <td>{{meeting.email}}</td>
+            <td>{{meeting.fname}} {{meeting.lname}}</td>
             <td>{{meeting.facility}}</td>
             <td>{{meeting.heath_report}}</td>
           </tr>
@@ -82,7 +82,7 @@
          </div>
          <div layout>
            <span>ATMOS DPS: </span>
-           <span>{{ request.fname }}{{request.lname}}</span>
+           <span>{{ request.email }}</span>
          </div>
          <div layout>
            <span>Locate Technician: </span>
