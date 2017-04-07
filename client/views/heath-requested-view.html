@@ -1,9 +1,9 @@
-<div layout layout-align="end">
-  <div layout layout-align="start center">
+<div layout layout-align="end start" style="margin-bottom:1.5rem;">
+  <div layout layout-align="end center">
     <!--<div class="response_required"></div>-->
-    <div layout layout-align="center center">
-      <i class="material-icons md-caption" style="color:#e74200;font-size:1.4rem;margin:.5rem;">schedule</i>
-      <span class="md-caption" style="color:#e74200;">new schedule proposed</span>
+    <div layout layout-align="center center"style="background-color:#FAFAFA;border:solid thin lightgrey;">
+      <i class="material-icons md-caption" style="color:#009E5A;font-size:1.4rem;margin:.5rem;">schedule</i>
+      <span class="md-caption" style="color:#05633B;">new schedule proposed</span>
     </div>
   </div>
 </div>
@@ -19,7 +19,7 @@
   <tbody>
   <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body" >
     <td>
-      <i ng-if="request.schedule_status==='proposed'" class="material-icons" style="color:#e74200;font-size:1.4rem;">schedule</i>
+      <i ng-if="request.schedule_status==='proposed'" class="material-icons" style="color:#009E5A;font-size:1.4rem;">schedule</i>
       <!-- <div ng-class="{response_required:request.schedule_status==='proposed'}">-->
 
       </div>
@@ -53,6 +53,7 @@
           <th align="left">Town</th>
           <th align="left">DPS</th>
           <th align="left">Facility</th>
+          <th align="left">Damage Report</th>
           </thead>
           <tbody>
           <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'" style="">
@@ -62,12 +63,14 @@
             <td>{{meeting.town}}</td>
             <td>{{meeting.fname}} {{meeting.lname}}</td>
             <td>{{meeting.facility}}</td>
+            <td>{{meeting.heath_report}}</td>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <div layout="column" layout-align="start" style="width:100%;">
+
+    <div layout="column" layout-align="start" style="width:100%;margin-bottom:1rem;">
       <h4 style="margin-top:0;margin-bottom:0;color:#0F4A78;width:100%;padding-top:.5rem;padding-bottom:.5rem;" >Requested
         Meeting</h4>
      <div md-whiteframe="3">
@@ -118,5 +121,6 @@
         </div>
       </div>
     </div>
+
   </div>
 </div>

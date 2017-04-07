@@ -8,7 +8,7 @@
   <th align="left">Action</th>
   </thead>
   <tbody>
-  <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'">
+  <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'" class="table_body">
     <td>{{meeting.meeting_datetime | date:'short' }}</td>
     <td>{{ meeting.fname }}{{ meeting.lname}}</td>
     <td>{{ meeting.location_name }}</td>
@@ -71,7 +71,7 @@
       <div>
         <div ng-if="selectedIndex === 1" layout layout-align="start center" style="margin-top:1rem;">
 
-          <md-button class="md-raised" ng-click="cancelMeeting(meeting)" style="background-color:#444444;color:white;">
+          <md-button class="md-raised info" ng-click="cancelMeeting(meeting)">
             CANCEL MEETING
           </md-button>
         </div>
