@@ -1,11 +1,21 @@
-body{
-  height: auto;
-  background-color: white;
-  color: #333333;
-  font-family: 'Open Sans', sans-serif;
 
+body{
+  background: rgba(25, 120, 210, 1);
+  background: -moz-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
+  background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(25, 120, 210, 1)), color-stop(73%, rgba(14, 71, 119, 1)), color-stop(95%, rgba(11, 56, 91, 1)));
+  background: -webkit-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
+  background: -o-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
+  background: -ms-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
+  background: linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1978d2', endColorstr='#0b385b', GradientType=1);
+  height: 100%;
+  min-height: 100%;
+  font-family: 'Open Sans', sans-serif;
 }
 
+html {
+  height: auto;
+}
 h3 {
   color: #9e9e9e;
   font-family: 'Droid Sans', sans-serif;
@@ -42,7 +52,7 @@ button.md-raised.md-button.md-ink-ripple.info.md-focused {
 
 
 .active.md-button {
-  background-color: #005EB8;
+  background-color: #0B5A97;
   color:white;
   border-radius: .2rem;
 }
@@ -145,7 +155,7 @@ nav a {
 
 .active_link {
   padding-bottom: .1rem;
-  border-bottom: solid 2px #e74200;
+  border-bottom: solid 2px #EB4402;
 
 }
 
@@ -169,10 +179,11 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
 }
 
 .response_required {
+
   margin: .5rem;
   height: 12px;
   width: 12px;
-  border-radius: 50px;
+  /*border-radius: 50px;*/
   background-color: #e74200;
   box-shadow: 1px 1px 1px #888888;
 }

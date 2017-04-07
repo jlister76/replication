@@ -36,7 +36,7 @@
             case 'HEATH':
               if (ctx.access_type = 'group') {
                 //set start page
-                $state.go('authenticated.page.heath');
+                $state.go('authenticated.page.heath.template');
 
               }
               break;

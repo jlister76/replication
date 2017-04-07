@@ -1,160 +1,32 @@
-<div layout layout-align="center" style="width:100%;">
-  <div layout="column" layout-align="start center" style="width:100%;">
-    <div layout layout-align="center start" style="width:100%;">
-      <div class="md-padding" style="width:900px;">
-        <div layout layout-align="end end" style="margin-bottom:1rem;">
-          <div layout layout-align="center center" style="width:100%;">
-            <!---success messages--->
-            <div ng-if="meeting_confirmed" id="meeting_confirmed">
+<div layout layout-align="center">
+  <div layout style="width:1024px;height:auto;background-color:#0D4977;">
+    <div style="width:100%;height:1100px;background-color:#fafafa;">
+      <!---success messages--->
+      <div ng-if="meeting_confirmed" id="meeting_confirmed">
               <span
-                style="background: rgba(215,213,211,0.61);border:solid thin #939393; padding:.5rem;margin:1rem;width:100%;">Meeting confirmed. Email sent to {{ meeting.email }}</span>
-            </div>
-          </div>
+                style="background: rgba(215,213,211,0.61);border:solid thin #939393; padding:.5rem;margin:1rem;width:100%;">
+                Meeting confirmed. Email sent to {{ meeting.email }}</span>
         </div>
-          <md-content>
-            <md-tabs md-dynamic-height md-border-bottom md-selected="selectedIndex">
-              <md-tab label="requested">
-                <md-tab-body>
-                  <div layout layout-align="end center" class="md-padding" >
-                    <div layout layout-align="start center">
-                      <div class="response_required"></div>
-                      <span class="md-caption">heath response requested</span>
-                    </div>
-                  </div>
-                  <table cellpadding="2" cellspacing="0" border="0" width="900">
-                    <thead>
-                    <th>Status</th>
-                    <th>Date / Time</th>
-                    <th>Sent to</th>
-                    <th>Place</th>
-                    <th>Address</th>
-                    <th>Town</th>
-                    <th>Action</th>
-                    </thead>
-                    <tbody>
-                    <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
-                      <td>
-
-                        <div ng-class="{response_required:request.schedule_status==='proposed'}"></div>
-                      </td>
-                      <td>{{ request.meeting_datetime | date: 'short'}}
-                      </td>
-                      <td>{{ request.email}}</td>
-                      <td>{{ request.location_name }}</td>
-                      <td>{{ request.location }}</td>
-                      <td>{{ request.town }}</td>
-                      <td>
-                        <md-button class="md-raised"
-                                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
-                                   ng-click="viewRequest(request)" layout layout-align="center center">
-                          view
-                        </md-button>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </md-tab-body>
-              </md-tab>
-              <md-tab label="scheduled" ui-sref="authenticated.page.heath.scheduled">
-                <md-tab-body>
-                  <div ui-view></div>
-                </md-tab-body>
-              </md-tab>
-              <md-tab label="completed" ui-sref="authenticated.page.heath.completed">
-                <div ui-view></div>
-              </md-tab>
-              <md-tab label="scheduling" ui-sref="authenticated.page.heath.scheduling">
-                <div ui-view></div>
-              </md-tab>
-            </md-tabs>
-          </md-content>
+      <md-content>
+        <md-tabs md-dynamic-height="" md-border-bottom md-selected="selectedIndex" md-stretch-tabs="always">
+          <md-tab label="requested">
+            <div ui-view name="requested" style="margin:.5rem;padding:1rem;"></div>
+          </md-tab>
+          <md-tab label="scheduled">
+            <div ui-view name="scheduled" style="margin:.5rem;padding:1rem;"></div>
+          </md-tab>
+          <md-tab label="completed">
+            <div ui-view name="completed" style="margin:.5rem;padding:1rem;"></div>
+          </md-tab>
+          <md-tab label="scheduling">
+            <div ui-view name="scheduling" style="margin:.5rem;padding:1rem;"></div>
+          </md-tab>
+        </md-tabs>
+      </md-content>
       </div>
-      <div>
-      </div>
-    </div>
-
-    <div ng-if="selectedIndex === 0 && request" layout="column" class="view">
-      <div>
-        <fieldset class="field_set">
-          <legend>Meeting Details</legend>
-          <div layout>
-            <div layout="column" style="padding:1rem;">
-              <div>
-                <div layout>
-                  <span>Date: </span>
-                  <span>{{request.meeting_datetime | date:'short' }}</span>
-                </div>
-                <div layout>
-                  <span>Sent To: </span>
-                  <span>{{ request.email }}</span>
-                </div>
-                <div layout>
-                  <span>Locate Technician: </span>
-                  <span>{{ request.locate_technician }}</span>
-                </div>
-                <div layout>
-                  <span>Heath Damage Report: </span>
-                  <span>{{ request.heath_report }}</span>
-                </div>
-                <div layout>
-                  <span>Facility: </span>
-                  <span>{{ request.facility }}</span>
-                </div>
-                <div ng-if="request.location_name" layout>
-                  <span>Meeting Location: </span>
-                  <span>{{ request.location_name }}</span>
-                </div>
-                <div layout>
-                  <span>Address: </span>
-                  <span>{{ request.location }}
-                <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
-                </span>
-                </div>
-                <div layout>
-                  <span>Town: </span>
-                  <span>{{ request.town }}</span>
-                </div>
-              </div>
-              <div layout layout-align="start center">
-                <div ng-if="selectedIndex === 0 && request.schedule_status ==='proposed'" layout
-                     layout-align="start center" style="margin-top:1rem;">
-
-                  <md-button class="md-raised active" ng-click="confirmMeeting(request)">CONFIRM MEETING</md-button>
-                </div>
-                <div ng-if="selectedIndex === 0" layout layout-align="start center" style="margin-top:1rem;">
-
-                  <md-button class="md-raised" ng-click="cancelRequest(request)" style="background-color:#444444;color:white;">CANCEL REQUEST</md-button>
-                </div>
-              </div>
-            </div>
-            <div ng-if="scheduledMeetings.length > 0" layout="column" style="border-left:solid thin lightgray;padding:.5rem;width:100%;">
-              <div  style="height:100%;background-color: whitesmoke;box-shadow: 2px 2px 1px #888888">
-                <div layout="column" style="width:100%;height:100%;padding:.5rem;">
-                  <h4 style="border-bottom: solid thin #888888;">Upcoming Meetings</h4>
-                  <div>
-                    <table>
-                      <thead>
-                      <th>Date</th>
-                      <th>Location</th>
-                      <th>Town</th>
-                      </thead>
-                      <tbody>
-                      <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'">
-                        <td>{{meeting.meeting_datetime | date:'short'}}</td>
-                        <td>{{meeting.location}}</td>
-                        <td>{{meeting.town}}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </fieldset>
-      </div>
-    </div>
   </div>
 </div>
+
+
 
 

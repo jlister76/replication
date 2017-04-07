@@ -23,17 +23,15 @@
               templateUrl: 'views/navigation.html',
               controller: 'NavCtrl'
             },
-            title: {
-              templateUrl: 'views/page-title.html'
-            },
             'page_content': {
-              template: '<div layout layout-align="center start" ui-view style="width:100%;"></div>'
+              templateUrl: 'views/template-layout.html'
 
             }
           }
         })
         .state('authenticated.page.heath', {
           url: '/my-replications',
+          abstract: true,
           resolve: {
             "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -53,10 +51,6 @@
             "replications": function (Replication, userCtx) {
               return Replication.find({filter: {where: {team_leader_email: userCtx.email}}}).$promise
             },
-            "confirmedMeetings": function (Meeting, userCtx) {
-
-
-            },
             "access": function (userCtx, $state) {
               if (userCtx.company === "ATMOS") {
                 console.error('403 Forbidden Access');
@@ -68,16 +62,29 @@
           controller: 'HeathCtrl',
           title: 'Replications'
         })
-        .state('authenticated.page.heath.scheduled', {
-          templateUrl: 'views/heath-scheduled-view.html',
-          controller: 'HeathCtrl',
-          title: 'Replications'
+        .state('authenticated.page.heath.template', {
+          url: '',
+          title: 'Replications',
+          views: {
+            'requested': {
+              templateUrl: 'views/heath-requested-view.html',
+              controller: 'HeathCtrl'
+            },
+            'scheduled': {
+              templateUrl: 'views/heath-scheduled-view.html',
+              controller: 'HeathCtrl'
+            },
+            'completed': {
+              templateUrl: 'views/heath-completed-view.html',
+              controller: 'HeathCtrl'
+            },
+            'scheduling': {
+              templateUrl: 'views/heath-scheduler.html',
+              controller: 'HeathCtrl'
+            }
+          }
         })
-        .state('authenticated.page.heath.completed', {
-          templateUrl: 'views/heath-completed-view.html',
-          controller: 'HeathCtrl',
-          title: 'Replications'
-        })
+
         .state('authenticated.page.atmos', {
           url: '/schedules',
           title: 'Schedule Manager',
