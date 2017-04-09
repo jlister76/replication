@@ -1,13 +1,8 @@
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
 
 body{
-  /*background: rgba(25, 120, 210, 1);
-  background: -moz-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
-  background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(25, 120, 210, 1)), color-stop(73%, rgba(14, 71, 119, 1)), color-stop(95%, rgba(11, 56, 91, 1)));
-  background: -webkit-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
-  background: -o-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
-  background: -ms-linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
-  background: linear-gradient(45deg, rgba(25, 120, 210, 1) 0%, rgba(14, 71, 119, 1) 73%, rgba(11, 56, 91, 1) 95%);
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1978d2', endColorstr='#0b385b', GradientType=1);*/
   background: rgba(194, 194, 194, 1);
   background: -moz-linear-gradient(45deg, rgba(194, 194, 194, 1) 0%, rgba(194, 194, 194, 1) 5%, rgba(189, 189, 189, 1) 49%, rgba(182, 182, 182, 1) 91%, rgba(181, 181, 181, 1) 99%);
   background: -webkit-gradient(left bottom, right top, color-stop(0%, rgba(194, 194, 194, 1)), color-stop(5%, rgba(194, 194, 194, 1)), color-stop(49%, rgba(189, 189, 189, 1)), color-stop(91%, rgba(182, 182, 182, 1)), color-stop(99%, rgba(181, 181, 181, 1)));
@@ -20,6 +15,13 @@ body{
 
   font-family: 'Open Sans', sans-serif;
 }
+
+/* change tab transition
+[role="tabpanel"],
+md-tabs {
+  transition: none;
+}
+*/
 
 html {
   height: auto;
@@ -38,6 +40,10 @@ h1, h2 {
   color: #2f3661;
   font-family: 'Open Sans Condensed', sans-serif;
   line-height: 200%;
+}
+
+p {
+  margin: .5rem 1rem;
 }
 
 .row {
@@ -161,10 +167,20 @@ nav a {
   font-weight: 600;
 }
 
-.active_link {
+.activeNavLink {
   padding-bottom: .1rem;
   border-bottom: solid 2px #EB4402;
 
+}
+
+.activePageLink {
+  color: blue;
+  border-bottom: solid 2px darkcyan;
+  /*background-color: #dfdfdf;*/
+}
+
+.inactivePageLink {
+  color: grey;
 }
 
 nav a:hover {
@@ -205,4 +221,20 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
   box-shadow: 1px 1px 1px #888888;
 }
 
+.fade.ng-hide {
+  opacity: 0;
+}
+
+.fade.ng-hide-remove,
+.fade.ng-hide-add {
+  display: inline-block !important;
+}
+
+.fade.ng-hide-remove {
+  transition: all linear 200ms;
+}
+
+.fade.ng-hide-add {
+  transition: all linear 500ms;
+}
 

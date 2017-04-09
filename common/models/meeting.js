@@ -9,13 +9,13 @@ var moment = require('moment');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {
-    console.log('sending meeting ...', moment(request.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'));
+    console.log('sending meeting ...', moment(request.meeting_datetime).format('dddd, MMMM Do YYYY @ h:mm a'));
     var d = request;
     var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: d.id,
-      meeting_date: moment(request.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      meeting_date: moment(request.meeting_datetime).format('dddd, MMMM Do YYYY @ h:mm a'),
       team_leader: d.team_leader,
       location_name: d.location_name,
       location: d.location,
@@ -83,7 +83,7 @@ module.exports = function(Meeting) {
     var messageVars = {
       id: m.id,
       dps: m.fname + m.lname,
-      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY @ h:mm a'),
       team_leader: m.team_leader,
       location_name: m.location_name,
       location: m.location,
@@ -118,7 +118,7 @@ module.exports = function(Meeting) {
     var messageVars = {
       id: m.id,
       dps: m.fname + m.lname,
-      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY @ h:mm a'),
       team_leader: m.team_leader,
       location_name: m.location_name,
       location: m.location,
@@ -132,11 +132,10 @@ module.exports = function(Meeting) {
       .template(path
         .resolve(__dirname, '../../server/views/email-meeting-proposed.ejs'));
     var html_body = renderer(messageVars);
-    console.log('Before send');
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Proposed Meeting Request from  ' + m.fname + ' ' + m.lname,
+      subject: 'New Schedule Proposal from ' + m.fname + ' ' + m.lname,
       html: html_body
     }, function(err, mail) {
       if (err) {
@@ -153,7 +152,7 @@ module.exports = function(Meeting) {
     var messageVars = {
       id: m.id,
       dps: m.fname + m.lname,
-      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY h:mm a'),
       team_leader: m.team_leader,
       location_name: m.location_name,
       location: m.location,
@@ -171,7 +170,7 @@ module.exports = function(Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', m.team_leader_email, emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Scheduled Meeting was Cancelled by  ' + m.team_leader,
+      subject: 'Scheduled Meeting Cancelled by  ' + m.team_leader,
       html: html_body
     }, function(err, mail) {
       if (err) {

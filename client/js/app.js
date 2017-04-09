@@ -8,7 +8,9 @@
       'ngMaterial',
       'ngMessages',
       'ngLodash',
-      'moment-picker'
+      'moment-picker',
+      'ngAnimate',
+      'ngSanitize'
     ])
     .config(function ($httpProvider) {
       // Inside app config block
@@ -35,7 +37,7 @@
       }
     })
     .run(function ($rootScope, $state, $stateParams) {
-      console.log($rootScope.title);
+      //takes title property from state (assigned in controller) and assigned to $rootScope
       $rootScope.title = $state.current.title;
 
     })
