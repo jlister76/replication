@@ -687,19 +687,21 @@
               var location = _.get(scheduledMeeting[0], 'location');
 
               var town = _.get(scheduledMeeting[0], 'town');
-
+              $scope.showUpcomingMeetings = false;
               //scheduling conflict
-              $scope.showErrorIcon = true;
 
               $scope.icon = '<i class="material-icons">error</i>';
 
-              $scope.pageMsg = 'Scheduling Conflict';
+              $scope.pageMsg = '<h4>Schedule conflict</h4>' +
+                '<p class="md-body-1" style="width:100%;">Reschedule or decline this meeting.</p>';
+
 
               $timeout(function () {
 
                 $scope.pageReload = false;
 
-              }, 5000)
+              }, 7000);
+
             } else {
               Meeting
                 .updateAttributes({
