@@ -80,10 +80,16 @@
             "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
             },
+            "access": function (userCtx, $state) {
+              if (userCtx.company === "HEATH") {
+                console.error('403 Forbidden Access');
+                $state.go('app.heath');
+              }
+            },
             "replications": function (Replication, userCtx) {
               return Replication.find({filter: {where: {team_leader_email: userCtx.email}}}).$promise
             },
-            "meetingRequests": function (Meeting, userCtx) {
+            'requestedReplicationMeetings': function (userCtx, Meeting) {
               var oneMonth = moment().subtract(1, 'months');
               return Meeting.find({
                 filter: {
@@ -95,7 +101,7 @@
                 }
               }).$promise
             },
-            "proposedRequests": function (Meeting, userCtx) {
+            'proposedReplicationMeetings': function (Meeting, userCtx) {
               var oneMonth = moment().subtract(1, 'months');
               return Meeting.find({
                 filter: {
@@ -105,9 +111,9 @@
                     meeting_datetime: {gte: oneMonth}
                   }
                 }
-              }).$promise
+              })
             },
-            "confirmedMeetings": function (Meeting, userCtx) {
+            'confirmedReplicationMeetings': function (Meeting, userCtx) {
               var oneMonth = moment().subtract(1, 'months');
               return Meeting.find({
                 filter: {
@@ -118,13 +124,8 @@
                   }
                 }
               }).$promise
-            },
-            "access": function (userCtx, $state) {
-              if (userCtx.company === "HEATH") {
-                console.error('403 Forbidden Access');
-                $state.go('app.heath');
-              }
             }
+
           }
         })
         .state('authenticated.page.atmos.replications', {
@@ -132,35 +133,12 @@
           views: {
             'requestedReplications': {
               templateUrl: 'views/atmos-requested-replication.html',
-              controller: 'MeetingRequestCtrl',
+              controller: 'MeetingRequestCtrl'
+            },
+            'scheduledReplications': {
+              templateUrl: 'views/atmos-scheduled-view.html',
+              controller: 'ScheduledReplicationsCtrl',
               resolve: {
-                'userCtx': function (AuthService) {
-                  AuthService.getCurrent().$promise
-                },
-                'requestedReplicationMeetings': function (userCtx, Meeting) {
-                  var oneMonth = moment().subtract(1, 'months');
-                  return Meeting.find({
-                    filter: {
-                      where: {
-                        email: userCtx.email,
-                        schedule_status: 'pending',
-                        meeting_datetime: {gte: oneMonth}
-                      }
-                    }
-                  }).$promise
-                },
-                'proposedReplicationMeetings': function (Meeting, userCtx) {
-                  var oneMonth = moment().subtract(1, 'months');
-                  return Meeting.find({
-                    filter: {
-                      where: {
-                        email: userCtx.email,
-                        schedule_status: 'proposed',
-                        meeting_datetime: {gte: oneMonth}
-                      }
-                    }
-                  })
-                },
                 'confirmedReplicationMeetings': function (Meeting, userCtx) {
                   var oneMonth = moment().subtract(1, 'months');
                   return Meeting.find({
@@ -172,13 +150,11 @@
                       }
                     }
                   }).$promise
+                    .then(function (data) {
+                      console.log(data)
+                    })
                 }
-
               }
-            },
-            'scheduledReplications': {
-              templateUrl: 'views/heath-scheduled-view.html',
-              controller: 'AtmosCtrl'
             },
             'completedReplications': {
               templateUrl: 'views/heath-completed-view.html',

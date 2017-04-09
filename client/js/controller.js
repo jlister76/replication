@@ -229,11 +229,11 @@
 
 
     })
-    .controller('AtmosCtrl', function ($scope, userCtx, $rootScope, $state, $http, $timeout, replications, meetingRequests, proposedRequests, confirmedMeetings, Meeting, $anchorScroll, $location) {
+    .controller('AtmosCtrl', function ($scope, userCtx, $rootScope, $state, $http, $timeout, replications) {
 
       //$rootScope.title = $state.current.title;
 
-      $scope.meetings = confirmedMeetings;
+
 
       $scope.sendData = function (request) {
         sessionStorage.removeItem('data');
@@ -921,5 +921,9 @@
 
       };
 
+    })
+    .controller('ScheduledReplicationsCtrl', function ($scope, userCtx, confirmedReplicationMeetings) {
+
+      $scope.meetings = confirmedReplicationMeetings;
     })
 })();
