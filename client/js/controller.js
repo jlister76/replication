@@ -338,7 +338,7 @@
             for (var e = 0; e < request.emailList.length; e++){
               console.log(request.emailList[e]);
 
-              request.locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
+              var locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
               request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
               request.facility = request.facility_size + " " + request.facility_material;
 
@@ -559,22 +559,22 @@
             cross_street = _.capitalize(response.cross_street);
 
           Replication.create({
-            meeting_date: date,
-            atmos_employee: response.atmos_employee,
-            atmos_employeeId: response.employeeId,
-            team_leader: team_leader,
-            team_leader_email: recipent.email,
-            locate_technician: tech_name,
-            heath_report: response.heath_report,
-            facility_size: response.facility_size,
-            facility_material: response.facility_material,
-            street_number: response.street_number,
-            street_name: street_name,
-            street_suffix: response.street_suffix,
-            cross_street: cross_street,
-            town: response.town,
+            replication_date: date,
+            atmos_employee: userCtx.fname + userCtx.lname,
+            atmos_employeeId: userCtx.id,
+            team_leader: meeting.team_leader,
+            team_leader_email: meeting.team_leader_email,
+            locate_technician: meeting.locate_technician,
+            heath_report: meeting.heath_report,
+            facility: meeting.facility,
+            location: meeting.location,
+            cross_street: meeting.cross_street,
+            town: meeting.town,
             isReplicated: response.able_to_replicate,
             atmos_determination: response.atmos_determination,
+            corrective_actions: response.corrective_actions,
+            able_to_locate: response.able_to_locate,
+            is_line_marked: response.is_line_marked,
             atmos_comments: response.atmos_comments,
             heath_comments: null,
             video_url: null
@@ -922,8 +922,93 @@
       };
 
     })
-    .controller('ScheduledReplicationsCtrl', function ($scope, userCtx, confirmedReplicationMeetings) {
+    .controller('ScheduledReplicationsCtrl', function ($scope, Replication,userCtx, confirmedReplicationMeetings,$http,$state) {
 
       $scope.meetings = confirmedReplicationMeetings;
+
+      //handler to clear form values
+      $scope.clearForm = function (response){
+
+        response.atmos_determination = null;
+
+        response.atmos_comments = null;
+
+        response.actions_taken = null;
+
+        response.atmos_determination = null;
+
+        response.isLocatable = null;
+
+        response.line_marked = null;
+
+        };
+
+      //handler for creating replication response
+      $scope.sendEmail = function (response,meeting) {
+
+
+        var date = moment(),
+          tech_name = _.capitalize(response.locate_technician_fname) + " " + _.capitalize(response.locate_technician_lname),
+          street_name = _.capitalize(response.street_name),
+          cross_street = _.capitalize(response.cross_street);
+
+        Replication.create({
+          replication_date: date,
+          atmos_employee: userCtx.fname + userCtx.lname,
+          atmos_employeeId: userCtx.id,
+          team_leader: meeting.team_leader,
+          team_leader_email: meeting.team_leader_email,
+          locate_technician: meeting.locate_technician,
+          heath_report: meeting.heath_report,
+          facility: meeting.facility,
+          location: meeting.location,
+          cross_street: meeting.cross_street,
+          town: meeting.town,
+          isReplicated: response.able_to_replicate,
+          atmos_determination: response.atmos_determination,
+          corrective_actions: response.corrective_actions,
+          able_to_locate: response.able_to_locate,
+          is_line_marked: response.is_line_marked,
+          atmos_comments: response.atmos_comments,
+          heath_comments: null,
+          video_url: null
+        })
+          .$promise
+          .then(function (response) {
+            console.log(response);
+            $http.post('api/replications/sendemail', {formData: response})
+              .then(function (response) {
+                console.log('sending email...', response);
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              });
+
+            $state.reload();
+            /*$scope.response.able_to_replicate = null;
+
+            $scope.response.atmos_determination = null;
+
+            $scope.response.atmos_comments = null;
+
+            $scope.response.actions_taken = null;
+
+            $scope.response.atmos_determination = null;
+
+            $scope.response.isLocatable = null;
+
+            $scope.response.line_marked = null;*/
+
+
+          })
+          .catch(function (err) {
+            if (err) {
+              console.error(err)
+            }
+          });
+
+      }
     })
 })();

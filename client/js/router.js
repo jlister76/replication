@@ -87,7 +87,7 @@
               }
             },
             "replications": function (Replication, userCtx) {
-              return Replication.find({filter: {where: {team_leader_email: userCtx.email}}}).$promise
+              return Replication.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
             },
             'requestedReplicationMeetings': function (userCtx, Meeting) {
               var oneMonth = moment().subtract(1, 'months');

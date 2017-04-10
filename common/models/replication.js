@@ -32,7 +32,7 @@ module.exports = function(Replication) {
       location = d.street_number + ' ' + d.street_name + ' ' + d.street_suffix;
 
     var messageVars = {
-      meeting_date: d.meeting_date,
+      replication_date: d.replication_date,
       town: d.town,
       atmos_employee: d.atmos_employee,
       team_leader: d.team_leader,
@@ -94,7 +94,7 @@ module.exports = function(Replication) {
 
 
     var messageVars = {
-      meeting_date: moment(d.meeting_date).format('MM/DD/YYYY'),
+      replication_date: moment(d.replication_date).format('MM/DD/YYYY'),
       town: d.town,
       atmos_employee: d.atmos_employee,
       team_leader: d.team_leader,

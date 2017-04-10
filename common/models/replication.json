@@ -6,7 +6,7 @@
     "validateUpsert": true
   },
   "properties": {
-    "meeting_date": {
+    "replication_date": {
       "type": "date",
       "required": true
     },
@@ -34,23 +34,11 @@
       "type": "number",
       "required": true
     },
-    "facility_size": {
+    "facility": {
       "type": "string",
       "required": true
     },
-    "facility_material": {
-      "type": "string",
-      "required": true
-    },
-    "street_number": {
-      "type": "number",
-      "required": true
-    },
-    "street_name": {
-      "type": "string",
-      "required": true
-    },
-    "street_suffix": {
+    "location": {
       "type": "string",
       "required": true
     },
@@ -68,6 +56,18 @@
     "atmos_determination": {
       "type": "string",
       "required": true
+    },
+    "corrective_actions": {
+      "type": "string",
+      "default": null
+    },
+    "able_to_locate": {
+      "type": "string",
+      "default": null
+    },
+    "is_line_marked": {
+      "type": "string",
+      "default": null
     },
     "atmos_comments": {
       "type": "string"
