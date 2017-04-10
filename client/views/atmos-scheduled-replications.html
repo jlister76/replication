@@ -115,10 +115,10 @@
                         <input ng-model="response.atmos_determination"
                                ng-init="response.atmos_determination = 'Facility Issue'"
                                type="hidden">
-                        <label for="unscheduled_facility_issue"><strong>If there is a facility issue, please describe
+                        <label for="facility_issue"><strong>If there is a facility issue, please describe
                           the root cause.<span style="color:darkorange;">*</span></strong></label>
                         <textarea ng-model="response.atmos_comments" name="facility_issue"
-                                  id="unscheduled_facility_issue" cols="30"
+                                  id="facility_issue" cols="30"
                                   rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
                       </div>
                     </div>
