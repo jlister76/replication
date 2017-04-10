@@ -16,7 +16,15 @@
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
     <p class="md-subhead" style="color:white;">Meeting Requests</p>
   </div>
-  <table cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
+  <div ng-if="requests.length === 0" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no replication requests
+      </em>
+    </p>
+  </div>
+  <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
     <th align="left">Status</th>
     <th align="left">Date / Time</th>
@@ -28,6 +36,8 @@
     <tbody>
     <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
       <td>
+        <md-tooltip ng-if="request.schedule_status==='pending'" md-direction="right">Awaiting confirmation</md-tooltip>
+        <md-tooltip ng-if="request.schedule_status==='proposed'" md-direction="right">Proposed new schedule</md-tooltip>
         <i ng-if="request.schedule_status==='pending'" class="material-icons" style="color:#009E5A;font-size:1.4rem;">new_releases</i>
         <i ng-if="request.schedule_status==='proposed'" class="material-icons" style="color:gray;font-size:1.4rem;">schedule</i>
       </td>

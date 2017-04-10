@@ -229,38 +229,6 @@
 
 
     })
-    .controller('AtmosCtrl', function ($scope) {
-
-      //$rootScope.title = $state.current.title;
-
-
-
-      $scope.sendData = function (request) {
-        sessionStorage.removeItem('data');
-        sessionStorage.setItem('data', JSON.stringify(request));
-        getRequest();
-      };
-      $scope.viewMeeting = function (meeting) {
-        sessionStorage.removeItem('meeting');
-        sessionStorage.setItem('meeting', JSON.stringify(meeting));
-        getMeeting();
-      };
-
-
-      $scope.months = moment.months();
-      $scope.viewMeeting = function (meeting) {
-        sessionStorage.removeItem('meeting');
-        sessionStorage.setItem('meeting', JSON.stringify(meeting));
-        getMeeting();
-      };
-
-      function getRequest() {
-        var requestObj = sessionStorage.getItem('data');
-        $scope.request = JSON.parse(requestObj);
-      }
-
-
-    })
     .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
       //set pagetitle
@@ -481,7 +449,7 @@
       };
 
     })
-    .controller('AtmosFormCtrl', function ($scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state) {
+    .controller('UnscheduledReplicationCtrl', function ($scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state) {
       var _ = lodash;
       //set pagetitle
       $rootScope.title = $state.current.title;
@@ -1021,7 +989,29 @@
             }
           });
 
+      };
+
+      //handler for completing a replication response
+      $scope.viewMeeting = function (meeting) {
+        console.log(meeting);
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(meeting));
+
+        getMeeting();
+
+      };
+
+      //controller functions
+      function getMeeting() {
+
+        var meetingObj = sessionStorage.getItem('data');
+
+        $scope.meeting = JSON.parse(meetingObj);
+
       }
+
+
     })
     .controller('CompletedReplicationsCtrl', function ($scope, completedReplications) {
 
@@ -1031,7 +1021,7 @@
       //handler for viewing replication details
       //event handler for viewing the meeting details
       $scope.viewReplication = function (replication) {
-
+        console.log(replication);
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(replication));

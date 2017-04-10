@@ -75,7 +75,6 @@
           abstract: true,
           url: '/atmos',
           templateUrl: 'views/atmos-page.html',
-          controller: 'AtmosCtrl',
           resolve: {
             "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -162,19 +161,9 @@
             },
             'unscheduledReplication': {
               templateUrl: 'views/replication-form.html',
-              controller: 'AtmosCtrl'
+              controller: 'UnscheduledReplicationCtrl'
             }
           }
-        })
-        .state('authenticated.page.atmos.scheduled', {
-          templateUrl: 'views/atmos-scheduled-replications.html',
-          controller: 'AtmosCtrl',
-          title: 'Schedule Manager'
-        })
-        .state('authenticated.page.atmos.unscheduled', {
-          templateUrl: 'views/replication-form.html',
-          controller: 'AtmosCtrl',
-          title: 'Schedule Manager'
         })
         .state('authenticated.page.heath.scheduling', {
           url: '',
@@ -195,25 +184,6 @@
           templateUrl: 'views/heath-scheduler.html',
           controller: 'HeathSchedulerCtrl',
           title: 'Replication'
-
-        })
-        .state('authenticated.page.replication-form', {
-          url: '/forms/replication',
-          resolve: {
-            userCtx: function (AuthService) {
-              return AuthService.getCurrent().$promise
-
-            },
-            access: function (userCtx, $state) {
-              if (userCtx.company === "HEATH") {
-                console.error('403 Forbidden Access');
-                $state.go('app.heath');
-              }
-            }
-          },
-          templateUrl: 'views/replication-form.html',
-          controller: 'AtmosFormCtrl',
-          title: 'Replication Form'
 
         })
         .state('app.error', {
