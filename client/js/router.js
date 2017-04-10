@@ -86,7 +86,7 @@
                 $state.go('app.heath');
               }
             },
-            "replications": function (Replication, userCtx) {
+            "completedReplications": function (Replication, userCtx) {
               return Replication.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
             },
             'requestedReplicationMeetings': function (userCtx, Meeting) {
@@ -132,11 +132,11 @@
           url: '',
           views: {
             'requestedReplications': {
-              templateUrl: 'views/atmos-requested-replication.html',
+              templateUrl: 'views/atmos-requested-replications.html',
               controller: 'MeetingRequestCtrl'
             },
             'scheduledReplications': {
-              templateUrl: 'views/atmos-scheduled-view.html',
+              templateUrl: 'views/atmos-scheduled-replications.html',
               controller: 'ScheduledReplicationsCtrl',
               resolve: {
                 'confirmedReplicationMeetings': function (Meeting, userCtx) {
@@ -157,8 +157,8 @@
               }
             },
             'completedReplications': {
-              templateUrl: 'views/heath-completed-view.html',
-              controller: 'AtmosCtrl'
+              templateUrl: 'views/atmos-completed-replications.html',
+              controller: 'CompletedReplicationsCtrl'
             },
             'unscheduledReplication': {
               templateUrl: 'views/replication-form.html',
@@ -167,7 +167,7 @@
           }
         })
         .state('authenticated.page.atmos.scheduled', {
-          templateUrl: 'views/atmos-scheduled-view.html',
+          templateUrl: 'views/atmos-scheduled-replications.html',
           controller: 'AtmosCtrl',
           title: 'Schedule Manager'
         })

@@ -229,7 +229,7 @@
 
 
     })
-    .controller('AtmosCtrl', function ($scope, userCtx, $rootScope, $state, $http, $timeout, replications) {
+    .controller('AtmosCtrl', function ($scope) {
 
       //$rootScope.title = $state.current.title;
 
@@ -259,11 +259,7 @@
         $scope.request = JSON.parse(requestObj);
       }
 
-      function getMeeting() {
-        var requestObj = sessionStorage.getItem('meeting');
-        $scope.meeting = JSON.parse(requestObj);
 
-      }
     })
     .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state) {
       var _ = lodash;
@@ -620,7 +616,7 @@
 
     })
     .controller('MeetingRequestCtrl', function ($scope, Meeting, userCtx, requestedReplicationMeetings, proposedReplicationMeetings, confirmedReplicationMeetings, $http, $timeout, $anchorScroll, $location, $state) {
-      console.info(userCtx.fname);
+
       //collect all meeting requests
       var requests = [];
 
@@ -640,6 +636,7 @@
       } else {
 
         //what to do when there are no meetings
+        //TODO: handle when there are no meeting requests
       }
 
       if (proposedReplicationMeetings.length > 0) {
@@ -654,6 +651,7 @@
         $scope.requests = requests;
 
       }
+
       if (confirmedReplicationMeetings.length > 0) {
         //assign meetings in view
         $scope.meetings = confirmedReplicationMeetings;
@@ -661,7 +659,7 @@
 
       //event handler for confirming meeting
       $scope.confirmMeeting = function (request) {
-        console.log(request);
+
         $scope.pageReload = true;
 
         $scope.pageMsg = 'Checking schedule...';
@@ -687,7 +685,7 @@
               var location = _.get(scheduledMeeting[0], 'location');
 
               var town = _.get(scheduledMeeting[0], 'town');
-              $scope.showUpcomingMeetings = false;
+
               //scheduling conflict
 
               $scope.icon = '<i class="material-icons">error</i>';
@@ -747,7 +745,7 @@
       //event handler for cancelling the meeting request
       //TODO write function to decline meeting request
 
-      //event handler for propsing new schedule
+      //event handler for proposing new schedule
       $scope.propose = function (request) {
 
         $scope.team_leader_email = request.team_leader_email;
@@ -922,7 +920,7 @@
       };
 
     })
-    .controller('ScheduledReplicationsCtrl', function ($scope, Replication,userCtx, confirmedReplicationMeetings,$http,$state) {
+    .controller('ScheduledReplicationsCtrl', function ($scope, Replication, Meeting, userCtx, confirmedReplicationMeetings, $http, $state, $timeout, $anchorScroll, $location) {
 
       $scope.meetings = confirmedReplicationMeetings;
 
@@ -946,11 +944,17 @@
       //handler for creating replication response
       $scope.sendEmail = function (response,meeting) {
 
+        $location.hash('pageReload');
 
-        var date = moment(),
-          tech_name = _.capitalize(response.locate_technician_fname) + " " + _.capitalize(response.locate_technician_lname),
-          street_name = _.capitalize(response.street_name),
-          cross_street = _.capitalize(response.cross_street);
+        $anchorScroll();
+
+        var date = moment();
+
+        $scope.pageReload = true;
+
+        $scope.pageMsg = '<p>Saving replication</p>';
+
+        $scope.showLinearProgress = true;
 
         Replication.create({
           replication_date: date,
@@ -975,39 +979,73 @@
         })
           .$promise
           .then(function (response) {
-            console.log(response);
+
+            $scope.pageMsg = '<p>Emailing results</p>';
+
+
             $http.post('api/replications/sendemail', {formData: response})
               .then(function (response) {
-                console.log('sending email...', response);
+
+                $scope.pageMsg = '<p>Updating replication results</p>';
+
+                //console.log('sending email...', response);
+
+                Meeting.updateAttributes({id: meeting.id, schedule_status: 'complete'})
+                  .$promise
+                  .then(function () {
+
+                    $timeout(function () {
+                      $scope.pageReload = false;
+
+                      $state.reload();
+
+                    }, 5000);
+
+                  })
+                  .catch(function (err) {
+                    if (err) {
+                      console.error(err)
+                    }
+                  });
+
               })
               .catch(function (err) {
                 if (err) {
                   console.error(err)
                 }
               });
-
-            $state.reload();
-            /*$scope.response.able_to_replicate = null;
-
-            $scope.response.atmos_determination = null;
-
-            $scope.response.atmos_comments = null;
-
-            $scope.response.actions_taken = null;
-
-            $scope.response.atmos_determination = null;
-
-            $scope.response.isLocatable = null;
-
-            $scope.response.line_marked = null;*/
-
-
           })
           .catch(function (err) {
             if (err) {
               console.error(err)
             }
           });
+
+      }
+    })
+    .controller('CompletedReplicationsCtrl', function ($scope, completedReplications) {
+
+      //assign completed replications to view
+      $scope.replications = completedReplications;
+
+      //handler for viewing replication details
+      //event handler for viewing the meeting details
+      $scope.viewReplication = function (replication) {
+
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(replication));
+
+        getReplication();
+
+      };
+
+      //controller functions
+      function getReplication() {
+
+        var replicationObj = sessionStorage.getItem('data');
+
+        $scope.replication = JSON.parse(replicationObj);
 
       }
     })

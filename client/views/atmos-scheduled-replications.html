@@ -1,8 +1,30 @@
 <div class="md-padding" id="wrapper">
+  <div ng-if="pageReload" id="pageReload"
+       style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
+    <div layout="column" layout-align="center center"
+         style="z-index:10; position: fixed; top: 30%; left: 35%;width:35%; height:15%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         md-whiteframe="3">
+      <div layout layout-align="center center" style="margin-bottom:.8rem;">
+        <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
+        <div class="md-subhead md-padding" ng-bind-html="pageMsg"></div>
+      </div>
+      <div ng-if="showLinearProgress" style="width:80%;">
+        <md-progress-linear md-mode="indeterminate" class="md-warn md-hue-2"></md-progress-linear>
+      </div>
+    </div>
+  </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
     <p class="md-subhead" style="color:white;">Replications</p>
   </div>
-  <table cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
+  <div ng-if="meetings.length === 0" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no scheduled replications
+      </em>
+    </p>
+  </div>
+  <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
     <th align="left">Date / Time</th>
     <th align="left">Team Leader</th>
@@ -13,11 +35,11 @@
     </thead>
     <tbody>
     <tr ng-repeat="meeting in meetings" class="table_body">
-      <td>{{meeting.meeting_datetime | date:'medium' }}</td>
-      <td>{{ meeting.team_leader }}</td>
-      <td>{{ meeting.location_name }}</td>
-      <td>{{ meeting.location }}</td>
-      <td>{{ meeting.town }}</td>
+      <td ng-bind="meeting.meeting_datetime | date:'short'"><em>empty</em></td>
+      <td ng-bind="meeting.team_leader"><em>empty</em></td>
+      <td ng-bind="meeting.location_name"><em>empty</em></td>
+      <td ng-bind="meeting.location"><em>empty</em></td>
+      <td ng-bind="meeting.town"><em>empty</em></td>
       <td>
         <md-button class="md-raised info" ng-click="viewMeeting(meeting)"
                    style="font-size:10px;line-height:18px;min-height:24px!important;height:18px!important; min-width:18px!important;">
@@ -39,37 +61,37 @@
               <div>
                 <div layout>
                   <span>Date: </span>
-                  <span>{{ meeting.meeting_datetime  | date:'short'}}</span>
+                  <span ng-bind="meeting.meeting_datetime  | date:'short'"></span>
                 </div>
                 <div layout>
                   <span>Team Leader: </span>
-                  <span>{{ meeting.team_leader }}</span>
+                  <span ng-bind=" meeting.team_leader"></span>
                 </div>
                 <div layout>
                   <span>Locate Technician: </span>
-                  <span>{{ meeting.locate_technician }}</span>
+                  <span ng-bind="meeting.locate_technician"></span>
                 </div>
                 <div layout>
                   <span>Heath Damage Report: </span>
-                  <span>{{ meeting.heath_report }}</span>
+                  <span ng-bind="meeting.heath_report"></span>
                 </div>
                 <div layout>
                   <span>Facility: </span>
-                  <span>{{ meeting.facility }}</span>
+                  <span ng-bind="meeting.facility"></span>
                 </div>
                 <div ng-if="meeting.location_name" layout>
                   <span>Meeting Location: </span>
-                  <span>{{ meeting.location_name }}</span>
+                  <span ng-bind="meeting.location_name"></span>
                 </div>
                 <div layout>
                   <span>Address: </span>
-                  <span>{{ meeting.location }}
-                <span ng-if="meeting.cross_street">@ {{ meeting.cross_street }}</span>
+                  <span ng-bind="meeting.location">
+                <span ng-if="meeting.cross_street">@{{ meeting.cross_street }}</span>
                 </span>
                 </div>
                 <div layout>
                   <span>Town: </span>
-                  <span>{{ meeting.town }}</span>
+                  <span ng-bind="meeting.town"></span>
                 </div>
               </div>
             </div>
@@ -91,7 +113,7 @@
                     <div class="row">
                       <div layout="column">
                         <input ng-model="response.atmos_determination"
-                               ng-init="response.atmos_determination = 'facility_issue'"
+                               ng-init="response.atmos_determination = 'Facility Issue'"
                                type="hidden">
                         <label for="unscheduled_facility_issue"><strong>If there is a facility issue, please describe
                           the root cause.<span style="color:darkorange;">*</span></strong></label>
@@ -102,7 +124,7 @@
                     </div>
                     <div class="row">
                       <div layout="column">
-                        <label for="actions_taken"><strong>Have any corrective actions been taken to resolve the
+                        <label for="actions_taken"><strong>Have any corrective actions been taken to resolve this
                           facility issue? Please decsribe.<span style="color:darkorange;">*</span></strong></label>
                         <textarea ng-model="response.corrective_actions" name="actions_taken" id="actions_taken" cols="30"
                                   rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
@@ -115,28 +137,28 @@
                       <strong>Reason<span style="color:darkorange;">*</span></strong>
                       <select ng-model="response.atmos_determination" name="unable_to_replicate"
                               ng-required="response.able_to_replicate === 'No'" style="">
-                        <option value="replaced">Facility was altered or replaced</option>
-                        <option value="locate_error">Locate Error</option>
+                        <option value="Facility Replaced">Facility was altered or replaced</option>
+                        <option value="Locate Error">Locate Error</option>
                       </select>
                     </div>
                     <div layout="column" class="row">
                       <strong>Is this facility able to be accurately marked?<span style="color:darkorange;">*</span></strong>
                       <select ng-model="response.able_to_locate" name="able_to_locate"
                               ng-required="response.able_to_replicate === 'Yes'" style="">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
                       </select>
                     </div>
-                    <div ng-if="response.able_to_locate === 'yes'" layout="column" class="row">
+                    <div ng-if="response.able_to_locate === 'Yes'" layout="column" class="row">
                       <strong>Is this line accurately marked as of today?</strong>
                       <select ng-model="response.is_line_marked" name="is_line_marked"
-                              ng-required="response.isLocatable === 'yes'" style="">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
+                              ng-required="response.isLocatable === 'Yes'" style="">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
                       </select>
                     </div>
                     <div layout="column" class="row">
-                      <label for="additional_comments"><strong>Did the technician receive any coaching?
+                      <label for="additional_comments"><strong>Comments
                         Please describe.<span style="color:darkorange;">*</span></strong></label>
                       <textarea ng-model="response.atmos_comments" name="additional_comments"
                                 id="additional_comments"
