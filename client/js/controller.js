@@ -642,13 +642,9 @@
               }, 7000);
 
             } else {
+
               Meeting
-                .updateAttributes({
-                  id: request.id,
-                  schedule_status: 'confirmed',
-                  fname: userCtx.fname,
-                  lname: userCtx.lname
-                })
+                .upsert({id: request.id,schedule_status: 'confirmed',fname: userCtx.fname,lname: userCtx.lname})
                 .$promise
                 .then(function (meeting) {
                   $scope.pageMsg = 'Scheduling Meeting';

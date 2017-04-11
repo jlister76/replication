@@ -41,11 +41,11 @@
         <i ng-if="request.schedule_status==='pending'" class="material-icons" style="color:#009E5A;font-size:1.4rem;">new_releases</i>
         <i ng-if="request.schedule_status==='proposed'" class="material-icons" style="color:gray;font-size:1.4rem;">schedule</i>
       </td>
-      <td ng-bind="request.meeting_datetime | date:'short'"><em>empty</em>
+      <td ng-bind="request.meeting_datetime | date:'short'">
       </td>
-      <td ng-bind="request.location"><em>empty</em></td>
-      <td ng-bind="request.town"><em>empty</em></td>
-      <td ng-bind="request.facility"><em>empty</em></td>
+      <td ng-bind="request.location"></td>
+      <td ng-bind="request.town"></td>
+      <td ng-bind="request.facility"></td>
       <td>
         <md-button class="md-raised info"
                    style="font-size:10px;line-height:18px;min-height:24px!important;height:18px!important; min-width:18px!important;"
