@@ -123,8 +123,13 @@
                   }
                 }
               }).$promise
+            },
+            'cities': function (City) {
+              return City.find().$promise
+            },
+            'suffixes': function (Suffix) {
+              return Suffix.find().$promise
             }
-
           }
         })
         .state('authenticated.page.atmos.replications', {

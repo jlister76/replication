@@ -49,5 +49,13 @@
   "meeting": {
     "dataSource": "mssql",
     "public": true
+  },
+  "city": {
+    "dataSource": "mssql",
+    "public": true
+  },
+  "suffix": {
+    "dataSource": "mssql",
+    "public": true
   }
 }

@@ -14,7 +14,6 @@
     },
     "lname": {
       "type": "string"
-
     },
     "meeting_datetime": {
       "type": "date",

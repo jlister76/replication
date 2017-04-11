@@ -179,7 +179,8 @@
 
 
                   <md-button class="md-raised active" ng-click="confirmMeeting(request)">SCHEDULE</md-button>
-                  <md-button class="md-raised info" ng-click="declineMeeting(request)">DECLINE</md-button>
+                  <md-button class="md-raised info" ng-disabled="true" ng-click="declineMeeting(request)">DECLINE
+                  </md-button>
 
                 </div>
 
@@ -219,7 +220,8 @@
 
                       </div>
 
-                      <table ng-if="meetings.length > 0" cellpadding="0" cellspacing="0" width="100%">
+                      <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="2" width="100%"
+                             style="margin-top:1rem;">
                         <thead>
                         <th align="left">Date</th>
                         <th align="left">Location</th>
