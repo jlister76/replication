@@ -449,10 +449,10 @@
       };
 
     })
-    .controller('UnscheduledReplicationCtrl', function (cities, suffixes, $scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state, City) {
+    .controller('UnscheduledReplicationCtrl', function (userCtx, cities, suffixes, $scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state, City) {
 
       $scope.towns = cities;
-      console.log(suffixes);
+
       $scope.suffixes = suffixes;
 
       var _ = lodash;
@@ -477,24 +477,9 @@
           .then(function (teamleaders) {
             $scope.teamleaders = teamleaders;
           });
-        $scope.distribution_lists = [
-          {heath: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'f.pinales@heathus.com', 'j.kouba@heathus.com']},
-          {midtx: ['peter.pedersen@atmosenergy.com', 'julie.campbell@atmosenergy.com']}
-        ];
+
         $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
         $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
-        /*$scope.suffixes = [
-          {label: "Road", abrv: "RD"},
-          {label: "Street", abrv: "ST"},
-          {label: "Avenue", abrv: "AVE"},
-          {label: "Trail", abrv: "TRL"},
-          {label: "Circle", abrv: "CIR"},
-          {label: "Boulevard", abrv: "BLVD"},
-          {label: "Lane", abrv: "LN"},
-          {label: "Drive", abrv: "DR"},
-          {label: "EXPWY", abrv: "EXPWY"},
-          {label: "Way", abrv: "WY"}
-         ];*/
 
         $scope.sendEmail = function (response) {
 
@@ -509,6 +494,7 @@
             street_name = _.capitalize(response.street_name),
             cross_street = _.capitalize(response.cross_street);
 
+          //TODO: Mock model in atmos-scheduled controller
           Replication.create({
             replication_date: date,
             atmos_employee: userCtx.fname + userCtx.lname,

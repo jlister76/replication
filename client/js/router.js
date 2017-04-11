@@ -134,6 +134,7 @@
         })
         .state('authenticated.page.atmos.replications', {
           url: '',
+          title: 'Replications',
           views: {
             'requestedReplications': {
               templateUrl: 'views/atmos-requested-replications.html',
