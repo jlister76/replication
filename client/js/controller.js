@@ -127,7 +127,7 @@
 
       };
       $scope.addResponse = function (replication) {
-        Replication.updateAttributes({
+        Replication.upsert({
           id: replication.id,
           heath_comments: replication.comments,
           video_url: replication.url
@@ -160,7 +160,7 @@
       $scope.confirmMeeting = function (request) {
         $scope.meeting = request;
         Meeting
-          .updateAttributes({id: request.id, schedule_status: 'confirmed'})
+          .upsert({id: request.id, schedule_status: 'confirmed'})
           .$promise
           .then(function (meeting) {
             console.log(meeting, request);
@@ -738,7 +738,7 @@
               $scope.pageMsg = 'Rescheduling meeting...';
 
 
-              Meeting.updateAttributes({
+              Meetings.upsert({
                 id: request.id,
                 schedule_status: 'proposed',
                 meeting_datetime: request.momentDate,
@@ -751,73 +751,7 @@
                   $http.post('api/Meetings/proposed', {formData: proposed_schedule})
                     .then(function () {
                       var requests = [];
-
                       $scope.pageMsg = 'Emailing ' + proposed_schedule.team_leader;
-                      /* var oneMonth = moment().subtract('month',1);
-
-                       Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'pending', meeting_datetime: {gte:oneMonth } }}}).$promise
-                       .then(function(requestedReplicationMeetings){
-
-                       if(requestedReplicationMeetings.length > 0){
-
-
-                       for (var i = 0; i < requestedReplicationMeetings.length; i++) {
-
-                       requests.push(requestedReplicationMeetings[i]);
-
-                       }
-
-                       //assign request for replications to the view
-                       $scope.requests = requests;
-
-
-                       }else{
-
-                       //what to do when there are no meetings
-                       }
-
-
-                       Meeting.find({filter: {where: {email: userCtx.email, schedule_status: 'proposed', meeting_datetime: {gte:oneMonth } }}}).$promise
-                       .then(function(proposedReplicationMeetings){
-
-
-
-                       if(proposedReplicationMeetings.length > 0){
-
-                       for (var x = 0; x < proposedReplicationMeetings.length; x++) {
-
-                       requests.push(proposedReplicationMeetings[x]);
-
-                       }
-
-                       //assign request for replications to the view
-                       $scope.requests = requests;
-
-                       }
-
-                       $timeout(function(){
-                       $scope.pageReload = false;
-                       },2000);
-
-                       })
-                       });*/
-
-                      $timeout(function () {
-
-                        $scope.pageReload = false;
-
-                        $state.reload();
-                      }, 2000)
-                      /*$timeout(function () {
-
-                       // set the location.hash to the id of
-                       // the element you wish to scroll to.
-                       $location.hash('meeting_proposed');
-                       // call $anchorScroll()
-                       //$anchorScroll();
-                       $scope.meeting_proposed = false;
-                       //$state.reload();
-                       }, 5000);*/
 
 
                     })
@@ -934,7 +868,7 @@
 
                 //console.log('sending email...', response);
 
-                Meeting.updateAttributes({id: meeting.id, schedule_status: 'complete'})
+                Meeting.upsert({id: meeting.id, schedule_status: 'complete'})
                   .$promise
                   .then(function () {
 
