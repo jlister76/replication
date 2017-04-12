@@ -1,5 +1,20 @@
 <div class="md-padding" id="wrapper">
-  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
+  <div ng-if="pageReload" id="pageReload"
+       style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
+    <div layout="column" layout-align="center center"
+         style="z-index:10; position: fixed; top: 30%; left: 35%;width:35%; height:15%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         md-whiteframe="3">
+      <div layout layout-align="center center" style="margin-bottom:.8rem;">
+        <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
+        <div class="md-subhead md-padding" ng-bind-html="pageMsg"></div>
+      </div>
+      <div ng-if="showLinearProgress" style="width:80%;">
+        <md-progress-linear md-mode="indeterminate" class="md-warn md-hue-2"></md-progress-linear>
+      </div>
+    </div>
+  </div>
+  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;"
+       id="title">
     <p class="md-subhead" style="color:white;">Replication Response Form</p>
   </div>
   <div layout layout-align="center center">

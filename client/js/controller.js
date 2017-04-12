@@ -40,7 +40,7 @@
               }
               break;
             case 'ATMOS':
-              console.log('Is ATMOS');
+
               $state.go('authenticated.page.atmos.replications');
 
               break;
@@ -66,7 +66,7 @@
               next = $location.nextAfterLogin || '/router';
 
               $location.nextAfterLogin = null;
-              console.log(next);
+
               $location.path(next);
             }
 
@@ -449,39 +449,34 @@
       };
 
     })
-    .controller('UnscheduledReplicationCtrl', function (userCtx, cities, suffixes, $scope, $http, AuthService, Appuser, Replication, lodash, $rootScope, $state, City) {
-
-      $scope.towns = cities;
-
-      $scope.suffixes = suffixes;
+    .controller('UnscheduledReplicationCtrl', function (userCtx, teamLeaders, cities, suffixes, $scope, $http, Replication, lodash, $timeout, $anchorScroll, $location) {
 
       var _ = lodash;
 
-      //set pagetitle
-      $rootScope.title = $state.current.title;
-      $rootScope.icon = $state.current.icon;
-      if (AuthService.getCurrent()) {
-        AuthService.getCurrent().$promise.then(function (user) {
-          console.log(user.id);
-          //persist username beyond $pristine()
-          $scope.response = {
-            atmos_employee: user.fname + " " + user.lname,
-            employeeId: user.id,
-            cross_street: null
-          }
+      $scope.towns = _.uniqBy(cities, 'city');
+
+      $scope.suffixes = _.uniq(suffixes);
+
+      $scope.teamleaders = teamLeaders;
 
 
-        });
-        Appuser.find({filter: {where: {company: "HEATH", accessLevel: "group"}}})
-          .$promise
-          .then(function (teamleaders) {
-            $scope.teamleaders = teamleaders;
-          });
+      $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
 
-        $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
-        $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
+      $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
 
-        $scope.sendEmail = function (response) {
+      //handler for submitting replication results
+      $scope.sendEmail = function (response) {
+
+        $location.hash('title');
+
+        $anchorScroll();
+
+        $scope.pageReload = true;
+
+
+        $scope.pageMsg = '<p>Emailing replication results</p>';
+
+        $scope.showLinearProgress = true;
 
           var recipent = _.pick(JSON.parse(response.team_leader), 'email'),
             team_leader_fname = _.pick(JSON.parse(response.team_leader), 'fname'),
@@ -490,23 +485,23 @@
 
 
           var date = moment(),
-            tech_name = _.capitalize(response.locate_technician_fname) + " " + _.capitalize(response.locate_technician_lname),
+            locate_technician = _.capitalize(response.locate_technician_fname) + " " + _.capitalize(response.locate_technician_lname),
             street_name = _.capitalize(response.street_name),
             cross_street = _.capitalize(response.cross_street);
 
-          //TODO: Mock model in atmos-scheduled controller
+
           Replication.create({
             replication_date: date,
             atmos_employee: userCtx.fname + userCtx.lname,
             atmos_employeeId: userCtx.id,
-            team_leader: meeting.team_leader,
-            team_leader_email: meeting.team_leader_email,
-            locate_technician: meeting.locate_technician,
-            heath_report: meeting.heath_report,
-            facility: meeting.facility,
-            location: meeting.location,
-            cross_street: meeting.cross_street,
-            town: meeting.town,
+            team_leader: team_leader,
+            team_leader_email: recipent,
+            locate_technician: locate_technician,
+            heath_report: response.heath_report,
+            facility: response.facility_size + ' ' + response.facility_material,
+            location: response.street_number + ' ' + street_name + '' + response.street_suffix,
+            cross_street: cross_street,
+            town: response.town,
             isReplicated: response.able_to_replicate,
             atmos_determination: response.atmos_determination,
             corrective_actions: response.corrective_actions,
@@ -518,28 +513,44 @@
           })
             .$promise
             .then(function (response) {
-              console.log(response);
+
               $http.post('api/replications/sendemail', {formData: response})
                 .then(function (response) {
-                  console.log('sending email...', response);
+                  $scope.pageMsg = '<p>Email Sent!</p>';
+                  $timeout(function () {
+                    $scope.pageReload = false;
+                  }, 5000)
                 })
                 .catch(function (err) {
                   if (err) {
                     console.error(err)
                   }
                 });
+              //reset form fields
               $scope.response.locate_technician_fname = null;
+
               $scope.response.locate_technician_lname = null;
+
               $scope.response.heath_report = null;
+
               $scope.response.facility_size = null;
+
               $scope.response.facility_material = null;
+
               $scope.response.street_number = null;
+
               $scope.response.street_name = null;
+
               $scope.response.street_suffix = null;
+
               $scope.response.cross_street = null;
+
               $scope.response.town = null;
+
               $scope.response.able_to_replicate = null;
+
               $scope.response.atmos_determination = null;
+
               $scope.response.atmos_comments = null;
 
               $scope.replicationForm.$setPristine();
@@ -550,11 +561,7 @@
               }
             });
 
-        }
-
       }
-      ;
-
     })
     .controller('MeetingRequestCtrl', function ($scope, Meeting, userCtx, requestedReplicationMeetings, proposedReplicationMeetings, confirmedReplicationMeetings, $http, $timeout, $anchorScroll, $location, $state) {
 

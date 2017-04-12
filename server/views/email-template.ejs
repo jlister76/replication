@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <style>
 
-    h1  {
+    h1, h4 {
+      color: #004284;
+    }
+
+    h4 {
       color: #005EB8;
     }
     p, h3 {
@@ -18,27 +22,38 @@
 </head>
 <body style="margin: 0; padding: 0;">
 <table border="0" cellpadding="5" cellspacing="10" width="500">
-  <thead>
-  <th>
-    <h1>Replication Results</h1>
-    <h3><%=town%> Area</h3>
-  </th>
-  </thead>
-  <tbody>
   <tr>
-    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;border-top:solid 1px #666666;">
-
-      <strong>DETERMINATION</strong>
-      <p><%= reason %></p>
-      <p><strong>Comments</strong></p>
-      <p><%= comments %></p>
-
+    <td>
+      <h1>Replication Results</h1>
+    </td>
+  </tr>
+  <tr style="border-bottom:solid 2px #E8E8E8;">
+    <td>
+      <h3><%= town %> Area</h3>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;border-top:solid 1px #666666;">
+    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;">
 
-      <strong>MEETING ATTENDEES</strong>
+      <h4>DETERMINATION</h4>
+      <p><strong>Outcome: </strong> <span><%= reason %></span></p>
+      <% if(able_to_locate != null){ %>
+      <p><strong>Does this facility locate correctly? </strong> <span> <%= able_to_locate %></span></p>
+      <p><strong>Line marked after replication? </strong> <span> <%= is_line_marked %></span></p>
+      <% } %>
+      <p><strong>Comments</strong></p>
+      <p><%= comments %></p>
+      <% if(corrective_actions != null){ %>
+      <p><strong>Corrective Actions: </strong> <span> <%= corrective_actions %></span></p>
+
+      <% } %>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white" align="left"
+        style="padding: 10px 10px 8px 5px; font-size:1.4rem;border-top:solid 1px transparent;">
+
+      <h4>MEETING ATTENDEES</h4>
       <p><strong>ATMOS Rep:</strong> <span><%= atmos_employee %></span></p>
       <p><strong>Team Leader:</strong> <span><%= team_leader %></span></p>
       <p><strong>Locate Technician:</strong> <span><%= locate_technician %></span></p>
@@ -47,9 +62,9 @@
   </tr>
   <tr>
     <td
-      style="padding: 10px 10px 8px 5px;font-size:1.4rem;border-top:solid 1px #666666;border-bottom:solid 1px #666666;">
+      style="padding: 10px 10px 8px 5px;font-size:1.4rem;border-top:solid 1px transparent;border-bottom:solid 1px transparent;">
 
-      <strong>DAMAGE INFORMATION</strong>
+      <h4>DAMAGE INFORMATION</h4>
       <p><strong>Damage Report #:</strong> <%= heath_report %></p>
       <p><strong>Location:</strong> <%= location %></p>
       <% if (cross_street !== 'undefined') { %>

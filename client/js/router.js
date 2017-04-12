@@ -167,6 +167,12 @@
             },
             'unscheduledReplication': {
               templateUrl: 'views/replication-form.html',
+              resolve: {
+                teamLeaders: function (Appuser) {
+                  return Appuser.find({filter: {where: {company: "HEATH", accessLevel: "group"}}})
+                    .$promise
+                }
+              },
               controller: 'UnscheduledReplicationCtrl'
             }
           }

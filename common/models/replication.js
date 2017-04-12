@@ -15,7 +15,7 @@ module.exports = function(Replication) {
 
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
 
-    switch (d.atmos_determination) {
+    /* switch (d.atmos_determination) {
       case 'facility_issue':
         var reason = 'Technician was able to replicate the locate.';
         break;
@@ -25,12 +25,7 @@ module.exports = function(Replication) {
       case 'replaced':
         reason = 'Because the facility was replaced or altered, the technician was unable to replicate the locate.';
         break;
-    }
-
-
-    var facility = d.facility_size + ' ' + d.facility_material,
-      location = d.street_number + ' ' + d.street_name + ' ' + d.street_suffix;
-
+     }*/
     var messageVars = {
       replication_date: d.replication_date,
       town: d.town,
@@ -38,11 +33,14 @@ module.exports = function(Replication) {
       team_leader: d.team_leader,
       locate_technician: d.locate_technician,
       heath_report: d.heath_report,
-      location: location,
+      location: d.location,
       cross_street: d.cross_street,
-      facility: facility,
-      reason: reason,
-      comments: d.atmos_comments
+      facility: d.facility,
+      reason: d.atmos_determination,
+      comments: d.atmos_comments,
+      able_to_locate: d.able_to_locate,
+      is_line_marked: d.is_line_marked,
+      corrective_actions: d.corrective_actions
     };
     // prepare a loopback template renderer
     var renderer = loopback.template(path.resolve(__dirname, '../../server/views/email-template.ejs'));
