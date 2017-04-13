@@ -87,9 +87,18 @@
                 }
               }).$promise
             },
-            'cities': function (City) {
-              return City.find().$promise
-            },
+          'confirmedATMOSMeetings': function (Meeting, userCtx) {
+            var nextTwoWeeks = moment().add(2, 'weeks');
+
+            return Meeting.find({
+              filter: {
+                where: {
+                  schedule_status: 'confirmed',
+                  meeting_datetime: {lte: nextTwoWeeks}
+                }
+              }
+            }).$promise
+          },
             'suffixes': function (Suffix) {
               return Suffix.find().$promise
             }
