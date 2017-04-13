@@ -58,38 +58,7 @@
   </table>
   <div ng-if="request" layout="column" class="view" style="margin-top:2rem;">
     <div layout="column" layout-align="space-around start" style="width:100%;padding:.5rem;">
-      <div ng-if="scheduledMeetings.length > 0" style="margin-bottom:2rem;width:100%;">
-        <fieldset>
-          <legend>Scheduled Replication Meetings</legend>
-          <!-- <h4 style="color:#0F4A78;padding:.5rem;">Upcoming
-             Meetings</h4>-->
-          <div layout="column" style="padding:.5rem;">
-            <table cellpadding="4" cellspacing="4">
-              <thead>
-              <th align="left">Date</th>
-              <th align="left">Place</th>
-              <th align="left">Location</th>
-              <th align="left">Town</th>
-              <th align="left">DPS</th>
-              <th align="left">Facility</th>
-              <th align="left">Damage Report</th>
-              </thead>
-              <tbody>
-              <tr ng-repeat="meeting in scheduledMeetings | orderBy: 'meeting_datetime'" style="">
-                <td>{{meeting.meeting_datetime | date:'short'}}</td>
-                <td>{{meeting.location_name}}</td>
-                <td>{{meeting.location}}</td>
-                <td>{{meeting.town}}</td>
-                <td>{{meeting.fname}} {{meeting.lname}}</td>
-                <td>{{meeting.facility}}</td>
-                <td>{{meeting.heath_report}}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-        </fieldset>
 
-      </div>
       <!--show meeting details-->
       <div layout="column" layout-align="start" style="width:100%;">
 

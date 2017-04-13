@@ -37,7 +37,7 @@
             "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
             },
-            atmos: function (Appuser) {
+            "atmos": function (Appuser) {
 
               return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
 
@@ -47,6 +47,51 @@
                 console.error('403 Forbidden Access');
                 $state.go('app.atmos');
               }
+            },
+            "completedReplications": function (Replication, userCtx) {
+              return Replication.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
+            },
+            'requestedReplicationMeetings': function (userCtx, Meeting) {
+              var oneMonth = moment().subtract(1, 'months');
+              return Meeting.find({
+                filter: {
+                  where: {
+                    team_leader_email: userCtx.email,
+                    schedule_status: 'pending',
+                    meeting_datetime: {gte: oneMonth}
+                  }
+                }
+              }).$promise
+            },
+            'proposedReplicationMeetings': function (Meeting, userCtx) {
+              var oneMonth = moment().subtract(1, 'months');
+              return Meeting.find({
+                filter: {
+                  where: {
+                    email: userCtx.email,
+                    schedule_status: 'proposed',
+                    meeting_datetime: {gte: oneMonth}
+                  }
+                }
+              })
+            },
+            'confirmedReplicationMeetings': function (Meeting, userCtx) {
+              var oneMonth = moment().subtract(1, 'months');
+              return Meeting.find({
+                filter: {
+                  where: {
+                    team_leader_email: userCtx.email,
+                    schedule_status: 'confirmed',
+                    meeting_datetime: {gte: oneMonth}
+                  }
+                }
+              }).$promise
+            },
+            'cities': function (City) {
+              return City.find().$promise
+            },
+            'suffixes': function (Suffix) {
+              return Suffix.find().$promise
             }
           }
         })
@@ -54,7 +99,8 @@
           url: '',
           views: {
             'requestedReplications': {
-
+              templateUrl: 'views/heath-requested-replication.html',
+              controller: 'MeetingRequestCtrl'
             },
             'scheduledReplications': {
               templateUrl: 'views/heath-scheduled-view.html',
@@ -134,7 +180,6 @@
         })
         .state('authenticated.page.atmos.replications', {
           url: '',
-          title: 'Replications',
           views: {
             'requestedReplications': {
               templateUrl: 'views/atmos-requested-replications.html',

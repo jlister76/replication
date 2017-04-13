@@ -93,7 +93,7 @@
                   <div layout="column">
                     <label for="street"><strong>Suffix</strong></label>
                     <select ng-model="response.street_suffix" name="street_suffix" id="street_suffix" required>
-                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.name }}">{{ suffix.suffix
+                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.name }}">{{ suffix.name
                         }}
                       </option>
                     </select>
@@ -112,7 +112,7 @@
                 <div layout="column">
                   <label for="town"><strong>Town</strong></label>
                   <select ng-model="response.town" type="text" id="town" required>
-                    <option ng-repeat="town in towns | orderBy: 'city'" value="{{ town.city }}">{{ town.city }}</option>
+                    <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}</option>
                   </select>
                 </div>
               </div>
