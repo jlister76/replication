@@ -14,15 +14,15 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Meeting Requests</p>
+    <p class="md-subhead" style="color:white;">Meeting Requests</span>
   </div>
   <div ng-if="requests.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
-    <p>
+    <span>
       <em>
         There are no replication requests
       </em>
-    </p>
+    </span>
   </div>
   <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
@@ -56,19 +56,19 @@
     </tr>
     </tbody>
   </table>
-  <div ng-if="request" layout="column" class="view" style="margin-top:2rem;">
-    <div layout="column" layout-align="space-around start" style="width:100%;padding:.5rem;">
+  <div ng-if="request" layout="column" style="margin-top:2rem;">
+    <div layout="column" layout-align="space-around start" style="padding:.5rem;">
 
       <!--show meeting details-->
-      <div layout="column" layout-align="start" style="width:100%;">
+      <div layout="column" layout-align="start">
 
-        <fieldset class="field_set">
+        <fieldset>
 
           <legend>DETAILS</legend>
 
-          <div layout>
+          <div layout class="view" style="width:auto;">
 
-            <div layout="column" class="md-padding">
+            <div layout="column" class="md-padding" style="width:50%;">
 
               <div>
 
@@ -76,7 +76,7 @@
 
                   <span>Date: </span>
 
-                  <span>{{request.meeting_datetime | date:'short' }}</span>
+                  <span ng-bind="request.meeting_datetime | date:'short'"></span>
 
                 </div>
 
@@ -84,7 +84,7 @@
 
                   <span>Team Leader: </span>
 
-                  <span>{{ request.team_leader }}</span>
+                  <span ng-bind="request.team_leader"></span>
 
                 </div>
 
@@ -92,7 +92,7 @@
 
                   <span>Locate Technician: </span>
 
-                  <span>{{ request.locate_technician }}</span>
+                  <span ng-bind="request.locate_technician"></span>
 
                 </div>
 
@@ -100,7 +100,7 @@
 
                   <span>Heath Damage Report: </span>
 
-                  <span>{{ request.heath_report }}</span>
+                  <span ng-bind="request.heath_report"></span>
 
                 </div>
 
@@ -108,7 +108,7 @@
 
                   <span>Facility: </span>
 
-                  <span>{{ request.facility }}</span>
+                  <span ng-bind="request.facility"></span>
 
                 </div>
 
@@ -116,7 +116,7 @@
 
                   <span>Meeting Location: </span>
 
-                  <span>{{ request.location_name }}</span>
+                  <span ng-bind="request.location_name"></span>
 
                 </div>
 
@@ -124,7 +124,7 @@
 
                   <span>Address: </span>
 
-                  <span>{{ request.location }}
+                  <span ng-bind="request.location">
 
                 <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
 
@@ -136,7 +136,7 @@
 
                   <span>Town: </span>
 
-                  <span>{{ request.town }}</span>
+                  <span ng-bind="request.town"></span>
 
                 </div>
 
@@ -148,7 +148,7 @@
 
 
                   <md-button class="md-raised active" ng-click="confirmMeeting(request)">SCHEDULE</md-button>
-                  <md-button class="md-raised info" ng-disabled="true" ng-click="declineMeeting(request)">DECLINE
+                  <md-button class="md-raised info" ng-click="declineMeeting(request)">DECLINE
                   </md-button>
 
                 </div>
@@ -157,7 +157,7 @@
 
             </div>
 
-            <div layout="column" class="md-padding" style="border-left:solid thin lightgray;width:100%;">
+            <div layout="column" class="md-padding" style="border-left:solid thin lightgray;width:50%;">
 
               <div style="height:100%;">
 
@@ -209,7 +209,7 @@
                     <div ng-if="showRescheduleForm">
                       <div layout="column" style="width:100%;" id="reschedule">
 
-                        <p style="width:100%;"><strong>When will you be able to meet?</strong></p>
+                        <span style="width:100%;"><strong>When will you be able to meet?</strong></span>
 
 
                         <div layout style="width:100%;">
@@ -251,7 +251,7 @@
 
                 <div ng-if="showRescheduleForm" layout layout-align="start center" style="margin-top:1rem;">
 
-                  <md-button class="md-raised active" ng-click="propose(request,proposed)">RESCHEDULE
+                  <md-button class="md-raised active" ng-click="propose(request)">RESCHEDULE
 
                   </md-button>
 

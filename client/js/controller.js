@@ -83,7 +83,7 @@
           })
       };
     })
-    .controller('LogOutCtrl', function (AuthService, $scope, $location, $state) {
+    .controller('LogOutCtrl', function (AuthService, $scope, $location) {
 
       $scope.logout = function () {
         console.log('Signing out...');
@@ -96,69 +96,53 @@
         $location.path('/');
       }
     })
-    .controller('HeathCtrl', function (userCtx, $scope, Replication, $http, $timeout, $location, $rootScope, $anchorScroll, $state, Meeting) {
-      //set pagetitle
-      //$rootScope.title = $state.current.title;
-      console.log($scope.selectedIndex);
-        var requests = [];
-      /*for (var x = 0; x < proposedMeetings.length; x++) {
-        requests.push(proposedMeetings[x]);
+    .controller('HeathRequestedMeetingCtrl', function ($scope, Meeting, requestedMeetings, proposedMeetings, $http, $timeout, $state, $location, $anchorScroll) {
+      //collect all meeting requests
+      var requests = [];
+
+      if (requestedMeetings.length > 0) {
+
+
+        for (var i = 0; i < requestedMeetings.length; i++) {
+
+          requests.push(requestedMeetings[i]);
+
+        }
+
+
+      } else {
+
+        //what to do when there are no meetings
+        //TODO: handle when there are no meeting requests
       }
-      for (var i = 0; i < requestedMeetings.length; i++) {
-        requests.push(requestedMeetings[i]);
-       }*/
 
-      //$scope.scheduledMeetings = scheduledMeetings;
-      //$scope.requests = requests;
-      $scope.viewRequest = function (request) {
-        sessionStorage.removeItem('data');
-        sessionStorage.setItem('data', JSON.stringify(request));
-        getRequest();
-      };
-      $scope.viewMeeting = function (meeting) {
-        sessionStorage.removeItem('meeting');
-        sessionStorage.setItem('meeting', JSON.stringify(meeting));
-        getMeeting();
-      };
-      $scope.viewReplication = function (replication) {
-        sessionStorage.removeItem('data');
-        sessionStorage.setItem('data', JSON.stringify(replication));
-        persistObj();
+      if (proposedMeetings.length > 0) {
 
-      };
-      $scope.addResponse = function (replication) {
-        Replication.upsert({
-          id: replication.id,
-          heath_comments: replication.comments,
-          video_url: replication.url
-        })
-          .$promise
-          .then(function (response) {
-            console.log(response);
-            $http.post('api/Replications/sendResponse', {formData: response})
-              .then(function (response) {
-                //do something on success
-                console.info('success return');
-              })
-              .catch(function(err){if (err){console.error(err)}});
-            $scope.showSuccess = true;
-            $timeout(function () {
-              // set the location.hash to the id of
-              // the element you wish to scroll to.
-              $location.hash('Your response has been emailed for review.');
-              // call $anchorScroll()
-              $anchorScroll();
-              $state.reload();
-            }, 1000);
-          })
-          .catch(function (err) {
-            if (err) {
-              console.error(err);
-            }
-          })
-      };
+        for (var x = 0; x < proposedMeetings.length; x++) {
+
+          requests.push(proposedMeetings[x]);
+
+        }
+
+      }
+
+      //assign request for replications to the view
+      $scope.requests = requests;
+
+
+      //event handler for confirming proposed meeting request
       $scope.confirmMeeting = function (request) {
-        $scope.meeting = request;
+
+        $scope.pageReload = true;
+
+        $scope.pageMsg = '<p>Scheduling Meeting</p>';
+
+        $scope.showLinearProgress = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
         Meeting
           .upsert({id: request.id, schedule_status: 'confirmed'})
           .$promise
@@ -166,16 +150,11 @@
             console.log(meeting, request);
             $http.post('api/Meetings/heathConfirmed', {formData: meeting})
               .then(function (meeting) {
-                console.log(meeting);
-                $scope.request = null;
-                $scope.meeting_confirmed = true;
+
                 $timeout(function () {
-                  // set the location.hash to the id of
-                  // the element you wish to scroll to.
-                  $location.hash('meeting_confirmed');
-                  // call $anchorScroll()
-                  $anchorScroll();
+
                   $state.reload();
+
                 }, 1000);
               })
               .catch(function (err) {
@@ -185,55 +164,132 @@
               });
           });
       };
-      $scope.cancelRequest = function (request) {
 
-        Meeting.destroyById({id: request.id})
-          .$promise
+      //event handler for resending meeting request
+      $scope.resend = function (request) {
+        $scope.pageReload = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
+        $scope.showLinearProgress;
+
+        $http.post('api/Meetings/sendrequest', {formData: request})
           .then(function (request) {
-            alert('Meeting request was cancelled');
-            $state.reload();
+            $scope.pageMsg = '<p>Emailing meeting request</p>';
+            //clear fields in form
+            $timeout(function () {
+
+              $state.reload();
+
+            }, 2500);
           })
       };
+
+      //event handler for cancelling the meeting request
+      $scope.cancelMeeting = function (request) {
+        Meeting.destroyById({id: request.id})
+          .$promise
+          .then(function () {
+            $scope.pageReload = true;
+
+            $scope.pageMsg = '<p>Cancelling meeting request</p>';
+
+            $scope.showLinearProgress = true;
+
+            $timeout(function () {
+
+              $scope.pageReload = false;
+
+              $state.reload();
+
+            }, 500)
+          })
+      };
+
+      //event handler for viewing the meeting details
+      $scope.viewRequest = function (request) {
+
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(request));
+
+        getRequest();
+
+      };
+
+      //controller functions
+      function getRequest() {
+
+        var requestObj = sessionStorage.getItem('data');
+
+        $scope.request = JSON.parse(requestObj);
+
+      };
+    })
+    .controller('HeathConfirmedMeetingCtrl', function ($scope, $state, confirmedMeetings, Meeting, $http, $timeout, $location, $anchorScroll) {
+
+
+      $scope.meetings = confirmedMeetings;
+
+      //handler for completing a replication response
+      $scope.viewMeeting = function (meeting) {
+        console.log(meeting);
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(meeting));
+
+        getMeeting();
+
+      };
+
+      //handler for meeting cancellation
       $scope.cancelMeeting = function(meeting){
+
+        $scope.pageReload = true;
+
+        $scope.showLinearProgress = true;
+
+        $scope.pageMsg = '<p>Cancelling meeting</p>';
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
         Meeting.destroyById({id: meeting.id})
           .$promise
           .then(function(){
-            console.log(meeting);
+
             $http.post('api/Meetings/cancelMeeting', {formData: meeting})
               .then(function(){
-                alert('Scheduled meeting cancelled. ' + meeting.fname + ' '+ meeting.lname + ' will be notified via email.');
-                $state.reload();
+                $scope.pageMsg = '<p>Meeting Cancelled</p>';
+                $timeout(function () {
+
+                  $state.reload();
+                }, 2500)
               })
               .catch(function(err){if(err){console.error(err)}});
           })
           .catch(function(err){if(err){console.error(err)}})
       };
-      //$scope.meetings = scheduledMeetings;
-      //$scope.replications = replications;
-      //$scope.replications.meeting_date = moment(replications.meeting_date).format('MM-DD-YYYY');
 
-
-      function getRequest() {
-        var requestObj = sessionStorage.getItem('data');
-        $scope.request = JSON.parse(requestObj);
-      };
+      //controller functions
       function getMeeting() {
-        var requestObj = sessionStorage.getItem('meeting');
-        $scope.meeting = JSON.parse(requestObj);
 
-      };
-      function persistObj() {
-          var replicationObj = sessionStorage.getItem('data');
-          $scope.replication = JSON.parse(replicationObj);
-        };
+        var meetingObj = sessionStorage.getItem('data');
+
+        $scope.meeting = JSON.parse(meetingObj);
+
+      }
 
 
     })
-    .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state, suffixes, confirmedReplicationMeetings,confirmedATMOSMeetings) {
+    .controller('HeathSchedulerCtrl', function (userCtx, atmos, $scope, Meeting, $http, lodash, $timeout, $anchorScroll, $location, $rootScope, $state, suffixes, confirmedMeetings, confirmedAtmosMeetings) {
       var _ = lodash;
 
       $scope.date = moment();
-
+      $scope.twoWeeks = moment().add(2, 'weeks');
 
       //combine all emails to send as group list
       var groupList = [];
@@ -302,15 +358,15 @@
 
             var scheduleConflicts = [];
 
-            for( var x in confirmedATMOSMeetings){
+            for (var x in confirmedAtmosMeetings) {
 
               //console.log(moment(confirmedATMOSMeetings[x].meeting_datetime).format(), moment(request.momentDate).format());
 
-              if (moment(confirmedATMOSMeetings[x].meeting_datetime).format() === moment(request.momentDate).format()){
+              if (moment(confirmedAtmosMeetings[x].meeting_datetime).format() === moment(request.momentDate).format()) {
 
                 //console.log(confirmedATMOSMeetings[x].email);
 
-                scheduleConflicts.push(confirmedATMOSMeetings[x].email)
+                scheduleConflicts.push(confirmedAtmosMeetings[x].email)
               }
             }
 
@@ -360,9 +416,8 @@
 
               }
             }
-
-            break;
             }
+            break;
           case 'string':
             request.email = request.selected_dps;
             request.emailList = null;
@@ -377,9 +432,9 @@
               .$promise
               .then(function(scheduledMeeting){
                 var scheduledMeetingDate = [];
-                for (var x = 0; x < confirmedReplicationMeetings.length; x++) {
+                for (var x = 0; x < confirmedMeetings.length; x++) {
                   //
-                  scheduledMeetingDate.push(confirmedReplicationMeetings[x].meeting_datetime);
+                  scheduledMeetingDate.push(confirmedMeetings[x].meeting_datetime);
 
                 }
                 //console.log(scheduledMeetingDate);
@@ -446,7 +501,75 @@
       };
 
     })
-    .controller('UnscheduledReplicationCtrl', function (userCtx, teamLeaders, suffixes, $scope, $http, Replication, lodash, $timeout, $anchorScroll, $location) {
+    .controller('HeathResponseCtrl', function ($scope, $state, Replication, completedReplications, $http, $timeout, $location, $anchorScroll) {
+      $scope.replications = completedReplications;
+
+      //handler for viewing replication details
+      $scope.viewReplication = function (replication) {
+
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(replication));
+
+        getReplication();
+
+      };
+
+      $scope.addResponse = function (replication) {
+
+        $scope.pageReload = true;
+
+        $scope.pageMsg = '<p>Emailing response for review</p>';
+
+        $scope.showLinearProgress = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
+
+        Replication.upsert({
+          id: replication.id,
+          heath_comments: replication.comments,
+          video_url: replication.url
+        })
+          .$promise
+          .then(function (response) {
+            console.log(response);
+            $http.post('api/Replications/sendResponse', {formData: response})
+              .then(function (response) {
+                //do something on success
+                console.info('success return');
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              });
+
+            $timeout(function () {
+
+              $state.reload();
+            }, 1500);
+          })
+          .catch(function (err) {
+            if (err) {
+              console.error(err);
+            }
+          })
+      };
+
+
+      //controller functions
+      function getReplication() {
+
+        var replicationObj = sessionStorage.getItem('data');
+
+        $scope.replication = JSON.parse(replicationObj);
+
+      }
+    })
+    .controller('AtmosUnscheduledReplicationCtrl', function (userCtx, teamLeaders, suffixes, $scope, $http, Replication, lodash, $timeout, $anchorScroll, $location) {
 
       var _ = lodash;
 
@@ -581,7 +704,7 @@
 
       }
     })
-    .controller('MeetingRequestCtrl', function ($scope, Meeting, userCtx, requestedReplicationMeetings, proposedReplicationMeetings, confirmedReplicationMeetings, $http, $timeout, $anchorScroll, $location, $state) {
+    .controller('AtmosRequestedMeetingCtrl', function ($scope, Meeting, userCtx, requestedMeetings, proposedMeetings, confirmedMeetings, $http, $timeout, $anchorScroll, $location, $state) {
 
       var towns = ['Addison', 'Balch Springs', 'Carrollton', 'Cedar Hill', 'Cockrell Hill',
         'Combine', 'Coppell', 'Dallas', 'DeSoto', 'Duncanville', 'Farmers Branch', 'Ferris',
@@ -609,12 +732,12 @@
       //collect all meeting requests
       var requests = [];
 
-      if (requestedReplicationMeetings.length > 0) {
+      if (requestedMeetings.length > 0) {
 
 
-        for (var i = 0; i < requestedReplicationMeetings.length; i++) {
+        for (var i = 0; i < requestedMeetings.length; i++) {
 
-          requests.push(requestedReplicationMeetings[i]);
+          requests.push(requestedMeetings[i]);
 
         }
 
@@ -622,17 +745,13 @@
         $scope.requests = requests;
 
 
-      } else {
-
-        //what to do when there are no meetings
-        //TODO: handle when there are no meeting requests
       }
 
-      if (proposedReplicationMeetings.length > 0) {
+      if (proposedMeetings.length > 0) {
 
-        for (var x = 0; x < proposedReplicationMeetings.length; x++) {
+        for (var x = 0; x < proposedMeetings.length; x++) {
 
-          requests.push(proposedReplicationMeetings[x]);
+          requests.push(proposedMeetings[x]);
 
         }
 
@@ -641,9 +760,9 @@
 
       }
 
-      if (confirmedReplicationMeetings.length > 0) {
+      if (confirmedMeetings.length > 0) {
         //assign meetings in view
-        $scope.meetings = confirmedReplicationMeetings;
+        $scope.meetings = confirmedMeetings;
       }
 
       //event handler for confirming meeting
@@ -692,7 +811,7 @@
             } else {
 
               Meeting
-                .upsert({id: request.id,schedule_status: 'confirmed',fname: userCtx.fname,lname: userCtx.lname})
+                .upsert({id: request.id, schedule_status: 'confirmed', fname: userCtx.fname, lname: userCtx.lname})
                 .$promise
                 .then(function (meeting) {
                   $scope.pageMsg = 'Scheduling Meeting';
@@ -727,29 +846,10 @@
 
       };
 
-      //event handler for cancelling the meeting request
-      $scope.cancelMeeting = function (request){
-        Meeting.destroyById({id: request.id})
-          .$promise
-          .then(function(){
-            $scope.pageReload = true;
-
-            $scope.pageMsg = '<p>Cancelling meeting request</p>';
-
-            $scope.showLinearProgress = true;
-
-            $timeout(function(){
-
-              $scope.pageReload = false;
-
-              $state.reload();
-
-            },500)
-          })
-      };
 
       //event handler for proposing new schedule
       $scope.propose = function (request) {
+
 
         $scope.team_leader_email = request.team_leader_email;
 
@@ -759,82 +859,117 @@
 
         $scope.showLinearProgress = true;
 
-        Meeting.find({
-          filter: {
-            where: {
-              email: userCtx.email,
-              schedule_status: 'confirmed',
-              meeting_datetime: request.momentDate
-            }
-          }
-        })
-          .$promise
-          .then(function (scheduledMeeting) {
-            console.log(scheduledMeeting.length);
-            if (scheduledMeeting.length > 0) {
 
-              $scope.showLinearProgress = false;
-
-              var location = _.get(scheduledMeeting[0], 'location');
-
-              var town = _.get(scheduledMeeting[0], 'town');
-
-              //scheduling conflict
-              $scope.showErrorIcon = true;
-
-              $scope.icon = '<i class="material-icons">error</i>';
-
-              $scope.pageMsg = 'Scheduling Conflict';
-
-              $timeout(function () {
-
-                $scope.pageReload = false;
-
-              }, 5000)
-
-            } else if (scheduledMeeting.length === 0) {
-              //no conflict
-              $scope.pageMsg = 'Rescheduling meeting...';
+        for (var x in confirmedMeetings) {
 
 
-              Meetings.upsert({
-                id: request.id,
-                schedule_status: 'proposed',
-                meeting_datetime: request.momentDate,
-                fname: userCtx.fname,
-                lname: userCtx.lname
-              })
-                .$promise
-                .then(function (proposed_schedule) {
+          if (moment(confirmedMeetings[x].meeting_datetime).format === moment(request.momentDate).format()) {
 
-                  $http.post('api/Meetings/proposed', {formData: proposed_schedule})
-                    .then(function () {
-                      var requests = [];
-                      $scope.pageMsg = 'Emailing ' + proposed_schedule.team_leader;
 
+            //scheduling conflict
+            $scope.showErrorIcon = true;
+
+            $scope.icon = '<i class="material-icons">error</i>';
+
+            $scope.pageMsg = 'Scheduling Conflict';
+
+            $timeout(function () {
+
+              $scope.pageReload = false;
+
+            }, 2500)
+
+          } else {
+            //check team leader's schedule for conflicts
+            Meeting.find({
+              filter: {
+                where: {
+                  team_leader: request.team_leader,
+                  schedule_status: 'confirmed',
+                  meeting_datetime: request.momentDate
+                }
+              }
+            })
+              .$promise
+              .then(function (scheduledMeeting) {
+
+
+                if (scheduledMeeting.length > 0) {
+
+                  $scope.showLinearProgress = false;
+
+                  var location = _.get(scheduledMeeting[0], 'location');
+
+                  var town = _.get(scheduledMeeting[0], 'town');
+
+                  //scheduling conflict
+                  $scope.showErrorIcon = true;
+
+                  $scope.icon = '<i class="material-icons">error</i>';
+
+                  $scope.pageMsg = 'Scheduling Conflict';
+
+                  $timeout(function () {
+
+                    $scope.pageReload = false;
+
+                  }, 2500)
+
+                } else if (scheduledMeeting.length === 0) {
+
+                  //no conflict
+                  $scope.showErrorIcon = false;
+
+                  $scope.pageMsg = 'Rescheduling meeting';
+
+
+                  Meeting.upsert({
+                    id: request.id,
+                    schedule_status: 'proposed',
+                    meeting_datetime: request.momentDate,
+                    fname: userCtx.fname,
+                    lname: userCtx.lname
+                  })
+                    .$promise
+                    .then(function (proposed_schedule) {
+
+                      $http.post('api/Meetings/proposed', {formData: proposed_schedule})
+                        .then(function () {
+                          var requests = [];
+                          $scope.pageMsg = 'Emailing ' + proposed_schedule.team_leader;
+
+                          $timeout(function () {
+
+                            $state.reload();
+
+                          }, 2500)
+
+                        })
+                        .catch(function (err) {
+                          if (err) {
+                            console.error(err);
+                          }
+                        });
 
                     })
                     .catch(function (err) {
                       if (err) {
-                        console.error(err);
+                        console.error(err)
                       }
-                    });
+                    })
 
-                })
-                .catch(function (err) {
-                  if (err) {
-                    console.error(err)
-                  }
-                })
+                }
 
-            }
+              })
+              .catch(function () {
+              });
 
-          })
-          .catch(function () {
-          });
+          }
+        }
 
 
       };
+
 
       //event handler for viewing the meeting details
       $scope.viewRequest = function (request) {
@@ -844,6 +979,52 @@
         sessionStorage.setItem('data', JSON.stringify(request));
 
         getRequest();
+
+      };
+
+
+      //event handler for declining meeting
+      $scope.declineMeeting = function (request) {
+
+        $scope.pageReload = true;
+
+        $scope.pageMsg = '<p>Declining Meeting</p>';
+
+        $scope.showLinearProgress = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
+        Meeting.destroyById({id: request.id})
+          .$promise
+          .then(function () {
+            console.log(request);
+            $scope.pageMsg = '<p>Emailing ' + request.team_leader + '</p>';
+
+            $http.post('api/Meetings/declined', {formData: request})
+              .then(function (request) {
+
+                $timeout(function () {
+
+                  $state.reload();
+
+                }, 2000);
+
+
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              })
+
+          })
+          .catch(function (err) {
+            if (err) {
+              console.error(err)
+            }
+          });
 
       };
 
@@ -857,9 +1038,11 @@
       };
 
     })
-    .controller('ScheduledReplicationsCtrl', function ($scope, Replication, Meeting, userCtx, confirmedReplicationMeetings, $http, $state, $timeout, $anchorScroll, $location) {
+    .controller('AtmosConfirmedMeetingCtrl', function ($scope, Replication, Meeting, userCtx, confirmedMeetings, $http, $state, $timeout, $anchorScroll, $location) {
 
-      $scope.meetings = confirmedReplicationMeetings;
+
+      $scope.meetings = confirmedMeetings;
+
 
 
       //handler to clear form values
@@ -983,13 +1166,12 @@
 
 
     })
-    .controller('CompletedReplicationsCtrl', function ($scope, completedReplications) {
+    .controller('AtmosCompletedReplicationCtrl', function ($scope, completedReplications) {
 
       //assign completed replications to view
       $scope.replications = completedReplications;
 
       //handler for viewing replication details
-      //event handler for viewing the meeting details
       $scope.viewReplication = function (replication) {
         console.log(replication);
         sessionStorage.removeItem('data');

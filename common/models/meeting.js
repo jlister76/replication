@@ -145,7 +145,6 @@ module.exports = function(Meeting) {
     });
   };
   Meeting.cancel = function(meeting, cb) {
-    console.log('Inside cancel', meeting);
     var m = meeting;
     var emailTo = m.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -179,8 +178,50 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
+  Meeting.decline = function (meeting, cb) {
+    var m = meeting;
+    console.log(m.email);
+    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
+    var messageVars = {
+      id: m.id,
+      dps: m.email,
+      meeting_date: moment(m.meeting_datetime).format('dddd, MMMM Do YYYY h:mm a'),
+      team_leader: m.team_leader,
+      location_name: m.location_name,
+      location: m.location,
+      cross_street: m.cross_street,
+      town: m.town,
+      heath_report: m.heath_report,
+      facility: m.facility,
+      locate_technician: m.locate_technician
+    };
+    var renderer = loopback
+      .template(path
+        .resolve(__dirname, '../../server/views/email-meeting-declined.ejs'));
+    var html_body = renderer(messageVars);
+    console.log('Before send');
+    Meeting.app.models.Email.send({
+      to: ['jlister469@outlook.com', 'j.lister@heathus.com', m.team_leader_email],
+      from: 'j.lister@heathus.com',
+      subject: 'Scheduled Meeting Declined by  ' + m.email,
+      html: html_body
+    }, function (err, mail) {
+      if (err) {
+        console.error(err);
+      }
+      console.log('email sent!');
+    });
+  };
+  //custom remote methods
+  Meeting.declined = function (msg, next) {
+    Meeting.decline(msg);
+    next();
+  };
+  Meeting.remoteMethod('declined', {
+    accepts: {arg: 'formData', type: 'Object'},
+    http: {path: '/declined', verb: 'post'}
+  });
   Meeting.cancelMeeting = function(msg, next) {
-    console.log('Meeting cancelled', msg);
     Meeting.cancel(msg);
     next();
   };

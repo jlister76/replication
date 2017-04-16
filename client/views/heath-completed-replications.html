@@ -1,0 +1,140 @@
+<div class="md-padding" id="wrapper">
+  <div ng-if="pageReload" id="pageReload"
+       style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
+    <div layout="column" layout-align="center center"
+         style="z-index:10; position: fixed; top: 15%; left: 35%;width:35%; height:10%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         md-whiteframe="3">
+      <div layout layout-align="center center" style="margin-bottom:.8rem;">
+        <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
+        <div class="md-subhead md-padding" ng-bind-html="pageMsg"></div>
+      </div>
+      <div ng-if="showLinearProgress" style="width:80%;">
+        <md-progress-linear md-mode="indeterminate" class="md-warn md-hue-2"></md-progress-linear>
+      </div>
+    </div>
+  </div>
+  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
+    <p class="md-subhead" style="color:white;">Replications</p>
+  </div>
+  <div ng-if="replications.length === 0" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no completed replications
+      </em>
+    </p>
+  </div>
+  <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%"
+         style="margin-top:3.8rem;">
+    <thead>
+    <th align="left">Date / Time</th>
+    <th align="left">DPS</th>
+    <th align="left">Address</th>
+    <th align="left">Town</th>
+    <th align="left">Facility</th>
+    <th align="left">Technician</th>
+    <th align="left">Action</th>
+    </thead>
+    <tbody>
+    <tr ng-repeat="replication in replications | orderBy: 'meeting_datetime'" class="table_body">
+      <td ng-bind="replication.replication_date | date: 'short'"></td>
+      <td ng-bind="replication.atmos_employee"></td>
+      <td ng-bind="replication.location"></td>
+      <td ng-bind="replication.town"></td>
+      <td ng-bind="replication.facility"></td>
+      <td ng-bind="replication.locate_technician"></td>
+      <td>
+        <md-button class="md-raised"
+                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
+                   ng-click="viewReplication(replication)" layout layout-align="center center">
+          view
+        </md-button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div ng-if="replication" layout="column" class="view" style="margin-top:2rem;padding:1rem;">
+    <fieldset class="field_set">
+      <legend>
+        Replication Details
+      </legend>
+      <div style="margin:1rem;">
+        <div layout>
+          <span>Replication Date: </span>
+          <span ng-bind="replication.replication_date | date:'short'"></span>
+        </div>
+        <div layout>
+          <span>ATMOS REP.: </span>
+          <span ng-bind="replication.atmos_employee"></span>
+        </div>
+        <div layout>
+          <span>Locate Technician: </span>
+          <span ng-bind="replication.locate_technician"></span>
+        </div>
+        <div layout>
+          <span>Heath Damage Report: </span>
+          <span ng-bind="replication.heath_report"></span>
+        </div>
+        <div layout>
+          <span>Facility: </span>
+          <span ng-bind="replication.facility"></span>
+        </div>
+        <div layout>
+          <span>Address: </span>
+          <span ng-bind="replication.location"><span
+            ng-if="replication.cross_street">@ {{ replication.cross_street }}</span></span>
+        </div>
+        <div layout>
+          <span>Town: </span>
+          <span ng-bind="replication.town"></span>
+        </div>
+        <div layout>
+          <span>Determination: </span>
+          <span ng-bind="replication.atmos_determination"></span>
+        </div>
+        <div ng-if="replication.atmos_determination === 'Locate Error'" layout>
+          <span>Facility able to be located: </span>
+          <span ng-bind="replication.able_to_locate"></span>
+        </div>
+        <div ng-if="replication.able_to_locate === 'Yes'" layout>
+          <span>Facility marked after replication: </span>
+          <span ng-bind="replication.is_line_marked"></span>
+        </div>
+        <div layout>
+          <span>Comments: </span>
+          <span ng-bind="replication.atmos_comments"></span>
+        </div>
+        <div layout ng-if="replication.heath_comments">
+          <span>Team Leader Response: </span>
+          <span ng-bind="replication.heath_comments"></span>
+        </div>
+        <div layout ng-if="replication.video_url">
+          <span>Video: </span>
+          <span style="width:auto;"><a href="{{ replication.video_url }}" ng-bind="replication.video_url"></a></span>
+        </div>
+      </div>
+      <md-divider></md-divider>
+      <div class="md-padding">
+        <form name="heathResponseForm" ng-submit="addResponse(replication)" style=" margin-top:1rem; padding:1rem; background-color:#e2e2e2;
+          box-shadow: 1px 1px 1px #888888;">
+          <h4>Team Leader's Response</h4>
+          <input ng-model=replication.id type="hidden">
+          <div layout="column" style="margin:1rem;">
+            <label for="heath_response"><strong>Comments:</strong></label>
+            <textarea ng-model="replication.comments" name="heath_response" id="heath_response" cols="10" rows="5"
+                      required></textarea>
+          </div>
+          <div layout="column" style="margin:1rem;">
+            <label for="video_url"><strong>Paste video URL here</strong></label>
+            <input ng-model="replication.url" id="video_url" type="text">
+          </div>
+          <div layout style="">
+            <md-button class="md-raised" ng-disabled="heathResponseForm.$invalid"
+                       ng-class="{'active':heathResponseForm.$valid}" type="submit">SAVE
+            </md-button>
+          </div>
+        </form>
+      </div>
+    </fieldset>
+  </div>
+</div>

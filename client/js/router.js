@@ -5,7 +5,7 @@
     .config(function ($stateProvider, $urlRouterProvider) {
       $stateProvider
         .state('app', {
-          url: '',
+          url: '/',
           controller: 'LogInCtrl',
           templateUrl: 'views/login-form.html'
         })
@@ -49,47 +49,54 @@
               }
             },
             "completedReplications": function (Replication, userCtx) {
-              return Replication.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
+              var oneMonth = moment().subtract(1, 'month');
+              return Replication.find({
+                filter: {
+                  where: {
+                    team_leader_email: userCtx.email,
+                    replication_date: {gte: oneMonth}
+                  }
+                }
+              }).$promise
             },
-            'requestedReplicationMeetings': function (userCtx, Meeting) {
-              var oneMonth = moment().subtract(1, 'months');
+            'requestedMeetings': function (userCtx, Meeting) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
                     team_leader_email: userCtx.email,
                     schedule_status: 'pending',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               }).$promise
             },
-            'proposedReplicationMeetings': function (Meeting, userCtx) {
-              var oneMonth = moment().subtract(1, 'months');
+            'proposedMeetings': function (Meeting, userCtx) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
-                    email: userCtx.email,
+                    team_leader_email: userCtx.email,
                     schedule_status: 'proposed',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               })
             },
-            'confirmedReplicationMeetings': function (Meeting, userCtx) {
-              var oneMonth = moment().subtract(1, 'months');
+            'confirmedMeetings': function (Meeting, userCtx) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
                     team_leader_email: userCtx.email,
                     schedule_status: 'confirmed',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               }).$promise
             },
-          'confirmedATMOSMeetings': function (Meeting, userCtx) {
+            'confirmedAtmosMeetings': function (Meeting) {
             var nextTwoWeeks = moment().add(2, 'weeks');
-
             return Meeting.find({
               filter: {
                 where: {
@@ -107,17 +114,17 @@
         .state('authenticated.page.heath.replications', {
           url: '',
           views: {
-            'requestedReplications': {
-              templateUrl: 'views/heath-requested-replication.html',
-              controller: 'MeetingRequestCtrl'
+            'requested': {
+              templateUrl: 'views/heath-requested-meetings.html',
+              controller: 'HeathRequestedMeetingCtrl'
             },
-            'scheduledReplications': {
-              templateUrl: 'views/heath-scheduled-view.html',
-              controller: 'HeathCtrl'
+            'scheduled': {
+              templateUrl: 'views/heath-scheduled-meetings.html',
+              controller: 'HeathConfirmedMeetingCtrl'
             },
-            'completedReplications': {
-              templateUrl: 'views/heath-completed-view.html',
-              controller: 'HeathCtrl'
+            'completed': {
+              templateUrl: 'views/heath-completed-replications.html',
+              controller: 'HeathResponseCtrl'
             },
             'scheduling': {
               templateUrl: 'views/heath-scheduler.html',
@@ -141,46 +148,51 @@
               }
             },
             "completedReplications": function (Replication, userCtx) {
-              return Replication.find({filter: {where: {atmos_employeeId: userCtx.id}}}).$promise
+              var oneMonth = moment().subtract(1, 'month');
+              return Replication.find({
+                filter: {
+                  where: {
+                    atmos_employeeId: userCtx.id,
+                    replication_date: {gte: oneMonth}
+                  }
+                }
+              }).$promise
             },
-            'requestedReplicationMeetings': function (userCtx, Meeting) {
-              var oneMonth = moment().subtract(1, 'months');
+            'requestedMeetings': function (userCtx, Meeting) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
                     email: userCtx.email,
                     schedule_status: 'pending',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               }).$promise
             },
-            'proposedReplicationMeetings': function (Meeting, userCtx) {
-              var oneMonth = moment().subtract(1, 'months');
+            'proposedMeetings': function (Meeting, userCtx) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
                     email: userCtx.email,
                     schedule_status: 'proposed',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               })
             },
-            'confirmedReplicationMeetings': function (Meeting, userCtx) {
-              var oneMonth = moment().subtract(1, 'months');
+            'confirmedMeetings': function (Meeting, userCtx) {
+              var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
                     email: userCtx.email,
                     schedule_status: 'confirmed',
-                    meeting_datetime: {gte: oneMonth}
+                    meeting_datetime: {gte: today}
                   }
                 }
               }).$promise
-            },
-            'cities': function (City) {
-              return City.find().$promise
             },
             'suffixes': function (Suffix) {
               return Suffix.find().$promise
@@ -190,15 +202,15 @@
         .state('authenticated.page.atmos.replications', {
           url: '',
           views: {
-            'requestedReplications': {
-              templateUrl: 'views/atmos-requested-replications.html',
-              controller: 'MeetingRequestCtrl'
+            'requested': {
+              templateUrl: 'views/atmos-requested-meetings.html',
+              controller: 'AtmosRequestedMeetingCtrl'
             },
-            'scheduledReplications': {
-              templateUrl: 'views/atmos-scheduled-replications.html',
-              controller: 'ScheduledReplicationsCtrl',
+            'scheduled': {
+              templateUrl: 'views/atmos-scheduled-meetings.html',
+              controller: 'AtmosConfirmedMeetingCtrl',
               resolve: {
-                'confirmedReplicationMeetings': function (Meeting, userCtx) {
+                'confirmedMeetings': function (Meeting, userCtx) {
                   var oneMonth = moment().subtract(1, 'months');
                   return Meeting.find({
                     filter: {
@@ -215,11 +227,11 @@
                 }
               }
             },
-            'completedReplications': {
+            'completed': {
               templateUrl: 'views/atmos-completed-replications.html',
-              controller: 'CompletedReplicationsCtrl'
+              controller: 'AtmosCompletedReplicationCtrl'
             },
-            'unscheduledReplication': {
+            'unscheduled': {
               templateUrl: 'views/replication-form.html',
               resolve: {
                 teamLeaders: function (Appuser) {
@@ -227,7 +239,7 @@
                     .$promise
                 }
               },
-              controller: 'UnscheduledReplicationCtrl'
+              controller: 'AtmosUnscheduledReplicationCtrl'
             }
           }
         })

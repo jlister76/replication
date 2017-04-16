@@ -42,6 +42,7 @@
                        locale="en"
                        format="lll"
                        min-date="date"
+                       max-date="twoWeeks"
                        min-view="month"
                        autoclose="true"
                        today="true"
@@ -75,7 +76,7 @@
                   <div layout="column">
                     <label for="street"><strong>Suffix</strong></label>
                     <select ng-model="request.street_suffix" name="street_suffix" id="street_suffix" required>
-                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.name }}">{{ suffix.name
+                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.suffix }}">{{ suffix.name
                         }}
                       </option>
                     </select>
