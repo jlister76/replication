@@ -1,9 +1,9 @@
 /* eslint-disable comma-dangle,no-trailing-spaces */
 'use strict';
 
-module.exports = function (Appuser) {
+module.exports = function(Appuser) {
   //send password reset link when requested
-  Appuser.on('resetPasswordRequest', function (info) {
+  Appuser.on('resetPasswordRequest', function(info) {
     var url = 'https://rpf.heathfieldapp.com/password-reset';
     var html = 'Click <a href="' + url + '?access_token=' +
       info.accessToken.id + '">here</a> to reset your password';
@@ -16,7 +16,7 @@ module.exports = function (Appuser) {
       from: info.email,
       subject: 'Password reset',
       html: html
-    }, function (err) {
+    }, function(err) {
       if (err) return console.log('> error sending password reset email');
       console.log('> sending password reset email to:', info.email);
     });
