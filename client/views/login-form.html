@@ -4,7 +4,7 @@
 
   </div>
   <div flex-xs flex-sm flex-gt-sm="30" layout="column" layout-align="start center"
-       style="background-color:#fafafa;height:100%;">
+       style="background-color:#fafafa;height:100%;width:100%;">
     <div layout layout-align="start"
          style="margin-top:2rem;width:100%;height:80px;background-image: url('../img/HCI_logo-min.png'); background-size: contain; background-position: center;background-repeat:no-repeat; ">
 
@@ -15,39 +15,50 @@
         <div ng-show="err" class="md-caption" style="color: coral">Invalid Username and/or password.<br/> Please try
           again.
         </div>
-        <div layout layout-align="" class="md-padding">
-          <form name="logIn" ng-submit="login(user.email,user.password)">
-            <div layout="column">
+        <div layout layout-align="" class="md-padding" style="width: 100%;" ng-init="showResetForm = false">
+          <form ng-hide="showResetForm" name="logIn" ng-submit="login(user.email,user.password)" style="width: 100%;">
+            <div layout="column" style="width:100%;">
               <md-input-container>
                 <label for="email">Email</label>
-                <input type="email" id="email" ng-model="user.email" style="width:100%;">
+                <input type="email" id="email" ng-model="user.email" style="width:80%;">
               </md-input-container>
               <md-input-container>
                 <label for="password">Password</label>
-                <input type="password" id="password" ng-model="user.password" style="width:100%;">
+                <input type="password" id="password" ng-model="user.password" style="width:80%;">
               </md-input-container>
             </div>
-            <div layout="column" layout-align="center start">
-              <md-button class="md-raised" type="submit" id="sign-in-button"
-                         style="margin-top:1rem; width:45%; height: 42px; background-color: #005EB8;color:white;">
-                Log In
+            <div layout="column" layout-align="start start">
+              <md-button class="md-raised active" type="submit" id="sign-in-button"
+                         style="margin-top:2.5rem; width:45%; height:42px;">
+                Sign In
               </md-button>
+              <div layout layout-align="start" class="" style="margin-top:2.5rem;width:100%;">
+                <span>Forgot Password? </span>
+                <a href="" ng-click="showResetForm = true">Reset Password</a>
+              </div>
+            </div>
+          </form>
+          <form ng-if="showResetForm" name="resetPasswordForm" ng-submit="resetPassword(email)" style="width: 100%;">
+            <div layout="column" style="width: 100%;">
+              <span class="md-body-1">Enter your email address.</span>
+              <md-input-container>
+                <label for="email">Email</label>
+                <input type="email" id="passwordreset" ng-model="email" style="width:80%;">
+              </md-input-container>
+            </div>
+            <div>
+              <md-button class="md-raised info" type="submit">Password Reset</md-button>
             </div>
           </form>
         </div>
       </div>
-
     </div>
-    <div layout layout-align="" style="height:64px;width:100%;"></div>
-    <!--<div layout="column" layout-align="center center" href="" class="md-body-1" style="margin-top:2.5rem;border:solid thin orangered;">
-
+    <div layout layout-align="center center" style="height:64px;width:99%;border-top:solid thin #ebebeb;">
       <div layout layout-align="center center">
-        <span><i class="material-icons" style="color:#959595;">lock</i></span>
-        <span class="md-caption">SSL SECURE</span>
+        <div><i class="material-icons" style="color:#79b538;font-size:1rem;">lock</i></div>
+        <span class="md-caption">SSL Certified</span>
       </div>
-      <div layout layout-align="center center" style="margin-top:1rem;">
-        <a href="#" style="text-decoration: none;"><span>Reset Password</span></a></div>
-    </div>-->
+    </div>
   </div>
 
 </div>

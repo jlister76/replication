@@ -13,6 +13,11 @@
           url: '/router',
           controller: 'RouterCtrl'
         })
+        .state('password-reset', {
+          url: '/reset-password',
+          templateUrl: '',
+          controller: 'LogInCtrl'
+        })
         .state('authenticated', {
           abstract: true,
           templateUrl: 'views/page-template.html'

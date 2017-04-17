@@ -49,8 +49,8 @@
 
 
     })
-    .controller('LogInCtrl', function (AuthService, $scope, $location) {
-
+    .controller('LogInCtrl', function (AuthService, $scope, $location, Appuser) {
+      //event handler for signing-in
       $scope.login = function (email, password) {
         AuthService.login(email, password)
           .$promise
@@ -81,6 +81,22 @@
           .then(function () {
 
           })
+      };
+
+      //event handler for resetting password
+      $scope.resetPassword = function (email) {
+        console.log(email);
+        Appuser.resetPassword({email: email})
+          .$promise
+          .then(function (token) {
+            console.log(token)
+          })
+          .catch(function (err) {
+            if (err) {
+              console.error(err)
+            }
+          })
+
       };
     })
     .controller('LogOutCtrl', function (AuthService, $scope, $location) {
