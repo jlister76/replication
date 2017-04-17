@@ -14,15 +14,15 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Meeting Requests</span>
+    <p class="md-subhead" style="color:white;">Meeting Requests</p>
   </div>
-  <div ng-if="requests.length === 0" layout layout-align="center center"
+  <div ng-if="!requests" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
-    <span>
+    <p>
       <em>
         There are no replication requests
       </em>
-    </span>
+    </p>
   </div>
   <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
@@ -60,13 +60,13 @@
     <div layout="column" layout-align="space-around start" style="padding:.5rem;">
 
       <!--show meeting details-->
-      <div layout="column" layout-align="start">
+      <div layout="column" layout-align="center center" style="width: 100%;padding:.5rem;">
 
-        <fieldset>
+        <fieldset class="field_set" style="width: 100%;">
 
           <legend>DETAILS</legend>
 
-          <div layout class="view" style="width:auto;">
+          <div layout class="view">
 
             <div layout="column" class="md-padding" style="width:50%;">
 
@@ -157,9 +157,9 @@
 
             </div>
 
-            <div layout="column" class="md-padding" style="border-left:solid thin lightgray;width:50%;">
+            <div layout="column" class="md-padding" style="border-left:solid thin lightgray;max-width:50%;">
 
-              <div style="height:100%;">
+              <div style="height:100%;width:100%;">
 
                 <div>
                   <div ng-init="showUpcomingMeetings = true">
@@ -179,18 +179,17 @@
                          style="text-decoration:none;padding:.5rem;">RESCHEDULE</a>
 
                     </div>
-                    <div ng-if="showUpcomingMeetings" layout="column"
-                         style="width:100%;padding:.5rem;">
+                    <div ng-if="showUpcomingMeetings" layout="column" style="width:100%;">
 
                       <div ng-if="!meetings" layout layout-align="center center" class="md-body-2"
-                           style="background-color:lightgrey; color:dimgrey;width:100%;padding:1rem 0;margin-top:1rem;">
+                           style="background-color:lightgrey; color:dimgrey;width:100%;padding:1rem 0;margin:1rem;">
 
                         <em>There are no scheduled replications</em>
 
                       </div>
 
-                      <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="2" width="100%"
-                             style="margin-top:1rem;">
+                      <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="2"
+                             style="table-layout: fixed;margin-top:1rem;width:100%;">
                         <thead>
                         <th align="left">Date</th>
                         <th align="left">Location</th>
@@ -198,9 +197,11 @@
                         </thead>
                         <tbody>
                         <tr ng-repeat="meeting in meetings | orderBy: 'meeting_datetime'" class="table_body">
-                          <td align="left" class="md-caption" ng-bind="meeting.meeting_datetime | date:'short'"></td>
-                          <td align="left" class="md-caption" ng-bind="meeting.location"></td>
-                          <td align="left" class="md-caption" ng-bind="meeting.town"></td>
+                          <td align="left" class="md-caption" ng-bind="meeting.meeting_datetime | date:'short'"
+                              style="word-wrap: break-word"></td>
+                          <td align="left" class="md-caption" ng-bind="meeting.location"
+                              style="word-wrap: break-word"></td>
+                          <td align="left" class="md-caption" ng-bind="meeting.town" style="word-wrap: break-word"></td>
                         </tr>
                         </tbody>
                       </table>

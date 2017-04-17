@@ -31,7 +31,7 @@ module.exports = function(Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Replication Meeting Request from  ' + d.team_leader,
+      subject: 'Meeting Request for Replication',
       html: html_body
     }, function(err, mail) {
       if (err) {
@@ -66,7 +66,7 @@ module.exports = function(Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
-      subject: 'Replication Meeting Confirmed by  ' + m.fname + ' ' + m.lname,
+      subject: 'Replication Scheduled',
       html: html_body
     }, function(err, mail) {
       if (err) {
@@ -111,10 +111,8 @@ module.exports = function(Meeting) {
     });
   };
   Meeting.propose = function(meeting, cb) {
-    console.log('Inside propose', meeting);
     var m = meeting;
     var emailTo = m.team_leader_email;
-    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
       id: m.id,
       dps: m.fname + m.lname,
@@ -144,6 +142,7 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
+  //TODO:hard-code email addresses
   Meeting.cancel = function(meeting, cb) {
     var m = meeting;
     var emailTo = m.email;
@@ -203,7 +202,7 @@ module.exports = function(Meeting) {
     Meeting.app.models.Email.send({
       to: ['jlister469@outlook.com', 'j.lister@heathus.com', m.team_leader_email],
       from: 'j.lister@heathus.com',
-      subject: 'Scheduled Meeting Declined by  ' + m.email,
+      subject: 'Meeting Declined by  ' + m.email,
       html: html_body
     }, function (err, mail) {
       if (err) {
@@ -230,7 +229,6 @@ module.exports = function(Meeting) {
     http: {path: '/cancelMeeting', verb: 'post'}
   });
   Meeting.heathConfirmed = function(msg, next) {
-    console.log('Meeting confirmed', msg);
     Meeting.heathConfirm(msg);
     next();
   };
@@ -239,7 +237,6 @@ module.exports = function(Meeting) {
     http: {path: '/heathConfirmed', verb: 'post'}
   });
   Meeting.confirmed = function(msg, next) {
-    console.log('Meeting confirmed', msg);
     Meeting.confirm(msg);
     next();
   };
@@ -248,7 +245,6 @@ module.exports = function(Meeting) {
     http: {path: '/confirmed', verb: 'post'}
   });
   Meeting.proposed = function(msg, next) {
-    console.log('sending meeting proposal', msg);
     Meeting.propose(msg);
     next();
   };
@@ -257,7 +253,6 @@ module.exports = function(Meeting) {
     http: {path: '/proposed', verb: 'post'}
   });
   Meeting.sendRequest = function(msg, next) {
-    console.log('Sending request', msg);
     Meeting.sendMeetingRequest(msg);
     next();
   };

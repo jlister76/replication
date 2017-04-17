@@ -2,7 +2,7 @@
   <div ng-if="pageReload" id="pageReload"
        style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
     <div layout="column" layout-align="center center"
-         style="z-index:10; position: fixed; top: 15%; left: 35%;width:35%; height:10%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         style="z-index:10; position: fixed; top: 15%; left: 35%;width:35%; height:20%; padding:.5rem;background-color: white;color:#3b3b3b;"
          md-whiteframe="3">
       <div layout layout-align="center center" style="margin-bottom:.8rem;">
         <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
@@ -25,7 +25,7 @@
     </p>
   </div>
   <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%"
-         style="margin-top:3.8rem;">
+         style="margin-top:1rem;">
     <thead>
     <th align="left">Date / Time</th>
     <th align="left">DPS</th>
@@ -43,10 +43,12 @@
       <td ng-bind="replication.town"></td>
       <td ng-bind="replication.facility"></td>
       <td ng-bind="replication.locate_technician"></td>
+      <td ng-bind="replication.atmos_determination"></td>
       <td>
-        <md-button class="md-raised"
-                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
-                   ng-click="viewReplication(replication)" layout layout-align="center center">
+        <md-button class="md-raised info"
+                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
+                   layout layout-align="center center"
+                   ng-click="viewReplication(replication)">
           view
         </md-button>
       </td>

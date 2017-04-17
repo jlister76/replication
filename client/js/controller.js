@@ -173,12 +173,14 @@
 
         $anchorScroll();
 
-        $scope.showLinearProgress;
+        $scope.pageMsg = '<p>Emailing meeting request</p>';
+
+        $scope.showLinearProgress = true;
 
         $http.post('api/Meetings/sendrequest', {formData: request})
           .then(function (request) {
-            $scope.pageMsg = '<p>Emailing meeting request</p>';
-            //clear fields in form
+
+
             $timeout(function () {
 
               $state.reload();
@@ -189,22 +191,36 @@
 
       //event handler for cancelling the meeting request
       $scope.cancelMeeting = function (request) {
+
+        $scope.pageReload = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
+        $scope.pageMsg = '<p>Cancelling meeting request</p>';
+
+        $scope.showLinearProgress = true;
+
+
         Meeting.destroyById({id: request.id})
           .$promise
           .then(function () {
-            $scope.pageReload = true;
 
-            $scope.pageMsg = '<p>Cancelling meeting request</p>';
-
-            $scope.showLinearProgress = true;
+            $http.post('api/Meetings/cancelMeeting', {formData: request})
+              .then(function () {
+              })
+              .catch(function (err) {
+                if (err) {
+                  console.error(err)
+                }
+              });
 
             $timeout(function () {
 
-              $scope.pageReload = false;
-
               $state.reload();
 
-            }, 500)
+            }, 1000)
           })
       };
 
@@ -336,6 +352,7 @@
         'Maypearl', 'Midlothian', 'Milford', 'Oak Leaf', 'Palmer', 'Pecan Hill', 'Red Oak', 'Venus', 'Waxahachie'
       ];
 
+
       $scope.towns = towns.sort();
 
       $scope.atmos = atmos;
@@ -344,13 +361,14 @@
 
         $scope.pageReload = true;
 
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
         $scope.pageMsg = '<p>Verifying schedules</p>';
 
         $scope.showLinearProgress = true;
 
-        $location.hash('pageReload');
-
-        $anchorScroll();
         //check for single email adrs or list of email adrs and set property
         switch (typeof(request.selected_dps)) {
           case 'object':
@@ -358,65 +376,64 @@
 
             var scheduleConflicts = [];
 
-            for (var x in confirmedAtmosMeetings) {
+            //checking for schedule conflicts against all confirmed meetings in the next 2 weeks
+            _.forEach(confirmedAtmosMeetings, function (meeting) {
 
-              //console.log(moment(confirmedATMOSMeetings[x].meeting_datetime).format(), moment(request.momentDate).format());
+              if (moment(meeting.meeting_datetime).format() === moment(request.momentDate).format()) {
 
-              if (moment(confirmedAtmosMeetings[x].meeting_datetime).format() === moment(request.momentDate).format()) {
+                scheduleConflicts.push(meeting.email);
 
-                //console.log(confirmedATMOSMeetings[x].email);
-
-                scheduleConflicts.push(confirmedAtmosMeetings[x].email)
               }
-            }
+            });
+
+            _.forEach(request.emailList, function (adrs) {
+
+              if (scheduleConflicts.indexOf(adrs) === -1) {
+                console.log(adrs);
+
+                //send meeting request where there is no scheduling conflict - create instance
+
+                var locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
+                request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
+                request.facility = request.facility_size + " " + request.facility_material;
 
 
-            for (var e = 0; e < request.emailList.length; e++){
-              //console.log(scheduleConflicts);
+                Meeting.create({
+                  email: adrs,
+                  meeting_datetime: request.momentDate,
+                  location_name: _.capitalize(request.location_name),
+                  location: request.location,
+                  cross_street: _.capitalize(request.cross_street),
+                  town: request.town,
+                  heath_report: request.heath_report,
+                  facility: request.facility,
+                  locate_technician: locate_technician,
+                  team_leader: request.team_leader,
+                  team_leader_email: userCtx.email,
+                  schedule_status: 'pending'
+                })
+                  .$promise
+                  .then(function (meeting) {
+                    console.log(meeting);
+                    $http.post('api/Meetings/sendrequest', {formData: meeting})
+                      .then(function (meeting) {
+                        $scope.pageMsg = '<p>Emailing meeting request</p>';
+                        //clear fields in form
+                        $timeout(function () {
 
-              for (var sc in scheduleConflicts){
+                          $state.reload();
 
-                if(scheduleConflicts[sc] !== request.emailList[e]){
-                  console.log(request.emailList[e]);
-                  //create instance
-
-                  var locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
-                  request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
-                  request.facility = request.facility_size + " " + request.facility_material;
-
-                  Meeting.create({
-                    email: request.emailList[e],
-                    meeting_datetime: request.momentDate,
-                    location_name: _.capitalize(request.location_name),
-                    location: request.location,
-                    cross_street: _.capitalize(request.cross_street),
-                    town: request.town,
-                    heath_report: request.heath_report,
-                    facility: request.facility,
-                    locate_technician: locate_technician,
-                    team_leader: request.team_leader,
-                    team_leader_email: userCtx.email,
-                    schedule_status: 'pending'
+                        }, 2500);
+                      })
                   })
-                    .$promise
-                    .then(function (meeting) {
-                      console.log(meeting);
-                      $http.post('api/Meetings/sendrequest', {formData: meeting})
-                        .then(function (meeting) {
-                          $scope.pageMsg = '<p>Emailing meeting request</p>';
-                          //clear fields in form
-                          $timeout(function () {
-
-                            $state.reload();
-
-                          }, 2500);
-                        })
-                    })
-                    .catch(function(err){console.error(err)})
+                  .catch(function (err) {
+                    console.error(err)
+                  })
+              } else {
 
               }
-            }
-            }
+            });
+
             break;
           case 'string':
             request.email = request.selected_dps;
@@ -535,10 +552,10 @@
         })
           .$promise
           .then(function (response) {
-            console.log(response);
+
             $http.post('api/Replications/sendResponse', {formData: response})
               .then(function (response) {
-                //do something on success
+
                 console.info('success return');
               })
               .catch(function (err) {

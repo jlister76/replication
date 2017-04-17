@@ -12,20 +12,6 @@ module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
     var date = moment().format('dddd, MMMM, Do, YYYY');
     var d = response;
-
-    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
-
-    /* switch (d.atmos_determination) {
-      case 'facility_issue':
-        var reason = 'Technician was able to replicate the locate.';
-        break;
-      case 'locate_error':
-        reason = 'Technician was unable to replicate locate due to a locate error.';
-        break;
-      case 'replaced':
-        reason = 'Because the facility was replaced or altered, the technician was unable to replicate the locate.';
-        break;
-     }*/
     var messageVars = {
       replication_date: d.replication_date,
       town: d.town,
@@ -74,21 +60,20 @@ module.exports = function(Replication) {
   };
   Replication.sendHeathResponse = function(response, cb) {
     var d = response;
-    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     switch (d.atmos_determination) {
-      case 'facility_issue':
-        var reason = 'Technician was able to replicate the locate.';
+      case 'Facility Issue':
+        var reason = 'Facility Issue';
         break;
-      case 'locate_error':
-        reason = 'Technician was unable to replicate locate due to a locate error.';
+      case 'Locate Error':
+        reason = 'Locate error.';
         break;
-      case 'replaced':
-        reason = 'Because the facility was replaced or altered, the technician was unable to replicate the locate.';
+      case 'Facility Replaced':
+        reason = 'Facility was replaced or altered prior to replication.';
         break;
     }
 
-    var facility = d.facility_size + ' ' + d.facility_material,
-      location = d.street_number + ' ' + d.street_name + ' ' + d.street_suffix;
+    var facility = d.facility,
+      location = d.location;
 
 
     var messageVars = {
@@ -103,6 +88,9 @@ module.exports = function(Replication) {
       facility: facility,
       reason: reason,
       comments: d.atmos_comments,
+      able_to_locate: d.able_to_locate,
+      is_line_marked: d.is_line_marked,
+      corrective_actions: d.corrective_actions,
       heath_comments: d.heath_comments,
       video_url: d.video_url
     };

@@ -5,9 +5,12 @@
   <style>
 
     h1 {
-      color: #005EB8;
+      color: #004284;
     }
 
+    h4 {
+      color: #005EB8;
+    }
     p, h3 {
       color: #444444;
     }
@@ -21,22 +24,23 @@
 </head>
 <body style="margin: 0; padding: 0;">
 <table border="0" cellpadding="5" cellspacing="10" width="500">
-  <thead style="border-bottom: solid 6px #666666;">
-  <th>
-    <h1>Meeting Request Confirmed</h1>
-    <h3><%= town %> Area</h3>
-  </th>
-  </thead>
   <tbody>
   <tr>
-    <td width="200" style="font-size:1.2em;text-align: center;word-wrap: break-word">
+    <td>
+      <h1>Meeting Confirmation</h1>
+      <h3><%= town %> Area</h3>
+    </td>
+  </tr>
+  <tr>
+    <td width="200" style="font-size:1.2em;text-align: left; word-wrap: break-word">
       <p>
         <%= team_leader %> is scheduled to meet you for this replication.
       </p>
     </td>
   </tr>
   <tr>
-    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;border-top:solid 1px #666666;">
+    <td bgcolor="white" align="left" style="padding: 10px 10px 8px 5px; font-size:1.4rem;">
+      <h4>MEETING DETAILS</h4>
       <p><strong>Team Leader:</strong> <%= team_leader %></p>
       <p><strong>Date & Time:</strong> <%= meeting_date %></p>
       <% if (location_name) { %>
@@ -50,10 +54,9 @@
     </td>
   </tr>
   <tr>
-    <td
-      style="padding: 10px 10px 8px 5px;font-size:1.4rem;border-top:solid 1px #666666;border-bottom:solid 1px #666666;">
+    <td style="padding: 10px 10px 8px 5px;font-size:1.4rem;">
 
-      <h3>DAMAGE INFORMATION</h3>
+      <h4>DAMAGE INFORMATION</h4>
       <p><strong>Damage Report #:</strong> <%= heath_report %></p>
       <p><strong>Locate Technician:</strong> <span><%= locate_technician %></span></p>
       <p><strong>Facility:</strong> <%= facility %></p>

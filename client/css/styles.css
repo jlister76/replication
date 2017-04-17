@@ -16,12 +16,11 @@ body{
   font-family: 'Open Sans', sans-serif;
 }
 
-/* change tab transition
+
 [role="tabpanel"],
 md-tabs {
-  transition: none;
+  transition: none; /* or whatever transition you want*/
 }
-*/
 
 html {
   height: auto;

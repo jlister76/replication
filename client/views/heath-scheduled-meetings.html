@@ -27,8 +27,7 @@
   <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%" style="margin-top:1rem;">
     <thead>
     <th align="left">Date / Time</th>
-    <th align="left">ATMOS DPS</th>
-    <th align="left">Place</th>
+    <th align="left">DPS</th>
     <th align="left">Address</th>
     <th align="left">Town</th>
     <th align="left">Action</th>
@@ -37,12 +36,11 @@
     <tr ng-repeat="meeting in meetings | orderBy: 'meeting_datetime'" class="table_body">
       <td ng-bind="meeting.meeting_datetime | date:'short'"></td>
       <td>{{meeting.fname}} {{meeting.lname}}</td>
-      <td ng-bind="meeting.location_name || 'not provided'"></td>
       <td ng-bind="meeting.location"></td>
       <td ng-bind="meeting.town"></td>
       <td>
-        <md-button class="md-raised"
-                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;background-color:#444444;color:white;"
+        <md-button class="md-raised info"
+                   style="font-size:10px;line-height:18px;min-height:18px!important;height:18px!important; min-width:18px!important;"
                    ng-click="viewMeeting(meeting)" layout layout-align="center center">
           view
         </md-button>
@@ -52,9 +50,8 @@
     </tbody>
   </table>
   <div ng-if="meeting" layout="column" class="view" style="padding:1rem;margin-top:2rem;">
-    <div>
-      <h4 style="background-color:#0F4A78;color:white;padding:.5rem;" md-whiteframe="3">Meeting
-        Details</h4>
+    <fieldset class="field_set">
+      <legend>Meeting Details</legend>
       <div layout="column">
         <div layout="column">
           <div>
@@ -103,6 +100,6 @@
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
 </div>
