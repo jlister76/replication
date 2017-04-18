@@ -1,16 +1,18 @@
-/* eslint-disable comma-dangle,no-trailing-spaces,padded-blocks */
+/* eslint-disable comma-dangle,no-trailing-spaces,padded-blocks,max-len */
 'use strict';
 
 module.exports = function(Appuser) {
   //send password reset link when requested
   Appuser.on('resetPasswordRequest', function(info) {
-    var url = 'https://rpf.heathfieldapp.com/reset-password';
+    var url = 'http://localhost:3000/reset-password';
 
     var html = 'Click <a href="' + url + '?access_token=' +
 
-      info.accessToken.id + '">' + url + '?access_token=' +
+      info.accessToken.id + '"> here </a> to reset your password <br/><br/>' +
 
-      info.accessToken.id + '</a> to reset your password';
+      'If unable to open this link from your email, then copy and paste the following url into your browser to access the password reset form.<br/> ' + url + '?access_token=' +
+
+      info.accessToken.id;
 
     Appuser.app.models.Email.send({
 

@@ -66,7 +66,7 @@ module.exports = function (router) {
 
           redirectTo: '/',
 
-          redirectToLinkText: 'Log in'
+          redirectToLinkText: 'Sign In'
 
         });
 
