@@ -49,7 +49,7 @@
 
 
     })
-    .controller('LogInCtrl', function (AuthService, $scope, $location, Appuser) {
+    .controller('LogInCtrl', function (AuthService, $scope, $location, Appuser, $timeout) {
       //event handler for signing-in
       $scope.login = function (email, password) {
         AuthService.login(email, password)
@@ -85,15 +85,27 @@
 
       //event handler for resetting password
       $scope.resetPassword = function (email) {
-        console.log(email);
+
         Appuser.resetPassword({email: email})
           .$promise
           .then(function (token) {
-            console.log(token)
+            $scope.showResetForm = false;
+            $scope.confirmationMsg = true;
+
+            $timeout(function(){
+
+              $scope.confirmationMsg = false;
+              $scope.showResetForm = false;
+
+            }, 5000)
           })
           .catch(function (err) {
             if (err) {
-              console.error(err)
+              console.log(err.data.error.message);
+
+              $scope.errMsg = err.data.error.message;
+
+
             }
           })
 
@@ -111,12 +123,6 @@
           });
         $location.path('/');
       }
-    })
-    .controller('PasswordResetCtrl', function ($scope, $stateParams){
-      console.log($stateParams.access_token);
-
-
-
     })
     .controller('HeathRequestedMeetingCtrl', function ($scope, Meeting, requestedMeetings, proposedMeetings, $http, $timeout, $state, $location, $anchorScroll) {
       //collect all meeting requests

@@ -15,8 +15,8 @@
         <div ng-show="err" class="md-caption" style="color: coral">Invalid Username and/or password.<br/> Please try
           again.
         </div>
-        <div layout layout-align="" class="md-padding" style="width: 100%;" ng-init="showResetForm = false">
-          <form ng-hide="showResetForm" name="logIn" ng-submit="login(user.email,user.password)" style="width: 100%;">
+        <div layout layout-align="" class="" style="width: 100%;" ng-init="showResetForm = false">
+          <form ng-show="!showResetForm && !confirmationMsg" name="logIn" ng-submit="login(user.email,user.password)" style="width: 100%;">
             <div layout="column" style="width:100%;">
               <md-input-container>
                 <label for="email">Email</label>
@@ -32,24 +32,47 @@
                          style="margin-top:2.5rem;  height:42px;">
                 Sign In
               </md-button>
-              <div layout layout-align="start" class="" style="margin-top:2.5rem;width:100%;">
+              <div layout="column" layout-align="start" class="md-padding" style="margin-top:2.5rem;width:100%;">
                 <span>Forgot Password? </span>
-                <a href="" ng-click="showResetForm = true">Reset Password</a>
+                <a href="" ng-click="showResetForm = true">Reset your password</a>
               </div>
             </div>
           </form>
-          <form ng-if="showResetForm" name="resetPasswordForm" ng-submit="resetPassword(email)" style="width: 100%;">
-            <div layout="column" style="width: 100%;">
-              <span class="md-body-1">Enter your email address.</span>
+          <form ng-show="showResetForm" name="resetPasswordForm" ng-submit="resetPassword(email)" style="width: 100%;">
+            <div layout="column"  layout-align="start" style="width: 100%;">
+              <div style="margin: 1.5rem 0">
+                  <a layout layout-align="start center" href="" ng-click="showResetForm = false" style="margin:0;text-decoration: none;color:blue">
+                    <div style="border-radius:50%; background-color:blue;margin:.5rem;" layout layout-align="center center">
+                      <i class="material-icons" style="color:white">arrow_back</i>
+                    </div>
+                    <div class="md-body-1">
+                      Back to Sign In
+                    </div>
+                    </a>
+
+              </div>
+              <div>
+                <span class="md-body-1">Enter your email address to receive a password reset link</span>
+              </div>
               <md-input-container>
                 <label for="email">Email</label>
-                <input type="email" id="passwordreset" ng-model="email" style="width:80%;">
+                <input type="email" id="passwordreset" ng-model="email" style="width:260px;">
               </md-input-container>
             </div>
-            <div>
+            <div ng-if="errMsg" class="md-caption" style="color: coral">
+              <span>Error! {{errMsg}} </span>
+            </div>
+            <div style="margin: 2rem 0;">
               <md-button class="md-raised info" type="submit">Password Reset</md-button>
             </div>
           </form>
+          <div ng-show="confirmationMsg">
+            <div>
+              <p class="md-body-2" style="color:blue;">
+                Please check your email for a password reset link
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
