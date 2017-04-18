@@ -14,9 +14,9 @@
           controller: 'RouterCtrl'
         })
         .state('password-reset', {
-          url: '/reset-password',
-          templateUrl: '',
-          controller: 'LogInCtrl'
+          url: '/reset-password?access_token',
+          templateUrl: 'views/password-reset.html',
+          controller: 'PasswordResetCtrl'
         })
         .state('authenticated', {
           abstract: true,

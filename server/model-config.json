@@ -17,8 +17,8 @@
     "dataSource": "db"
   },
   "AccessToken": {
-    "dataSource": "db",
-    "public": false
+    "dataSource": "mssql",
+    "public": true
   },
   "ACL": {
     "dataSource": "db",

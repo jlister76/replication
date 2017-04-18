@@ -112,6 +112,12 @@
         $location.path('/');
       }
     })
+    .controller('PasswordResetCtrl', function ($scope, $stateParams){
+      console.log($stateParams.access_token);
+
+
+
+    })
     .controller('HeathRequestedMeetingCtrl', function ($scope, Meeting, requestedMeetings, proposedMeetings, $http, $timeout, $state, $location, $anchorScroll) {
       //collect all meeting requests
       var requests = [];
