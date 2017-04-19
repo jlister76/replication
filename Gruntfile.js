@@ -1,8 +1,9 @@
-/* eslint-disable no-trailing-spaces,comma-dangle */
+/* eslint-disable no-trailing-spaces,comma-dangle,max-len,camelcase */
 'use strict';
 module.exports = function(grunt) {
-  //grunt wrapper function
-  grunt.initConfig({
+  require('load-grunt-tasks')(grunt);//auto load all tasks
+
+  grunt.initConfig({//grunt wrapper function
     pkg: grunt.file.readJSON('package.json'),
     //grunt task configuration goes here
     ngAnnotate: {
@@ -20,26 +21,27 @@ module.exports = function(grunt) {
       }
     },
     concat: {
-      options: {
-        separator: ';'
+      bower: {
+        options: {separator: ';'},
+        src: [
+          './client/vendor/angular-moment-picker/dist/angular-moment-picker.min.js',
+          './client/vendor/ng-lodash/build/ng-lodash.min.js'
+        ],
+        dest: './client/build/bower.js'
+      },
+      css: {
+        src: [
+          './client/vendor/angular-material/angular-material.css',
+          './client/vendor/angular-moment-picker/dist/angular-moment-picker.css',
+          './client/css/styles.css'
+        ],
+        dest: './client/min/styles.css'
       },
       js: {//target
         src: [
-          './client/vendor/moment/moment.js',
-          './client/vendor/angular/angular.js',
-          './client/vendor/angular-animate/angular-animate.js',
-          './client/vendor/angular-aria/angular-aria.js',
-          './client/vendor/angular-material/angular-material.js',
-          './client/vendor/angular-messages/angular-messages.js',
-          './client/vendor/angular-moment-picker/dist/angular-moment-picker.js',
-          './client/vendor/angular-resource/angular-resource.js',
-          './client/vendor/angular-sanitize/angular-sanitize.js',
-          './client/vendor/angular-ui-router/release/angular-ui-router.js',
-          './client/vendor/ng-lodash/build/ng-lodash.js',
           './client/min-safe/app.js',
           './client/min-safe/js/*.js'
         ],
-
         dest: './client/min/app.js'
       }
     },
@@ -48,13 +50,20 @@ module.exports = function(grunt) {
         src: ['./client/min/app.js'],
         dest: './client/min/app.min.js'
       }
+    },
+    cssmin: {
+     target: {
+       files: {
+         './client/min/style.min.css': [
+           './client/vendor/angular-material/angular-material.css',
+           'vendor/angular-moment-picker/dist/angular-moment-picker.css',
+           './client/css/styles.css'
+         ]
+       }
+     }
     }
 
   });
-  //load grunt tasks
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  grunt.loadNpmTasks('grunt-ng-annotate');
   //register grunt default task
-  grunt.registerTask('default', ['ngAnnotate', 'concat',  'uglify']);
+  grunt.registerTask('default', ['ngAnnotate', 'concat',  'uglify', 'cssmin']);
 };
