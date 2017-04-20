@@ -35,10 +35,10 @@ module.exports = function(Replication) {
     var html_body = renderer(messageVars);
     var html_body2 = render_heath(messageVars);
 
-
+    //TODO:hard-code ATMOS emails
     Replication.app.models.Email.send({
       to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com', d.email],
-      from: 'j.lister@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Determination - ' + d.town,
       html: html_body
     }, function(err, mail) {
@@ -48,8 +48,8 @@ module.exports = function(Replication) {
 
     //send email with heath link
     Replication.app.models.Email.send({
-      to: [d.team_leader_email, 'j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
-      from: 'j.lister@heathus.com',
+      to: [d.team_leader_email],
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Determination - ' + d.town,
       html: html_body2
     }, function(err, mail) {
@@ -101,7 +101,7 @@ module.exports = function(Replication) {
 
     Replication.app.models.Email.send({
       to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
-      from: 'j.lister@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Determination Response from ' + d.team_leader,
       html: html_body
     }, function(err, mail) {
@@ -113,13 +113,10 @@ module.exports = function(Replication) {
   };
 
   Replication.sendemail = function(msg, next) {
-    console.log('in model', msg);
-
     Replication.sendEmail(msg);
     next();
   };
   Replication.sendResponse = function(msg, next) {
-    console.log('Sending response', msg);
     Replication.sendHeathResponse(msg);
   };
   Replication.remoteMethod('sendemail', {

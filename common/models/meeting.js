@@ -9,7 +9,6 @@ var moment = require('moment');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {
-    console.log('sending meeting ...', moment(request.meeting_datetime).format('dddd, MMMM Do YYYY @ h:mm a'));
     var d = request;
     var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -29,8 +28,8 @@ module.exports = function(Meeting) {
       path.resolve(__dirname, '../../server/views/email-meeting-template.ejs'));
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', emailTo],
-      from: 'j.lister@heathus.com',
+      to: [emailTo],
+      from: 'locateATMOS@heathus.com',
       subject: 'Meeting Request for Replication',
       html: html_body
     }, function(err, mail) {
@@ -62,10 +61,10 @@ module.exports = function(Meeting) {
       .template(path
         .resolve(__dirname, '../../server/views/email-meeting-confirmed.ejs'));
     var html_body = renderer(messageVars);
-    console.log('Before send');
+
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', emailTo],
-      from: 'j.lister@heathus.com',
+      to: [emailTo],
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Scheduled',
       html: html_body
     }, function(err, mail) {
@@ -76,7 +75,6 @@ module.exports = function(Meeting) {
     });
   };
   Meeting.heathConfirm = function(meeting, cb) {
-    console.log('Inside heath confirmed', meeting);
     var m = meeting;
     var emailTo = m.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -99,8 +97,8 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', emailTo],
-      from: 'j.lister@heathus.com',
+      to: [emailTo],
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Meeting Confirmed by  ' + m.team_leader,
       html: html_body
     }, function(err, mail) {
@@ -142,7 +140,6 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
-  //TODO:hard-code email addresses
   Meeting.cancel = function(meeting, cb) {
     var m = meeting;
     var emailTo = m.email;
@@ -164,10 +161,9 @@ module.exports = function(Meeting) {
       .template(path
         .resolve(__dirname, '../../server/views/email-meeting-cancelled.ejs'));
     var html_body = renderer(messageVars);
-    console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', m.team_leader_email, emailTo],
-      from: 'j.lister@heathus.com',
+      to: [m.team_leader_email, emailTo],
+      from: 'locateATMOS@heathus.com',
       subject: 'Scheduled Meeting Cancelled by  ' + m.team_leader,
       html: html_body
     }, function(err, mail) {
@@ -200,8 +196,8 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['j.lister@heathus.com', m.team_leader_email],
-      from: 'j.lister@heathus.com',
+      to: [m.team_leader_email],
+      from: 'locateATMOS@heathus.com',
       subject: 'Meeting Declined by  ' + m.email,
       html: html_body
     }, function(err, mail) {

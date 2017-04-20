@@ -120,8 +120,8 @@
 
 
     }])
-    .controller('RouterCtrl', ["userCtx", "AuthService", "$state", function (userCtx, AuthService, $state) {
-      console.log('Routing...', userCtx);
+    .controller('RouterCtrl', ["userCtx", "$state", function (userCtx, $state) {
+      //console.log('Routing...', userCtx);
 
       switch (userCtx.company) {
         case 'HEATH':
@@ -721,7 +721,7 @@
       //handler for submitting replication results
       $scope.sendEmail = function (response) {
 
-        $location.hash('title');
+        $location.hash('pageReload');
 
         $anchorScroll();
 
@@ -822,6 +822,10 @@
     .controller('AtmosRequestedMeetingCtrl', ["$scope", "Meeting", "userCtx", "requestedMeetings", "proposedMeetings", "confirmedMeetings", "$http", "$timeout", "$anchorScroll", "$location", "$state", "towns", function ($scope, Meeting, userCtx, requestedMeetings, proposedMeetings, confirmedMeetings, $http, $timeout, $anchorScroll, $location, $state, towns) {
 
       $scope.towns = _.uniqBy(towns, 'city');
+
+      $scope.today = moment();
+
+      $scope.twoWeeks = moment().add(2,'week');
 
       //collect all meeting requests
       var requests = [];

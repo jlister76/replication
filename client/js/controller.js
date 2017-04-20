@@ -627,7 +627,7 @@
       //handler for submitting replication results
       $scope.sendEmail = function (response) {
 
-        $location.hash('title');
+        $location.hash('pageReload');
 
         $anchorScroll();
 
@@ -728,6 +728,10 @@
     .controller('AtmosRequestedMeetingCtrl', function ($scope, Meeting, userCtx, requestedMeetings, proposedMeetings, confirmedMeetings, $http, $timeout, $anchorScroll, $location, $state, towns) {
 
       $scope.towns = _.uniqBy(towns, 'city');
+
+      $scope.today = moment();
+
+      $scope.twoWeeks = moment().add(2,'week');
 
       //collect all meeting requests
       var requests = [];
