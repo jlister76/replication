@@ -11,6 +11,11 @@
         })
         .state('router', {
           url: '/router',
+          resolve: {
+            userCtx: function(AuthService) {
+              return AuthService.getCurrent().$promise
+            }
+          },
           controller: 'RouterCtrl'
         })
         .state('authenticated', {

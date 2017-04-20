@@ -26,32 +26,49 @@
 
 
     })
-    .controller('RouterCtrl', function (AuthService, $state) {
-      console.log('Routing...', AuthService.getCurrent().$promise);
-      var ctx = AuthService.getCurrent()
-        .$promise
-        .then(function (ctx) {
-          switch (ctx.company) {
-            case 'HEATH':
-              if (ctx.access_type = 'group') {
-                //set start page
-                $state.go('authenticated.page.heath.replications');
+    .controller('RouterCtrl', function (userCtx, $state) {
+      //console.log('Routing...', userCtx);
 
-              }
-              break;
-            case 'ATMOS':
+      switch (userCtx.company) {
+        case 'HEATH':
+          if (userCtx.access_type = 'group') {
+            //set start page
+            $state.go('authenticated.page.heath.replications');
 
-              $state.go('authenticated.page.atmos.replications');
-
-              break;
           }
-        });
+          break;
+        case 'ATMOS':
+
+          $state.go('authenticated.page.atmos.replications');
+
+          break;
+      }
+
+      // var ctx = AuthService.getCurrent()
+      //   .$promise
+      //   .then(function (ctx) {
+      //     switch (ctx.company) {
+      //       case 'HEATH':
+      //         if (ctx.access_type = 'group') {
+      //           //set start page
+      //           $state.go('authenticated.page.heath.replications');
+      //
+      //         }
+      //         break;
+      //       case 'ATMOS':
+      //
+      //         $state.go('authenticated.page.atmos.replications');
+      //
+      //         break;
+      //     }
+      //   });
 
 
     })
     .controller('LogInCtrl', function (AuthService, $scope, $location, Appuser, $timeout) {
       //event handler for signing-in
       $scope.login = function (email, password) {
+
         AuthService.login(email, password)
           .$promise
           .then(function () {
