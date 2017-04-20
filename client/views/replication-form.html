@@ -2,7 +2,7 @@
   <div ng-if="pageReload" id="pageReload"
        style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
     <div layout="column" layout-align="center center"
-         style="z-index:10; position: fixed; top: 30%; left: 35%;width:35%; height:15%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         style="z-index:10; position: fixed; top: 20%; left: 30%;width:360px; height:200px; padding:.5rem;background-color: white;color:#3b3b3b;"
          md-whiteframe="3">
       <div layout layout-align="center center" style="margin-bottom:.8rem;">
         <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
@@ -13,8 +13,7 @@
       </div>
     </div>
   </div>
-  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;"
-       id="title">
+  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
     <p class="md-subhead" style="color:white;">Replication Response Form</p>
   </div>
   <div layout layout-align="center center">
@@ -44,7 +43,7 @@
                 <input ng-model="response.employeeId" type="hidden">
                 <label for="team_leader"><strong>Team Leader</strong></label>
                 <select ng-model="response.team_leader" id="team_leader">
-                  <option ng-repeat="teamleader in teamleaders" value="{{ teamleader }}">{{
+                  <option ng-repeat="teamleader in teamleaders | orderBy: 'lname'" value="{{ teamleader }}">{{
                     teamleader.fname }} {{ teamleader.lname }}
                   </option>
                 </select>
@@ -93,7 +92,7 @@
                   <div layout="column">
                     <label for="street"><strong>Suffix</strong></label>
                     <select ng-model="response.street_suffix" name="street_suffix" id="street_suffix" required>
-                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.name }}">{{ suffix.name
+                      <option ng-repeat="suffix in suffixes | orderBy:'name'" value="{{ suffix.suffix }}">{{ suffix.name
                         }}
                       </option>
                     </select>
@@ -112,7 +111,7 @@
                 <div layout="column">
                   <label for="town"><strong>Town</strong></label>
                   <select ng-model="response.town" type="text" id="town" required>
-                    <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}</option>
+                    <option ng-repeat="town in towns | orderBy: 'city'" value="{{ town.city }}">{{ town.city }}</option>
                   </select>
                 </div>
               </div>

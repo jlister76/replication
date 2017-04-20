@@ -29,7 +29,7 @@ module.exports = function(Meeting) {
       path.resolve(__dirname, '../../server/views/email-meeting-template.ejs'));
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      to: ['j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
       subject: 'Meeting Request for Replication',
       html: html_body
@@ -64,7 +64,7 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      to: ['j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
       subject: 'Replication Scheduled',
       html: html_body
@@ -99,7 +99,7 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      to: ['j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
       subject: 'Replication Meeting Confirmed by  ' + m.team_leader,
       html: html_body
@@ -131,7 +131,7 @@ module.exports = function(Meeting) {
         .resolve(__dirname, '../../server/views/email-meeting-proposed.ejs'));
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', emailTo],
+      to: ['j.lister@heathus.com', emailTo],
       from: 'j.lister@heathus.com',
       subject: 'New Schedule Proposal from ' + m.fname + ' ' + m.lname,
       html: html_body
@@ -166,7 +166,7 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', m.team_leader_email, emailTo],
+      to: ['j.lister@heathus.com', m.team_leader_email, emailTo],
       from: 'j.lister@heathus.com',
       subject: 'Scheduled Meeting Cancelled by  ' + m.team_leader,
       html: html_body
@@ -177,7 +177,7 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
-  Meeting.decline = function (meeting, cb) {
+  Meeting.decline = function(meeting, cb) {
     var m = meeting;
     console.log(m.email);
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -200,11 +200,11 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     console.log('Before send');
     Meeting.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com', m.team_leader_email],
+      to: ['j.lister@heathus.com', m.team_leader_email],
       from: 'j.lister@heathus.com',
       subject: 'Meeting Declined by  ' + m.email,
       html: html_body
-    }, function (err, mail) {
+    }, function(err, mail) {
       if (err) {
         console.error(err);
       }
@@ -212,7 +212,7 @@ module.exports = function(Meeting) {
     });
   };
   //custom remote methods
-  Meeting.declined = function (msg, next) {
+  Meeting.declined = function(msg, next) {
     Meeting.decline(msg);
     next();
   };

@@ -12,6 +12,7 @@ module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
     var date = moment().format('dddd, MMMM, Do, YYYY');
     var d = response;
+    var emailTo = d.team_leader_email;
     var messageVars = {
       replication_date: d.replication_date,
       town: d.town,
@@ -36,9 +37,9 @@ module.exports = function(Replication) {
 
 
     Replication.app.models.Email.send({
-      to: ['jlister469@outlook.com'],
+      to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com', d.email],
       from: 'j.lister@heathus.com',
-      subject: 'Locate Replication - ' + d.town,
+      subject: 'Replication Determination - ' + d.town,
       html: html_body
     }, function(err, mail) {
       if (err) { console.error(err) }
@@ -47,9 +48,9 @@ module.exports = function(Replication) {
 
     //send email with heath link
     Replication.app.models.Email.send({
-      to: ['jlister469@outlook.com', d.team_leader_email],
+      to: [d.team_leader_email, 'j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
       from: 'j.lister@heathus.com',
-      subject: 'Locate Replication - ' + d.town,
+      subject: 'Replication Determination - ' + d.town,
       html: html_body2
     }, function(err, mail) {
       if (err) {
@@ -99,9 +100,9 @@ module.exports = function(Replication) {
     var html_body = renderer(messageVars);
 
     Replication.app.models.Email.send({
-      to: ['jlister469@outlook.com', 'j.lister@heathus.com'],
+      to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
       from: 'j.lister@heathus.com',
-      subject: 'Locate Replication Response From ' + d.team_leader,
+      subject: 'Replication Determination Response from ' + d.team_leader,
       html: html_body
     }, function(err, mail) {
       if (err) {

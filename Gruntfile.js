@@ -51,19 +51,38 @@ module.exports = function(grunt) {
         dest: './client/min/app.min.js'
       }
     },
+    uncss: {
+      dist: {
+        files: {
+          './client/min/styles.css': [
+            './client/index.html',
+            './client/views/atmos-completed-replications.html',
+            './client/views/atmos-page.html',
+            './client/views/atmos-requested-meetings.html',
+            './client/views/atmos-scheduled-meetings.html',
+            './client/views/content-template.html',
+            './client/views/heath-completed-replications.html',
+            './client/views/heath-page.html',
+            './client/views/heath-requested-meetings.html',
+            './client/views/heath-scheduled-meetings.html',
+            './client/views/heath-scheduler.html',
+            './client/views/login-form.html',
+            './client/views/navigation.html',
+            './client/views/page-template.html',
+            './client/views/replication-form.html'
+          ]
+        }
+      }
+    },
     cssmin: {
-     target: {
-       files: {
-         './client/min/style.min.css': [
-           './client/vendor/angular-material/angular-material.css',
-           'vendor/angular-moment-picker/dist/angular-moment-picker.css',
-           './client/css/styles.css'
-         ]
-       }
-     }
+      target: {
+        files: {
+          './client/min/styles.min.css': ['./client/min/styles.css']
+        }
+      }
     }
 
   });
   //register grunt default task
-  grunt.registerTask('default', ['ngAnnotate', 'concat',  'uglify', 'cssmin']);
+  grunt.registerTask('default', ['ngAnnotate', 'concat',  'uglify', 'uncss', 'cssmin']);
 };

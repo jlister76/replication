@@ -13,11 +13,6 @@
           url: '/router',
           controller: 'RouterCtrl'
         })
-        .state('password-reset', {
-          url: '/reset-password?access_token',
-          templateUrl: 'views/password-reset.html',
-          controller: 'PasswordResetCtrl'
-        })
         .state('authenticated', {
           abstract: true,
           templateUrl: 'views/page-template.html'
@@ -113,6 +108,9 @@
           },
             'suffixes': function (Suffix) {
               return Suffix.find().$promise
+            },
+            'towns': function (Town) {
+              return Town.find().$promise
             }
           }
         })
@@ -201,6 +199,9 @@
             },
             'suffixes': function (Suffix) {
               return Suffix.find().$promise
+            },
+            'towns': function (Town) {
+              return Town.find().$promise
             }
           }
         })

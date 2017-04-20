@@ -1,20 +1,20 @@
 {
-  "name": "suffix",
+  "name": "town",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true,
     "mssql": {
       "schema": "dbo",
-      "table": "suffix"
+      "table": "ATMOS_TOWNS"
     }
   },
   "properties": {
-    "name": {
+    "county": {
       "type": "string",
       "required": true
     },
-    "suffix": {
+    "city": {
       "type": "string",
       "required": true
     }

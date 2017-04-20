@@ -30,7 +30,7 @@
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>SELECT DPS</legend>
               <select ng-model="request.selected_dps" id="dps" required>
-                <option ng-repeat="dps in atmos" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
+                <option ng-repeat="dps in atmos | orderBy: 'lname'" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
               </select>
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">
@@ -95,7 +95,7 @@
                 <div layout="column">
                   <label for="town"><strong>Town</strong></label>
                   <select ng-model="request.town" type="text" id="town" required>
-                    <option ng-repeat="town in towns | orderBy: 'town'" value="{{ town }}">{{ town }}</option>
+                    <option ng-repeat="town in towns | orderBy: 'city'" value="{{ town.city }}">{{ town.city }}</option>
                   </select>
                 </div>
               </div>

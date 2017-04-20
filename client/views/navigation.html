@@ -3,14 +3,14 @@
     <nav ng-if="company === 'HEATH'">
       <div layout layout-align="center center">
         <span>
-          <a href="" ui-sref="authenticated.page.logout" style="color:#d7d5d3;">SIGN OUT</a>
+          <a href="" ng-controller="LogOutCtrl" ng-click="logout()" style="color:#d7d5d3;">SIGN OUT</a>
         </span>
       </div>
     </nav>
     <nav ng-if="company === 'ATMOS'">
       <div layout layout-align="center center">
         <span>
-          <a ui-sref="authenticated.page.logout" style="color:#d7d5d3;">SIGN OUT</a>
+          <a ng-controller="LogOutCtrl" ng-click="logout()" style="color:#d7d5d3;">SIGN OUT</a>
         </span>
       </div>
     </nav>

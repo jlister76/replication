@@ -50,11 +50,11 @@
     "dataSource": "mssql",
     "public": true
   },
-  "city": {
+  "suffix": {
     "dataSource": "mssql",
     "public": true
   },
-  "suffix": {
+  "town": {
     "dataSource": "mssql",
     "public": true
   }
