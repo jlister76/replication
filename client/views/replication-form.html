@@ -136,7 +136,7 @@
             <legend>REPLICATION RESULTS</legend>
             <div layout="column" class="md-padding">
               <div layout="column">
-                <span style="width:100%;"><strong>Are the locate marks able to be replicated?</strong></span>
+                <span style="width:100%;"><strong>Can the technician replicate the locate marks?</strong></span>
                 <select ng-model="response.able_to_replicate" name="able_to_replicate" required
                         ng-change="clearForm(response)"
                         style="margin:1rem;">
@@ -150,8 +150,7 @@
                     <input ng-model="response.atmos_determination"
                            ng-init="response.atmos_determination = 'Facility Issue'"
                            type="hidden">
-                    <label for="facility_issue"><strong>If there is a facility issue, please describe
-                      the root cause.</strong></label>
+                    <label for="facility_issue"><strong>Please describe the root cause of this facility issue.</strong></label>
                     <textarea ng-model="response.atmos_comments" name="facility_issue"
                               id="facility_issue" cols="30"
                               rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
@@ -159,8 +158,8 @@
                 </div>
                 <div class="row">
                   <div layout="column">
-                    <label for="actions_taken"><strong>Have any corrective actions been taken to resolve this
-                      facility issue? Please decsribe.</strong></label>
+                    <label for="actions_taken"><strong>Please describe the corrective actions taken to resolve this
+                      facility issue.</strong></label>
                     <textarea ng-model="response.corrective_actions" name="actions_taken" id="actions_taken" cols="30"
                               rows="7" ng-required="response.atmos_determination === 'facility_issue'"></textarea>
                   </div>

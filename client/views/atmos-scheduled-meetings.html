@@ -34,7 +34,7 @@
     <th align="left">Action</th>
     </thead>
     <tbody>
-    <tr ng-repeat="meeting in meetings" class="table_body">
+    <tr ng-repeat="meeting in meetings | orderBy: 'meeting_datetime'" class="table_body">
       <td ng-bind="meeting.meeting_datetime | date:'short'"><em>empty</em></td>
       <td ng-bind="meeting.team_leader"></td>
       <td ng-bind="meeting.location_name || 'none'"></td>
@@ -104,9 +104,8 @@
                   <div layout="column" class="md-padding">
                     <h4>Replication Results</h4>
                     <p class="md-caption" style="color: darkorange;"><em>(All fields required)</em></p>
-                    <p style="width:100%;"><strong>Are the locate marks able to be replicated?
-                    <p
-                      style="color:darkorange;"></p></strong></p>
+                    <p style="width:100%;"><strong>Can the technician replicate the locate marks?</strong>
+                    </p>
                     <select ng-model="response.able_to_replicate" name="able_to_replicate" required
                             ng-change="clearForm(response)">
                       <option value="Yes">Yes</option>
@@ -119,7 +118,7 @@
                         <input ng-model="response.atmos_determination"
                                ng-init="response.atmos_determination = 'Facility Issue'"
                                type="hidden">
-                        <label for="facility_issue"><strong>Please describe the root cause of any facility issue.
+                        <label for="facility_issue"><strong>Please describe the root cause of this facility issue.
                           <p style="color:darkorange;"></p></strong></label>
                         <textarea ng-model="response.atmos_comments" name="facility_issue"
                                   id="facility_issue" cols="30"
@@ -128,8 +127,8 @@
                     </div>
                     <div class="row">
                       <div layout="column">
-                        <label for="actions_taken"><strong>Have any corrective actions been taken to resolve this
-                          facility issue? Please decsribe.<p style="color:darkorange;"></p></strong></label>
+                        <label for="actions_taken"><strong>Please describe the corrective actions taken to resolve this
+                          facility issue.<p style="color:darkorange;"></p></strong></label>
                         <textarea ng-model="response.corrective_actions" name="actions_taken" id="actions_taken" cols="30"
                                   rows="7" ng-required="response.atmos_determination === 'Facility Issue'"></textarea>
                       </div>

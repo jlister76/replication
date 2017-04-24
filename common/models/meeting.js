@@ -5,7 +5,7 @@ var http = require('http');
 var loopback = require('loopback');
 var app = require('../../server/server');
 var path = require('path');
-var moment = require('moment');
+var moment = require('moment/min/moment-with-locales');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {

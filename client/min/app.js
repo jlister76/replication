@@ -108,7 +108,7 @@
 
           switch (user.company) {
             case 'HEATH':
-              if (user.access_type = 'group') {
+              if (user.access_type === 'group') {
                 $scope.company = 'HEATH';
               }
               break;
@@ -125,7 +125,7 @@
 
       switch (userCtx.company) {
         case 'HEATH':
-          if (userCtx.access_type = 'group') {
+          if (userCtx.access_type === 'group') {
             //set start page
             $state.go('authenticated.page.heath.replications');
 
@@ -249,10 +249,6 @@
         }
 
 
-      } else {
-
-        //what to do when there are no meetings
-        //TODO: handle when there are no meeting requests
       }
 
       if (proposedMeetings.length > 0) {
@@ -422,11 +418,11 @@
                 $timeout(function () {
 
                   $state.reload();
-                }, 2500)
+                }, 2500);
               })
-              .catch(function(err){if(err){console.error(err)}});
+              .catch(function(err){if(err){console.error(err);}});
           })
-          .catch(function(err){if(err){console.error(err)}})
+          .catch(function(err){if(err){console.error(err);}});
       };
 
       //controller functions
@@ -956,9 +952,108 @@
         $scope.pageMsg = 'Checking schedule...';
 
         $scope.showLinearProgress = true;
+        var conflict = [];
+
+        _.forEach(confirmedMeetings, function(m){
+         if(moment(m.meeting_datetime).format() === moment(request.momentDate).format()){
+          conflict.push(request.momentDate);
+         }
+        });
+        if (conflict.length > 0 ){
+
+          console.log(conflict);
+
+          //scheduling conflict
+          $scope.showErrorIcon = true;
+
+          $scope.icon = '<i class="material-icons">error</i>';
+
+          $scope.pageMsg = 'Scheduling Conflict';
+
+          $timeout(function () {
+
+            $scope.pageReload = false;
+
+          }, 2500)
+
+        } else {
+
+          //check team leader's schedule for conflicts
+          Meeting.find({
+            filter: {
+              where: {
+                team_leader: request.team_leader,
+                schedule_status: 'confirmed',
+                meeting_datetime: request.momentDate
+              }
+            }
+          })
+            .$promise
+            .then(function(scheduledMeeting){
+              if (scheduledMeeting.length > 0) {
+
+                $scope.showLinearProgress = false;
+
+                var location = _.get(scheduledMeeting[0], 'location');
+
+                var town = _.get(scheduledMeeting[0], 'town');
+
+                //scheduling conflict
+                $scope.showErrorIcon = true;
+
+                $scope.icon = '<i class="material-icons">error</i>';
+
+                $scope.pageMsg = 'Scheduling Conflict';
+
+                $timeout(function () {
+
+                  $scope.pageReload = false;
+
+                }, 2500)
+
+              } else if (scheduledMeeting.length === 0) {
+
+                //no conflict
+                $scope.showErrorIcon = false;
+
+                $scope.pageMsg = 'Rescheduling meeting';
 
 
-        for (var x in confirmedMeetings) {
+                Meeting.upsert({
+                  id: request.id,
+                  schedule_status: 'proposed',
+                  meeting_datetime: request.momentDate,
+                  fname: userCtx.fname,
+                  lname: userCtx.lname
+                })
+                  .$promise
+                  .then(function(proposed_schedule){
+                    $http.post('api/Meetings/proposed', {formData: proposed_schedule})
+                      .then(function () {
+                        var requests = [];
+                        $scope.pageMsg = 'Emailing ' + proposed_schedule.team_leader;
+
+                        $timeout(function () {
+
+                          $state.reload();
+
+                        }, 2500)
+
+                      })
+                      .catch(function (err) {
+                        if (err) {
+                          console.error(err);
+                        }
+                      });
+                  })
+              }
+            })
+            .catch(function(err){if(err){console.error(err);}})
+
+
+        }
+
+        /*for (var x in confirmedMeetings) {
 
 
           if (moment(confirmedMeetings[x].meeting_datetime).format === moment(request.momentDate).format()) {
@@ -1063,7 +1158,7 @@
               });
 
           }
-        }
+        }*/
 
 
       };
