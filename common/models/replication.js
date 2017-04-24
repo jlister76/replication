@@ -10,7 +10,7 @@ var _ = require('lodash');
 
 module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
-    var date = moment().format('dddd, MMMM, Do, YYYY');
+    var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
     var d = response;
     var emailTo = d.team_leader_email;
     var messageVars = {
@@ -78,7 +78,7 @@ module.exports = function(Replication) {
 
 
     var messageVars = {
-      replication_date: moment(d.replication_date).format('MM/DD/YYYY'),
+      replication_date: moment(d.replication_date).subtract(5, 'hours').format('MM/DD/YYYY'),
       town: d.town,
       atmos_employee: d.atmos_employee,
       team_leader: d.team_leader,
