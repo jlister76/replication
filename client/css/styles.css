@@ -141,7 +141,7 @@ legend {
 
 select {
   width: 140px;
-  margin-right: 1rem;
+  margin-right: .5rem;
 }
 
 label, span {
@@ -235,5 +235,15 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
 
 .fade.ng-hide-add {
   transition: all linear 500ms;
+}
+.show-tel {
+  visibility: hidden;
+}
+.show-tel:hover {
+  visibility: visible;
+  background-color:#404040;
+  color: white;
+  width: 100px;
+  height: 15px;
 }
 

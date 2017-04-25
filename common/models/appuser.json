@@ -24,6 +24,9 @@
     "division": {
       "type": "string",
       "required": true
+    },
+    "tel": {
+      "type": "string"
     }
   },
   "validations": [],

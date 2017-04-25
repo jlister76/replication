@@ -36,7 +36,7 @@
     <tbody>
     <tr ng-repeat="meeting in meetings | orderBy: 'meeting_datetime'" class="table_body">
       <td ng-bind="meeting.meeting_datetime | date:'short'"><em>empty</em></td>
-      <td ng-bind="meeting.team_leader"></td>
+      <td ng-bind="meeting.team_leader"><md-tooltip>{{meeting.team_leader_tel}}</md-tooltip></td>
       <td ng-bind="meeting.location_name || 'none'"></td>
       <td ng-bind="meeting.location"></td>
       <td ng-bind="meeting.town"></td>
@@ -104,13 +104,18 @@
                   <div layout="column" class="md-padding">
                     <h4>Replication Results</h4>
                     <p class="md-caption" style="color: darkorange;"><em>(All fields required)</em></p>
-                    <p style="width:100%;"><strong>Can the technician replicate the locate marks?</strong>
-                    </p>
-                    <select ng-model="response.able_to_replicate" name="able_to_replicate" required
-                            ng-change="clearForm(response)">
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
+                    <div layout="column" class="row">
+                      <label for="atmos_report"><strong>ATMOS Claim #</strong></label>
+                      <input type="text" ng-model="response.atmos_report" id="atmos_report" style="width:94px;" required>
+                    </div>
+                    <div layout="column" class="row">
+                      <label for="able_to_replicate"><strong>Can the technician replicate the locate marks?</strong></label>
+                      <select ng-model="response.able_to_replicate" id="able_to_replicate"  required
+                              ng-change="clearForm(response)">
+                        <option value="Yes">Yes</option>
+                        <option value="No">No</option>
+                      </select>
+                    </div>
                   </div>
                   <div ng-if="response.able_to_replicate === 'Yes'">
                     <div class="row">

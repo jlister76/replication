@@ -12,11 +12,13 @@ module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
     var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
     var d = response;
+    console.log(d.atmos_report);
     var emailTo = d.team_leader_email;
     var messageVars = {
       replication_date: d.replication_date,
       town: d.town,
       atmos_employee: d.atmos_employee,
+      atmos_report: d.atmos_report,
       team_leader: d.team_leader,
       locate_technician: d.locate_technician,
       heath_report: d.heath_report,
@@ -37,7 +39,7 @@ module.exports = function(Replication) {
 
     //TODO:hard-code ATMOS emails
     Replication.app.models.Email.send({
-      to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com', d.email],
+      to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
       from: 'locateATMOS@heathus.com',
       subject: 'Replication Determination - ' + d.town,
       html: html_body
@@ -81,6 +83,7 @@ module.exports = function(Replication) {
       replication_date: moment(d.replication_date).subtract(5, 'hours').format('MM/DD/YYYY'),
       town: d.town,
       atmos_employee: d.atmos_employee,
+      atmos_report: d.atmos_report,
       team_leader: d.team_leader,
       locate_technician: d.locate_technician,
       heath_report: d.heath_report,

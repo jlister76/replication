@@ -70,11 +70,16 @@
               DAMAGE INFORMATION
             </legend>
             <div layout="column" class="md-padding">
-              <div class="row">
+              <div layout layout-align="space-between" class="row">
                 <div layout="column">
                   <label for="heath_report"><strong>Heath Damage Report</strong></label>
                   <input ng-model="response.heath_report" type="number" id="heath_report" required>
                 </div>
+                <div layout="column">
+                  <label for="atmos_report"><strong>ATMOS Claim #</strong></label>
+                  <input type="text" ng-model="response.atmos_report" id="atmos_report" style="width:94px;" required>
+                </div>
+                {{response.atmos_report}}
               </div>
               <div layout="column" class="row">
                 <span style="margin-bottom:1rem;"><em>Address Information</em></span>

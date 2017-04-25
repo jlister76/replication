@@ -54,6 +54,9 @@
       "type": "string",
       "required": true
     },
+    "team_leader_tel": {
+      "type": "string"
+    },
     "schedule_status": {
       "type": "string",
       "required": true

@@ -523,6 +523,7 @@
                   locate_technician: locate_technician,
                   team_leader: request.team_leader,
                   team_leader_email: userCtx.email,
+                  team_leader_tel: userCtx.tel,
                   schedule_status: 'pending'
                 })
                   .$promise
@@ -584,6 +585,7 @@
                     locate_technician: request.locate_technician,
                     team_leader: request.team_leader,
                     team_leader_email: userCtx.email,
+                    team_leader_tel: userCtx.tel,
                     schedule_status: 'pending'
                   })
                     .$promise
@@ -716,7 +718,7 @@
 
       //handler for submitting replication results
       $scope.sendEmail = function (response) {
-
+        console.log(response.atmos_report);
         $location.hash('pageReload');
 
         $anchorScroll();
@@ -739,11 +741,11 @@
             street_name = _.capitalize(response.street_name),
             cross_street = _.capitalize(response.cross_street);
 
-
           Replication.create({
             replication_date: date,
             atmos_employee: userCtx.fname + userCtx.lname,
             atmos_employeeId: userCtx.id,
+            atmos_report: response.atmos_report,
             team_leader: team_leader,
             team_leader_email: recipent.email,
             locate_technician: locate_technician,
@@ -1053,113 +1055,6 @@
 
         }
 
-        /*for (var x in confirmedMeetings) {
-
-
-          if (moment(confirmedMeetings[x].meeting_datetime).format === moment(request.momentDate).format()) {
-
-
-            //scheduling conflict
-            $scope.showErrorIcon = true;
-
-            $scope.icon = '<i class="material-icons">error</i>';
-
-            $scope.pageMsg = 'Scheduling Conflict';
-
-            $timeout(function () {
-
-              $scope.pageReload = false;
-
-            }, 2500)
-
-          } else {
-            //check team leader's schedule for conflicts
-            Meeting.find({
-              filter: {
-                where: {
-                  team_leader: request.team_leader,
-                  schedule_status: 'confirmed',
-                  meeting_datetime: request.momentDate
-                }
-              }
-            })
-              .$promise
-              .then(function (scheduledMeeting) {
-
-
-                if (scheduledMeeting.length > 0) {
-
-                  $scope.showLinearProgress = false;
-
-                  var location = _.get(scheduledMeeting[0], 'location');
-
-                  var town = _.get(scheduledMeeting[0], 'town');
-
-                  //scheduling conflict
-                  $scope.showErrorIcon = true;
-
-                  $scope.icon = '<i class="material-icons">error</i>';
-
-                  $scope.pageMsg = 'Scheduling Conflict';
-
-                  $timeout(function () {
-
-                    $scope.pageReload = false;
-
-                  }, 2500)
-
-                } else if (scheduledMeeting.length === 0) {
-
-                  //no conflict
-                  $scope.showErrorIcon = false;
-
-                  $scope.pageMsg = 'Rescheduling meeting';
-
-
-                  Meeting.upsert({
-                    id: request.id,
-                    schedule_status: 'proposed',
-                    meeting_datetime: request.momentDate,
-                    fname: userCtx.fname,
-                    lname: userCtx.lname
-                  })
-                    .$promise
-                    .then(function (proposed_schedule) {
-
-                      $http.post('api/Meetings/proposed', {formData: proposed_schedule})
-                        .then(function () {
-                          var requests = [];
-                          $scope.pageMsg = 'Emailing ' + proposed_schedule.team_leader;
-
-                          $timeout(function () {
-
-                            $state.reload();
-
-                          }, 2500)
-
-                        })
-                        .catch(function (err) {
-                          if (err) {
-                            console.error(err);
-                          }
-                        });
-
-                    })
-                    .catch(function (err) {
-                      if (err) {
-                        console.error(err)
-                      }
-                    })
-
-                }
-
-              })
-              .catch(function () {
-              });
-
-          }
-        }*/
-
 
       };
 
@@ -1274,6 +1169,7 @@
           replication_date: date,
           atmos_employee: userCtx.fname + userCtx.lname,
           atmos_employeeId: userCtx.id,
+          atmos_report: response.atmos_report,
           team_leader: meeting.team_leader,
           team_leader_email: meeting.team_leader_email,
           locate_technician: meeting.locate_technician,

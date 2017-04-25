@@ -18,6 +18,9 @@
       "type": "number",
       "required": true
     },
+    "atmos_report": {
+      "type": "string"
+    },
     "team_leader": {
       "type": "string",
       "required": true
