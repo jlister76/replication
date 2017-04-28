@@ -440,7 +440,7 @@
       var _ = lodash;
 
       $scope.date = moment();
-      $scope.twoWeeks = moment().add(2, 'weeks');
+      $scope.oneWeek = moment().add(1, 'weeks');
 
       //combine all emails to send as group list
       var groupList = [];
@@ -823,7 +823,7 @@
 
       $scope.today = moment();
 
-      $scope.twoWeeks = moment().add(2,'week');
+      $scope.oneWeek = moment().add(7,'days');
 
       //collect all meeting requests
       var requests = [];
@@ -915,11 +915,26 @@
                   $http.post('api/Meetings/confirmed', {formData: meeting})
                     .then(function (meeting) {
 
-                      $timeout(function () {
+                      Meeting.find({filter:{
+                        where: {
+                          location: meeting.location,
+                          meeting_datetime: meeting.datetime,
+                          schedule_status: 'pending' || 'proposed'
+                        }
+                      }})
+                        .$promise
+                        .then(function(duplicate){
 
-                        $state.reload();
+                          _.forEach(duplicate, function(dupe){
+                            Meeting.destroyById({id: dupe.id})
+                          });
 
-                      }, 2000);
+                          $timeout(function () {
+
+                            $state.reload();
+
+                          }, 2000);
+                        });
                     })
                     .catch(function (err) {
                       if (err) {

@@ -13,17 +13,19 @@
   <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;"
          style="margin-top:1rem;">
     <thead>
-    <th align="left">Date / Time</th>
-    <th align="left">Address</th>
-    <th align="left">Town</th>
-    <th align="left">Team Leader</th>
-    <th align="left">Techician</th>
-    <th align="left">Determination</th>
-    <th align="left">Action</th>
+    <tr>
+      <th align="left">Date</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Team Leader</th>
+      <th align="left">Techician</th>
+      <th align="left">Determination</th>
+      <th align="left">Action</th>
+    </tr>
     </thead>
     <tbody>
     <tr ng-repeat="replication in replications" class="table_body">
-      <td ng-bind="replication.replication_date | date:'short'"></td>
+      <td ng-bind="replication.replication_date | date:'shortDate'"></td>
       <td ng-bind="replication.location"></td>
       <td ng-bind="replication.town"></td>
       <td ng-bind="replication.team_leader"></td>

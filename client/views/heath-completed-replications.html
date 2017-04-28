@@ -27,17 +27,20 @@
   <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%"
          style="margin-top:1rem;">
     <thead>
-    <th align="left">Date / Time</th>
-    <th align="left">DPS</th>
-    <th align="left">Address</th>
-    <th align="left">Town</th>
-    <th align="left">Facility</th>
-    <th align="left">Technician</th>
-    <th align="left">Action</th>
+    <tr>
+      <th align="left">Date</th>
+      <th align="left">DPS</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Facility</th>
+      <th align="left">Technician</th>
+      <th align="left">Determination</th>
+      <th align="left">Action</th>
+    </tr>
     </thead>
     <tbody>
     <tr ng-repeat="replication in replications | orderBy: 'meeting_datetime'" class="table_body">
-      <td ng-bind="replication.replication_date | date: 'short'"></td>
+      <td ng-bind="replication.replication_date | date: 'shortDate'"></td>
       <td ng-bind="replication.atmos_employee"></td>
       <td ng-bind="replication.location"></td>
       <td ng-bind="replication.town"></td>

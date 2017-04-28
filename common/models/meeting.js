@@ -9,7 +9,7 @@ var moment = require('moment/min/moment-with-locales');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {
-    var d = request;
+   /* var d = request;
     var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
@@ -37,11 +37,10 @@ module.exports = function(Meeting) {
         console.error(err);
       }
       console.log('email sent!');
-    });
+    });*/
   };
   Meeting.confirm = function(meeting, cb) {
-    console.log('Inside confirmed', meeting);
-    var m = meeting;
+   /* var m = meeting;
     var emailTo = m.team_leader_email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
@@ -72,7 +71,7 @@ module.exports = function(Meeting) {
         console.error(err);
       }
       console.log('email sent!');
-    });
+    });*/
   };
   Meeting.heathConfirm = function(meeting, cb) {
     var m = meeting;
