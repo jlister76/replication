@@ -18,10 +18,6 @@
   </div>
   <div layout layout-align="center">
     <div layout="column" layout-align="start center">
-
-      <!--<div ng-if="showSuccessMsg" layout layout-align="center" id="successMsg">
-        <span style="background: rgba(219,255,248,0.61);border:solid thin lightgrey; padding:.5rem;margin:1rem;width:100%;">Your meeting request has been emailed.</span>
-      </div>-->
       <div layout>
         <div>
           <form name="meetingRequestForm" ng-submit="sendMeetingRequest(request)">
@@ -29,8 +25,8 @@
             <input ng-model="request.team_leader_email" type="hidden">
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>SELECT DPS</legend>
-              <select ng-model="request.selected_dps" id="dps" required>
-                <option ng-repeat="dps in atmos | orderBy: 'lname'" ng-value="dps.email">{{ dps.fname }} {{ dps.lname }}</option>
+              <select ng-model="request.selected_dps" id="dps" required ng-change="showDps(request.selected_dps)">
+                <option ng-repeat="dps in atmos | orderBy: 'lname'" ng-value="dps">{{ dps.fname }} {{ dps.lname }}</option>
               </select>
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">

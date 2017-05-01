@@ -14,7 +14,7 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Replications</p>
+    <p class="md-subhead" style="color:white;">Replications <span ng-if="replications.length > 0" class="md-caption">({{replications.length}})</span></p>
   </div>
   <div ng-if="replications.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -76,8 +76,8 @@
           <span>Locate Technician: </span>
           <span ng-bind="replication.locate_technician"></span>
         </div>
-        <div layout>
-          <span>ATMOS Claim # : </span>
+        <div ng-if="replication.atmos_report" layout>
+          <span>ATMOS Leak # : </span>
           <span ng-bind="replication.atmos_report"></span>
         </div>
         <div layout>

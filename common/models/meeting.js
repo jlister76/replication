@@ -9,6 +9,7 @@ var moment = require('moment/min/moment-with-locales');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {
+    console.log('No email was sent', request);
    /* var d = request;
     var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -40,6 +41,7 @@ module.exports = function(Meeting) {
     });*/
   };
   Meeting.confirm = function(meeting, cb) {
+    console.log('No email was sent', meeting);
    /* var m = meeting;
     var emailTo = m.team_leader_email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
@@ -206,41 +208,85 @@ module.exports = function(Meeting) {
       console.log('email sent!');
     });
   };
+  Meeting.reassign = function(meeting, cb) {
+    console.log(meeting);
+    var m = meeting;
+    var emailTo = m.team_leader_email;
+    // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
+    var messageVars = {
+      id: m.id,
+      dps: m.fname + m.lname,
+      meeting_date: moment(m.meeting_datetime).subtract(5, 'hours').format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      team_leader: m.team_leader,
+      location_name: m.location_name,
+      location: m.location,
+      cross_street: m.cross_street,
+      town: m.town,
+      heath_report: m.heath_report,
+      facility: m.facility,
+      locate_technician: m.locate_technician,
+      assignee: m.assignee
+    };
+    var renderer = loopback
+      .template(path
+        .resolve(__dirname, '../../server/views/email-meeting-reassigned.ejs'));
+    var html_body = renderer(messageVars);
+
+    Meeting.app.models.Email.send({
+      to: [emailTo],
+      from: 'locateATMOS@heathus.com',
+      subject: 'Meeting Request Assigned',
+      html: html_body
+    }, function(err, mail) {
+      if (err) {
+        console.error(err);
+      }
+      console.log('email sent!');
+    });
+  };
   //custom remote methods
-  Meeting.declined = function(msg, next) {
-    Meeting.decline(msg);
+  Meeting.reassigned = function(meeting, next) {
+    Meeting.reassign(meeting);
+    next();
+  };
+  Meeting.remoteMethod('reassigned', {
+    accepts: {arg: 'formData', type: 'Object'},
+    http: {path: '/reassign', verb: 'post'}
+  });
+  Meeting.declined = function(meeting, next) {
+    Meeting.decline(meeting);
     next();
   };
   Meeting.remoteMethod('declined', {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/declined', verb: 'post'}
   });
-  Meeting.cancelMeeting = function(msg, next) {
-    Meeting.cancel(msg);
+  Meeting.cancelMeeting = function(meeting, next) {
+    Meeting.cancel(meeting);
     next();
   };
   Meeting.remoteMethod('cancelMeeting', {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/cancelMeeting', verb: 'post'}
   });
-  Meeting.heathConfirmed = function(msg, next) {
-    Meeting.heathConfirm(msg);
+  Meeting.heathConfirmed = function(meeting, next) {
+    Meeting.heathConfirm(meeting);
     next();
   };
   Meeting.remoteMethod('heathConfirmed', {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/heathConfirmed', verb: 'post'}
   });
-  Meeting.confirmed = function(msg, next) {
-    Meeting.confirm(msg);
+  Meeting.confirmed = function(meeting, next) {
+    Meeting.confirm(meeting);
     next();
   };
   Meeting.remoteMethod('confirmed', {
     accepts: {arg: 'formData', type: 'Object'},
     http: {path: '/confirmed', verb: 'post'}
   });
-  Meeting.proposed = function(msg, next) {
-    Meeting.propose(msg);
+  Meeting.proposed = function(meeting, next) {
+    Meeting.propose(meeting);
     next();
   };
   Meeting.remoteMethod('proposed', {

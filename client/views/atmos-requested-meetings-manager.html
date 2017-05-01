@@ -1,0 +1,173 @@
+<div class="md-padding" id="wrapper">
+  <div ng-if="pageReload"
+       style="z-index:5; position:fixed; top:0; left:0; width:100%; height:100%;background-color:rgba(136,136,136,0.2)">
+    <div layout="column" layout-align="center center"
+         style="z-index:10; position: fixed; top: 30%; left: 35%;width:35%; height:20%; padding:.5rem;background-color: white;color:#3b3b3b;"
+         md-whiteframe="3">
+      <div layout layout-align="center center" style="margin-bottom:.8rem;">
+        <div ng-if="showErrorIcon" ng-bind-html="icon"></div>
+        <div class="md-subhead md-padding" ng-bind-html="pageMsg"></div>
+      </div>
+      <div ng-if="showLinearProgress" style="width:80%;">
+        <md-progress-linear md-mode="indeterminate" class="md-warn md-hue-2"></md-progress-linear>
+      </div>
+    </div>
+  </div>
+  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
+    <p class="md-subhead" style="color:white;">Meeting Requests <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span></p>
+  </div>
+  <div ng-if="!requests" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no meeting requests
+      </em>
+    </p>
+  </div>
+  <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
+    <thead>
+    <tr>
+      <th align="left">Date & Time</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Facility</th>
+      <th align="left">Emailed To</th>
+      <th align="left">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
+      <td ng-bind="request.meeting_datetime | date:'short'">
+      </td>
+      <td ng-bind="request.location"></td>
+      <td ng-bind="request.town"></td>
+      <td ng-bind="request.facility"></td>
+      <td ng-bind="request.fname +' '+request.lname"></td>
+      <td style="min-width: 180px;">
+        <md-button class="md-raised info"
+                   style="font-size:10px;line-height:18px;min-height:24px!important;height:18px!important; min-width:18px!important;"
+                   ng-click="viewRequest(request)" layout layout-align="center center">
+          REASSIGN
+        </md-button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <div ng-if="request" layout="column" style="margin-top:2rem;">
+    <div layout="column" layout-align="space-around start" style="padding:.5rem;">
+
+      <!--show meeting details-->
+      <div layout="column" layout-align="center center" style="width: 100%;padding:.5rem;" id="details">
+
+        <form name="reassignmentForm" ng-submit="reassignMeetingRequest(request, selectedDps)" style="width: 90%;">
+          <fieldset class="field_set" style="width: 100%;">
+
+            <legend>DETAILS</legend>
+
+            <div layout class="view">
+
+              <div layout="column" class="md-padding" style="width:50%;">
+
+                <div>
+                  <div layout style="margin-bottom:1rem;">
+                    <span>Reassign to: </span>
+
+                    <span>
+                    <select ng-model="selectedDps" id="dps" required>
+                  <option ng-repeat="dps in atmosTeam | orderBy: 'lname'" ng-value="dps">{{ dps.fname }} {{ dps.lname }}</option>
+                </select>
+                  </span>
+                  </div>
+
+                  <div layout>
+
+                    <span>Date: </span>
+
+                    <span ng-bind="request.meeting_datetime | date:'short'"></span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Team Leader: </span>
+
+                    <span ng-bind="request.team_leader"></span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Locate Technician: </span>
+
+                    <span ng-bind="request.locate_technician"></span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Heath Damage Report: </span>
+
+                    <span ng-bind="request.heath_report"></span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Facility: </span>
+
+                    <span ng-bind="request.facility"></span>
+
+                  </div>
+
+                  <div ng-if="request.location_name" layout>
+
+                    <span>Meeting Location: </span>
+
+                    <span ng-bind="request.location_name"></span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Address: </span>
+
+                    <span ng-bind="request.location">
+
+                <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
+
+                </span>
+
+                  </div>
+
+                  <div layout>
+
+                    <span>Town: </span>
+
+                    <span ng-bind="request.town"></span>
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <div layout layout-align="start center" style="margin-top:1rem;">
+
+                    <md-button class="md-raised active" ng-disabled="reassignmentForm.$invalid" type="submit">SEND</md-button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </fieldset>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>

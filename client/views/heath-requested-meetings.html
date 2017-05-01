@@ -14,7 +14,7 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Requested Meetings</p>
+    <p class="md-subhead" style="color:white;">Requested Meetings <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span></p>
   </div>
   <div ng-if="requests.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -26,12 +26,15 @@
   </div>
   <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
-    <th align="left">Status</th>
-    <th align="left">Date / Time</th>
-    <th align="left">Address</th>
-    <th align="left">Town</th>
-    <th align="left">Facility</th>
-    <th align="left">Action</th>
+    <tr>
+      <th align="left">Status</th>
+      <th align="left">Date & Time</th>
+      <th align="left">DPS</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Facility</th>
+      <th align="left">Action</th>
+    </tr>
     </thead>
     <tbody>
     <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
@@ -43,6 +46,7 @@
       </td>
       <td ng-bind="request.meeting_datetime | date:'short'">
       </td>
+      <td ng-bind="request.fname +' '+request.lname"></td>
       <td ng-bind="request.location"></td>
       <td ng-bind="request.town"></td>
       <td ng-bind="request.facility"></td>
@@ -81,9 +85,9 @@
 
                 <div layout>
 
-                  <span>DPS Email: </span>
+                  <span>DPS: </span>
 
-                  <span>{{ request.email }}</span>
+                  <span ng-bind="request.fname + ' '+ request.lname"></span>
 
                 </div>
 
@@ -91,7 +95,7 @@
 
                   <span>Locate Technician: </span>
 
-                  <span>{{ request.locate_technician }}</span>
+                  <span ng-bind="request.locate_technician"></span>
 
                 </div>
 
@@ -99,7 +103,7 @@
 
                   <span>Heath Damage Report: </span>
 
-                  <span>{{ request.heath_report }}</span>
+                  <span ng-bind="request.heath_report"></span>
 
                 </div>
 
@@ -107,7 +111,7 @@
 
                   <span>Facility: </span>
 
-                  <span>{{ request.facility }}</span>
+                  <span ng-bind="request.facility"></span>
 
                 </div>
 
@@ -115,7 +119,7 @@
 
                   <span>Meeting Location: </span>
 
-                  <span>{{ request.location_name }}</span>
+                  <span ng-bind="request.location_name"></span>
 
                 </div>
 
@@ -123,7 +127,7 @@
 
                   <span>Address: </span>
 
-                  <span>{{ request.location }}
+                  <span ng-bind="request.location">
 
                 <span ng-if="request.cross_street">@ {{ request.cross_street }}</span>
 
@@ -135,7 +139,7 @@
 
                   <span>Town: </span>
 
-                  <span>{{ request.town }}</span>
+                  <span ng-bind="request.town "></span>
 
                 </div>
 

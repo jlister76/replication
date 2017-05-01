@@ -132,30 +132,16 @@
           }
           break;
         case 'ATMOS':
-
-          $state.go('authenticated.page.atmos.replications');
+          if (userCtx.access_type === 'dps') {
+            //set start page
+            $state.go('authenticated.page.atmos.replications');
+          }else if (userCtx.access_type === 'manager') {
+            //set start page
+            $state.go('authenticated.page.manager.atmos');
+          }
 
           break;
       }
-
-      // var ctx = AuthService.getCurrent()
-      //   .$promise
-      //   .then(function (ctx) {
-      //     switch (ctx.company) {
-      //       case 'HEATH':
-      //         if (ctx.access_type = 'group') {
-      //           //set start page
-      //           $state.go('authenticated.page.heath.replications');
-      //
-      //         }
-      //         break;
-      //       case 'ATMOS':
-      //
-      //         $state.go('authenticated.page.atmos.replications');
-      //
-      //         break;
-      //     }
-      //   });
 
 
     }])
@@ -270,34 +256,50 @@
 
         $scope.pageReload = true;
 
-        $scope.pageMsg = '<p>Scheduling Meeting</p>';
+        $scope.pageMsg = '<p>Verifying Meeting</p>';
 
         $scope.showLinearProgress = true;
 
         $location.hash('pageReload');
 
         $anchorScroll();
-
-        Meeting
-          .upsert({id: request.id, schedule_status: 'confirmed'})
+        //Check if meeting exists before scheduling
+        Meeting.findById({id: request.id})
           .$promise
-          .then(function (meeting) {
-            console.log(meeting, request);
-            $http.post('api/Meetings/heathConfirmed', {formData: meeting})
-              .then(function (meeting) {
+          .then(function(meeting){
+            console.log(meeting.length, meeting);
+            if(meeting){
+              Meeting
+                .upsert({id: request.id, schedule_status: 'confirmed'})
+                .$promise
+                .then(function (meeting) {
+                  console.log(meeting, request);
+                  $http.post('api/Meetings/heathConfirmed', {formData: meeting})
+                    .then(function (meeting) {
 
-                $timeout(function () {
+                      $timeout(function () {
 
-                  $state.reload();
+                        $state.reload();
 
-                }, 1000);
-              })
-              .catch(function (err) {
-                if (err) {
-                  console.error(err)
-                }
-              });
-          });
+                      }, 1000);
+                    })
+                    .catch(function (err) {
+                      if (err) {
+                        console.error(err)
+                      }
+                    });
+                });
+            } else if (!meeting){
+              $timeout(function(){
+
+                $scope.pageMsg = '<p>Meeting not scheduled. Request was cancelled.</p>';
+
+                state.reload();
+
+              }, 2500)
+            }
+          })
+          .catch(function(err){console.error(err);});
       };
 
       //event handler for resending meeting request
@@ -440,16 +442,14 @@
       var _ = lodash;
 
       $scope.date = moment();
-      $scope.oneWeek = moment().add(1, 'weeks');
+      $scope.oneWeek = moment().add(7, 'days');
 
       //combine all emails to send as group list
       var groupList = [];
-      for (var obj in atmos) {
-        if (atmos[obj].hasOwnProperty('email')) {
-          groupList.push(atmos[obj].email);
-        }
 
-      }
+      _.forEach(atmos, function(dps){
+        groupList.push(dps);
+      });
       var atmosObj = {fname: "Send to", lname: "All", email: groupList};
       atmos.push(atmosObj);
       var emailList = [];
@@ -470,6 +470,19 @@
 
       $scope.atmos = atmos;
 
+      $scope.showDps = function (groupObj){
+          console.log(typeof(groupObj.email), groupObj.email);
+        _.forEach(groupObj, function(obj){
+          //console.log(obj);
+          _.forEach(obj, function(dps){
+            if (dps.email !== undefined){
+              console.log(dps.fname,dps.lname,dps.email);
+            }
+          })
+        })
+
+      };
+
       $scope.sendMeetingRequest = function (request) {
 
         $scope.pageReload = true;
@@ -482,10 +495,11 @@
 
         $scope.showLinearProgress = true;
 
-        //check for single email adrs or list of email adrs and set property
-        switch (typeof(request.selected_dps)) {
+        //check if email property is a string or an array, then set properties accordingly
+        switch (typeof(request.selected_dps.email)) {
           case 'object':
-            request.emailList = request.selected_dps;
+
+            request.emailGroupObj = request.selected_dps;
 
             var scheduleConflicts = [];
 
@@ -499,58 +513,64 @@
               }
             });
 
-            _.forEach(request.emailList, function (adrs) {
+            _.forEach(request.emailGroupObj, function (PersonObj) {
+              _.forEach(PersonObj, function(dps){
 
-              if (scheduleConflicts.indexOf(adrs) === -1) {
-                console.log(adrs);
+                if (scheduleConflicts.indexOf(dps.email) === -1 && dps.email !== undefined) {
+                  console.log(dps.email, dps.fname, dps.lname);
 
-                //send meeting request where there is no scheduling conflict - create instance
+                  //send meeting request where there is no scheduling conflict - create instance
 
-                var locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
-                request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
-                request.facility = request.facility_size + " " + request.facility_material;
+                  var locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
+                  request.location = request.street_number + " " + _.capitalize(request.street_name) + " " + request.street_suffix;
+                  request.facility = request.facility_size + " " + request.facility_material;
 
 
-                Meeting.create({
-                  email: adrs,
-                  meeting_datetime: request.momentDate,
-                  location_name: _.capitalize(request.location_name),
-                  location: request.location,
-                  cross_street: _.capitalize(request.cross_street),
-                  town: request.town,
-                  heath_report: request.heath_report,
-                  facility: request.facility,
-                  locate_technician: locate_technician,
-                  team_leader: request.team_leader,
-                  team_leader_email: userCtx.email,
-                  team_leader_tel: userCtx.tel,
-                  schedule_status: 'pending'
-                })
-                  .$promise
-                  .then(function (meeting) {
-                    console.log(meeting);
-                    $http.post('api/Meetings/sendrequest', {formData: meeting})
-                      .then(function (meeting) {
-                        $scope.pageMsg = '<p>Emailing meeting request</p>';
-                        //clear fields in form
-                        $timeout(function () {
-
-                          $state.reload();
-
-                        }, 2500);
-                      })
+                  Meeting.create({
+                    fname: dps.fname,
+                    lname: dps.lname,
+                    email: dps.email,
+                    meeting_datetime: request.momentDate,
+                    location_name: _.capitalize(request.location_name),
+                    location: request.location,
+                    cross_street: _.capitalize(request.cross_street),
+                    town: request.town,
+                    heath_report: request.heath_report,
+                    facility: request.facility,
+                    locate_technician: locate_technician,
+                    team_leader: request.team_leader,
+                    team_leader_email: userCtx.email,
+                    team_leader_tel: userCtx.tel,
+                    schedule_status: 'pending'
                   })
-                  .catch(function (err) {
-                    console.error(err)
-                  })
-              } else {
+                    .$promise
+                    .then(function (meeting) {
+                      console.log(meeting);
+                      $http.post('api/Meetings/sendrequest', {formData: meeting})
+                        .then(function (meeting) {
+                          $scope.pageMsg = '<p>Emailing meeting request</p>';
+                          //clear fields in form
+                          $timeout(function () {
 
-              }
+                            $state.reload();
+
+                          }, 2500);
+                        })
+                    })
+                    .catch(function (err) {
+                      console.error(err)
+                    })
+                }
+
+              });
+
             });
 
             break;
           case 'string':
-            request.email = request.selected_dps;
+            request.email = request.selected_dps.email;
+            request.fname = request.selected_dps.fname;
+            request.lname = request.selected_dps.lname;
             request.emailList = null;
 
             request.locate_technician = _.capitalize(request.locate_technician_fname) + " " + _.capitalize(request.locate_technician_lname);
@@ -573,6 +593,8 @@
                 if(scheduledMeeting.length === 0 && scheduledMeetingDate !== request.momentDate){
                   //create instance
                   Meeting.create({
+                    fname: request.fname,
+                    lname: request.lname,
                     email: request.email,
                     emailList: request.emailList,
                     meeting_datetime: request.momentDate,
@@ -869,91 +891,119 @@
         $scope.pageMsg = 'Checking schedule...';
 
         $scope.showLinearProgress = true;
-
+        //check if meeting exist
         Meeting.find({
           filter: {
             where: {
-              email: userCtx.email,
-              schedule_status: 'confirmed',
-              meeting_datetime: request.meeting_datetime
+              location: request.location,
+              meeting_datetime: request.meeting_datetime,
+              schedule_status: 'confirmed'
             }
           }
         })
           .$promise
-          .then(function (scheduledMeeting) {
-            console.log(scheduledMeeting);
-            if (scheduledMeeting.length > 0) {
+          .then(function(meeting){
+            console.log('Controller ', meeting.length);
+            if (meeting.length > 0){
+              //reject and reload
+              $timeout(function(){
+                $scope.pageMsg = 'Meeting was already scheduled with ' + meeting.fname + ' ' + meeting.lname;
 
-              $scope.showLinearProgress = false;
-
-              var location = _.get(scheduledMeeting[0], 'location');
-
-              var town = _.get(scheduledMeeting[0], 'town');
-
-              //scheduling conflict
-
-              $scope.icon = '<i class="material-icons">error</i>';
-
-              $scope.pageMsg = '<h4>Schedule conflict</h4>' +
-                '<p class="md-body-1" style="width:100%;">Reschedule or decline this meeting.</p>';
-
-
-              $timeout(function () {
-
-                $scope.pageReload = false;
-
-              }, 7000);
-
-            } else {
-
-              Meeting
-                .upsert({id: request.id, schedule_status: 'confirmed', fname: userCtx.fname, lname: userCtx.lname})
+                $state.reload();
+              }, 2500)
+            } else if (meeting.legnth === 0){
+              //check for scheduling conflicts
+              Meeting.find({
+                filter: {
+                  where: {
+                    email: userCtx.email,
+                    schedule_status: 'confirmed',
+                    meeting_datetime: request.meeting_datetime
+                  }
+                }
+              })
                 .$promise
-                .then(function (meeting) {
-                  $scope.pageMsg = 'Scheduling Meeting';
+                .then(function (scheduledMeeting) {
+                  console.log(scheduledMeeting);
+                  if (scheduledMeeting.length > 0) {
 
-                  $http.post('api/Meetings/confirmed', {formData: meeting})
-                    .then(function (meeting) {
+                    $scope.showLinearProgress = false;
 
-                      Meeting.find({filter:{
-                        where: {
-                          location: meeting.location,
-                          meeting_datetime: meeting.datetime,
-                          schedule_status: 'pending' || 'proposed'
-                        }
-                      }})
-                        .$promise
-                        .then(function(duplicate){
+                    var location = _.get(scheduledMeeting[0], 'location');
 
-                          _.forEach(duplicate, function(dupe){
-                            Meeting.destroyById({id: dupe.id})
+                    var town = _.get(scheduledMeeting[0], 'town');
+
+                    //scheduling conflict
+
+                    $scope.icon = '<i class="material-icons">error</i>';
+
+                    $scope.pageMsg = '<h4>Schedule conflict</h4>' +
+                      '<p class="md-body-1" style="width:100%;">Reschedule or decline this meeting.</p>';
+
+
+                    $timeout(function () {
+
+                      $scope.pageReload = false;
+
+                    }, 7000);
+
+                  } else {
+
+                    Meeting
+                      .upsert({id: request.id, schedule_status: 'confirmed', fname: userCtx.fname, lname: userCtx.lname})
+                      .$promise
+                      .then(function (meeting) {
+                        $scope.pageMsg = 'Scheduling Meeting';
+
+                        $http.post('api/Meetings/confirmed', {formData: meeting})
+                          .then(function (meeting) {
+
+                            Meeting.find({filter:{
+                              where: {
+                                or: [
+                                  {schedule_status: 'pending'},
+                                  {schedule_status: 'proposed'}
+                                ],
+                                location: meeting.location,
+                                meeting_datetime: meeting.datetime
+                              }
+                            }})
+                              .$promise
+                              .then(function(duplicates){
+                                console.log(duplicates);
+                                _.forEach(duplicates, function(dupe){
+                                  Meeting.destroyById({id: dupe.id})
+                                });
+
+                                $timeout(function () {
+
+                                  $state.reload();
+
+                                }, 2000);
+                              });
+                          })
+                          .catch(function (err) {
+                            if (err) {
+                              console.error(err)
+                            }
                           });
-
-                          $timeout(function () {
-
-                            $state.reload();
-
-                          }, 2000);
-                        });
-                    })
-                    .catch(function (err) {
-                      if (err) {
-                        console.error(err)
-                      }
-                    });
+                      })
+                      .catch(function (err) {
+                        if (err) {
+                          console.error(err)
+                        }
+                      })
+                  }
                 })
                 .catch(function (err) {
                   if (err) {
                     console.error(err)
                   }
-                })
+                });
             }
           })
-          .catch(function (err) {
-            if (err) {
-              console.error(err)
-            }
-          });
+          .catch(function(err){console.error(err)});
+
 
       };
 
@@ -1295,6 +1345,74 @@
 
       }
     }])
+    .controller('AtmosRequestsManagerCtrl', ["$scope", "$state", "userCtx", "requestedMeetings", "atmosTeam", "$timeout", "Meeting", "$location", "$anchorScroll", "$http", function ($scope, $state, userCtx, requestedMeetings, atmosTeam, $timeout, Meeting, $location, $anchorScroll, $http) {
+
+      $scope.requests = requestedMeetings;
+      $scope.atmosTeam = atmosTeam;
+
+      //event handler for viewing the meeting details
+      $scope.viewRequest = function (request) {
+
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(request));
+
+        $location.hash('details');
+
+        $anchorScroll();
+
+        getRequest();
+
+      };
+
+      //handler for assigning meeting request
+      $scope.reassignMeetingRequest = function (request, selectedDps) {
+
+        $scope.pageReload = true;
+
+        $scope.pageMsg = '<p>Reassigning Meeting</p>';
+
+        $scope.showLinearProgress = true;
+
+        $location.hash('pageReload');
+
+        $anchorScroll();
+
+      Meeting.upsert({
+        id: request.id,
+        email: selectedDps.email,
+        fname: selectedDps.fname,
+        lname: selectedDps.lname
+      })
+        .$promise
+        .then(function(meeting){
+
+          meeting.assignee = userCtx.fname + " " + userCtx.lname;
+
+          $scope.pageMsg = '<p>Emailing ' + meeting.fname + " " + meeting.lname + ' &  ' + meeting.team_leader + '</p>';
+          $http.post('api/Meetings/reassign', {formData: meeting})
+            .then(function(){
+              $timeout(function(){
+                $state.reload();
+                },
+              2500)
+            })
+            .catch(function(err){console.error(err);});
+        })
+        .catch(function(err){console.error(err);});
+
+      };
+      //controller functions
+      function getRequest() {
+
+        var requestObj = sessionStorage.getItem('data');
+
+        $scope.request = JSON.parse(requestObj);
+
+      };
+
+    }])
+    .controller('AtmosReplicationResultsCtrl', function () {})
 })();
 
 // CommonJS package manager support
@@ -9320,7 +9438,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
             "access": ["userCtx", "$state", function (userCtx, $state) {
               if (userCtx.company === "ATMOS") {
                 console.error('403 Forbidden Access');
-                $state.go('app.atmos');
+                $state.go('authenticated.page.atmos.replications');
               }
             }],
             "completedReplications": ["Replication", "userCtx", function (Replication, userCtx) {
@@ -9524,26 +9642,120 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
             }
           }
         })
-        .state('authenticated.page.heath.scheduling', {
-          url: '',
+        .state('authenticated.page.manager', {
+          abstract: true,
+          url: '/atmos/manage',
+          templateUrl: 'views/atmos-manager-page.html',
           resolve: {
-            userCtx: ["AuthService", function (AuthService) {
+            "userCtx": ["AuthService", function (AuthService) {
               return AuthService.getCurrent().$promise
             }],
-            atmos: ["Appuser", function (Appuser) {
-              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
-            }],
-            access: ["userCtx", "$state", function (userCtx, $state) {
-              if (userCtx.company === "ATMOS") {
+            "access": ["userCtx", "$state", function (userCtx, $state) {
+              if (userCtx.company === "HEATH" && userCtx.access_type === 'group') {
                 console.error('403 Forbidden Access');
-                $state.transitionTo('app.atmos');
+                $state.go('authenticated.page.heath.replications');
+              } else if (userCtx.access_type !== 'manager') {
+                console.error('403 Forbidden Access');
+                $state.go('authenticated.page.atmos.replications');
               }
+            }],
+            "atmosTeam": ["Appuser", function (Appuser) {
+              return Appuser.find({
+                filter: {
+                  where: {
+                    and: [
+                      {company: 'ATMOS'},
+                      {access_type: 'dps'}
+                    ]
+                  }
+                }
+              })
+            }],
+            "completedReplications": ["Replication", "userCtx", function (Replication, userCtx) {
+              var oneMonth = moment().subtract(1, 'month');
+              return Replication.find({
+                filter: {
+                  where: {
+                    atmos_employeeId: userCtx.id,
+                    replication_date: {gte: oneMonth}
+                  }
+                }
+              }).$promise
+            }],
+            "requestedMeetings": ["Meeting", function (Meeting) {
+              var beginingOfMonth = moment().startOf('month');
+              console.log(beginingOfMonth);
+              return Meeting.find({
+                filter: {
+                  where: {
+                    or: [
+                      {schedule_status: 'pending'},
+                      {schedule_status: 'proposed'}
+                    ],
+                    meeting_datetime: {gte: beginingOfMonth}
+                  }
+                }
+              }).$promise
+            }],
+            'proposedMeetings': ["Meeting", "userCtx", function (Meeting, userCtx) {
+              var today = moment();
+              return Meeting.find({
+                filter: {
+                  where: {
+                    email: userCtx.email,
+                    schedule_status: 'proposed',
+                    meeting_datetime: {gte: today}
+                  }
+                }
+              })
+            }],
+            'confirmedMeetings': ["Meeting", "userCtx", function (Meeting, userCtx) {
+              var today = moment();
+              return Meeting.find({
+                filter: {
+                  where: {
+                    email: userCtx.email,
+                    schedule_status: 'confirmed',
+                    meeting_datetime: {gte: today}
+                  }
+                }
+              }).$promise
             }]
-          },
-          templateUrl: 'views/heath-scheduler.html',
-          controller: 'HeathSchedulerCtrl',
-          title: 'Replication'
-
+          }
+        })
+        .state('authenticated.page.manager.atmos', {
+          url: '',
+          views: {
+            'requested': {
+              templateUrl: 'views/atmos-requested-meetings-manager.html',
+              controller: 'AtmosRequestsManagerCtrl'
+            },
+            'scheduled': {
+              templateUrl: 'views/atmos-scheduled-meetings.html',
+              controller: 'AtmosConfirmedMeetingCtrl',
+              resolve: {
+                'confirmedMeetings': ["Meeting", "userCtx", function (Meeting, userCtx) {
+                  var oneMonth = moment().subtract(1, 'months');
+                  return Meeting.find({
+                    filter: {
+                      where: {
+                        email: userCtx.email,
+                        schedule_status: 'confirmed',
+                        meeting_datetime: {gte: oneMonth}
+                      }
+                    }
+                  }).$promise
+                    .then(function (data) {
+                      console.log(data)
+                    })
+                }]
+              }
+            },
+            'completed': {
+              templateUrl: 'views/atmos-completed-replications.html',
+              controller: 'AtmosReplicationResultsCtrl'
+            }
+          }
         })
         .state('app.error', {
           url: '/error',
