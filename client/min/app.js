@@ -1436,7 +1436,13 @@
       };
 
     }])
-    .controller('AtmosReplicationResultsCtrl', function () {})
+    .controller('AtmosReplicationResultsCtrl', ["$scope", "currentMonthReplications", function ($scope, currentMonthReplications) {
+      $scope.title = "IT works!";
+      $scope.replications = currentMonthReplications;
+
+      console.log($scope.replications);
+
+    }])
 })();
 
 // CommonJS package manager support
@@ -9669,6 +9675,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
         .state('authenticated.page.manager', {
           abstract: true,
           url: '/atmos/manage',
+          controller: 'AtmosReplicationResultsCtrl',
           templateUrl: 'views/atmos-manager-page.html',
           resolve: {
             "userCtx": ["AuthService", function (AuthService) {
@@ -9695,13 +9702,12 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
                 }
               })
             }],
-            "completedReplications": ["Replication", "userCtx", function (Replication, userCtx) {
-              var oneMonth = moment().subtract(1, 'month');
+            "currentMonthReplications": ["Replication", "userCtx", function (Replication, userCtx) {
+              var beginingOfMonth = moment().startOf('month');
               return Replication.find({
                 filter: {
                   where: {
-                    atmos_employeeId: userCtx.id,
-                    replication_date: {gte: oneMonth}
+                    replication_date: {gte: beginingOfMonth}
                   }
                 }
               }).$promise
@@ -9776,8 +9782,8 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
               }
             },
             'completed': {
-              templateUrl: 'views/atmos-completed-replications.html',
-              controller: 'AtmosReplicationResultsCtrl'
+              templateUrl: 'views/atmos-completed-replications-manager.html'
+              //controller: 'AtmosReplicationResultsCtrl'
             }
           }
         })

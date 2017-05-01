@@ -1,0 +1,109 @@
+<div class="md-padding" id="wrapper">
+  <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
+    <p class="md-subhead" style="color:white;">Replications <span ng-if="replications.length > 0" class="md-caption">({{replications.length}})</span></p>
+  </div>
+  <div ng-if="replications.length === 0" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no completed replications
+      </em>
+    </p>
+  </div>
+  <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;"
+         style="margin-top:1rem;">
+    <thead>
+    <tr>
+      <th align="left">Date</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Team Leader</th>
+      <th align="left">Techician</th>
+      <th align="left">Determination</th>
+      <th align="left">Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="replication in replications" class="table_body">
+      <td ng-bind="replication.replication_date | date:'shortDate'"></td>
+      <td ng-bind="replication.location"></td>
+      <td ng-bind="replication.town"></td>
+      <td ng-bind="replication.team_leader"></td>
+      <td ng-bind="replication.locate_technician"></td>
+      <td ng-bind="replication.atmos_determination"></td>
+      <td>
+        <md-button class="md-raised info" ng-click="viewReplication(replication)"
+                   style="font-size:10px;line-height:18px;min-height:24px!important;height:18px!important; min-width:18px!important;">
+          View More
+        </md-button>
+      </td>
+    </tr>
+
+    </tbody>
+  </table>
+  <div ng-if="replication" layout="column" class="view" id="details" style="padding:1rem;">
+    <div>
+      <form name="replicationForm">
+        <fieldset class="field_set">
+          <legend>Replication Details</legend>
+          <div layout="column">
+            <div layout="column">
+              <div>
+                <div layout>
+                  <span>Date: </span>
+                  <span ng-bind="replication.replication_date  | date:'short'"></span>
+                </div>
+                <div layout>
+                  <span>Team Leader: </span>
+                  <span ng-bind=" replication.team_leader"></span>
+                </div>
+                <div layout>
+                  <span>Locate Technician: </span>
+                  <span ng-bind="replication.locate_technician"></span>
+                </div>
+                <div layout>
+                  <span>ATMOS Claim # : </span>
+                  <span ng-bind="replication.atmos_report"></span>
+                </div>
+                <div layout>
+                  <span>Heath Damage Report: </span>
+                  <span ng-bind="replication.heath_report"></span>
+                </div>
+                <div layout>
+                  <span>Facility: </span>
+                  <span ng-bind="replication.facility"></span>
+                </div>
+                <div layout>
+                  <span>Address: </span>
+                  <span ng-bind="replication.location">
+                <span ng-if="replication.cross_street">@ {{ replication.cross_street }}</span>
+                </span>
+                </div>
+                <div layout>
+                  <span>Town: </span>
+                  <span ng-bind="replication.town"></span>
+                </div>
+                <div layout>
+                  <span>Determination: </span>
+                  <span ng-bind="replication.atmos_determination"></span>
+                </div>
+                <div ng-if="replication.atmos_determination === 'Locate Error'" layout>
+                  <span>Facility able to be located: </span>
+                  <span ng-bind="replication.able_to_locate"></span>
+                </div>
+                <div ng-if="replication.able_to_locate === 'Yes'" layout>
+                  <span>Facility marked after replication: </span>
+                  <span ng-bind="replication.is_line_marked"></span>
+                </div>
+                <div layout>
+                  <span>Comments: </span>
+                  <span ng-bind="replication.atmos_comments"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+    </div>
+  </div>
+</div>

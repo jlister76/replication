@@ -1,5 +1,5 @@
 <div layout layout-align="center">
-  <div layout style="width:1024px;height:auto;background-color:#0D4977;">
+  <div layout style="width:1024px;height:auto;background-color:#0D4977;" >
     <div style="width:100%;min-height:100vh;height:auto;background-color:white;">
 
       <!---success messages--->
@@ -11,13 +11,17 @@
       <md-content style="background-color:white;">
         <md-tabs md-dynamic-height="always" md-tab-scroll="never"  md-border-bottom
                  md-selected="selectedIndex">
-          <md-tab label="Pending Requests">
-            <div ui-view name="requested" style="margin:.5rem;padding:1rem;"></div>
+          <md-tab label="{{title}} {{replications.length}}">
+
+            <md-tab-body>
+              <div ui-view name="requested" style="margin:.5rem;padding:1rem;"></div>
+            </md-tab-body>
           </md-tab>
           <md-tab label="Replications">
             <div ui-view name="completed" style="margin:.5rem;padding:1rem;"></div>
           </md-tab>
         </md-tabs>
+        {{replications.length}}
       </md-content>
     </div>
   </div>

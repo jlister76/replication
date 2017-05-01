@@ -1342,5 +1342,11 @@
       };
 
     })
-    .controller('AtmosReplicationResultsCtrl', function () {})
+    .controller('AtmosReplicationResultsCtrl', function ($scope, currentMonthReplications) {
+      $scope.title = "IT works!";
+      $scope.replications = currentMonthReplications;
+
+      console.log($scope.replications);
+
+    })
 })();

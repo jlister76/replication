@@ -257,6 +257,7 @@
         .state('authenticated.page.manager', {
           abstract: true,
           url: '/atmos/manage',
+          controller: 'AtmosReplicationResultsCtrl',
           templateUrl: 'views/atmos-manager-page.html',
           resolve: {
             "userCtx": function (AuthService) {
@@ -284,12 +285,11 @@
               })
             },
             "currentMonthReplications": function (Replication, userCtx) {
-              var oneMonth = moment().subtract(1, 'month');
+              var beginingOfMonth = moment().startOf('month');
               return Replication.find({
                 filter: {
                   where: {
-                    atmos_employeeId: userCtx.id,
-                    replication_date: {gte: oneMonth}
+                    replication_date: {gte: beginingOfMonth}
                   }
                 }
               }).$promise
@@ -364,8 +364,8 @@
               }
             },
             'completed': {
-              templateUrl: 'views/atmos-completed-replications.html',
-              controller: 'AtmosReplicationResultsCtrl'
+              templateUrl: 'views/atmos-completed-replications-manager.html'
+              //controller: 'AtmosReplicationResultsCtrl'
             }
           }
         })
