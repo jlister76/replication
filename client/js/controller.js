@@ -274,6 +274,10 @@
 
         sessionStorage.setItem('data', JSON.stringify(request));
 
+        $location.hash('details');
+
+        $anchorScroll();
+
         getRequest();
 
       };
@@ -298,6 +302,10 @@
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(meeting));
+
+        $location.hash('details');
+
+        $anchorScroll();
 
         getMeeting();
 
@@ -571,6 +579,10 @@
 
         sessionStorage.setItem('data', JSON.stringify(replication));
 
+        $location.hash('details');
+
+        $anchorScroll();
+
         getReplication();
 
       };
@@ -797,28 +809,13 @@
         $scope.pageMsg = 'Checking schedule...';
 
         $scope.showLinearProgress = true;
-        //check if meeting exist
-        Meeting.find({
-          filter: {
-            where: {
-              location: request.location,
-              meeting_datetime: request.meeting_datetime,
-              schedule_status: 'confirmed'
-            }
-          }
-        })
-          .$promise
-          .then(function(meeting){
-            console.log('Controller ', meeting.length);
-            if (meeting.length > 0){
-              //reject and reload
-              $timeout(function(){
-                $scope.pageMsg = 'Meeting was already scheduled with ' + meeting.fname + ' ' + meeting.lname;
 
-                $state.reload();
-              }, 2500)
-            } else if (meeting.legnth === 0){
-             console.log("else if", request);
+        try {
+          //check if meeting exist
+          Meeting.findById({id: request.id})
+            .$promise
+            .then(function(meeting){
+
               //check for scheduling conflicts
               Meeting.find({
                 filter: {
@@ -831,7 +828,7 @@
               })
                 .$promise
                 .then(function (scheduledMeeting) {
-                  console.log(scheduledMeeting);
+
                   if (scheduledMeeting.length > 0) {
 
                     $scope.showLinearProgress = false;
@@ -860,6 +857,7 @@
                       .upsert({id: request.id, schedule_status: 'confirmed', fname: userCtx.fname, lname: userCtx.lname})
                       .$promise
                       .then(function (meeting) {
+
                         $scope.pageMsg = 'Scheduling Meeting';
 
                         $http.post('api/Meetings/confirmed', {formData: meeting})
@@ -877,9 +875,11 @@
                             }})
                               .$promise
                               .then(function(duplicates){
-                                console.log(duplicates);
+
                                 _.forEach(duplicates, function(dupe){
+
                                   Meeting.destroyById({id: dupe.id})
+
                                 });
 
                                 $timeout(function () {
@@ -907,9 +907,20 @@
                     console.error(err)
                   }
                 });
-            }
-          })
-          .catch(function(err){console.error(err)});
+
+            })
+            .catch(function(err){
+              //meeting does not exist reject & reload
+              $scope.pageMsg = 'Request was cancelled by team leader';
+              $timeout(function(){
+                $state.reload();
+              },2500)
+
+            });
+
+        }catch(err){
+          if(err) throw err;
+        }
 
 
       };
@@ -1037,6 +1048,10 @@
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(request));
+
+        $location.hash('details');
+
+        $anchorScroll();
 
         getRequest();
 
@@ -1212,6 +1227,10 @@
 
         sessionStorage.setItem('data', JSON.stringify(meeting));
 
+        $location.hash('details');
+
+        $anchorScroll();
+
         getMeeting();
 
       };
@@ -1238,6 +1257,10 @@
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(replication));
+
+        $location.hash('details');
+
+        $anchorScroll();
 
         getReplication();
 

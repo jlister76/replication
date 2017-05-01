@@ -283,7 +283,7 @@
                 }
               })
             },
-            "completedReplications": function (Replication, userCtx) {
+            "currentMonthReplications": function (Replication, userCtx) {
               var oneMonth = moment().subtract(1, 'month');
               return Replication.find({
                 filter: {

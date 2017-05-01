@@ -1,6 +1,6 @@
 <div class="md-padding" id="wrapper">
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Replications</p>
+    <p class="md-subhead" style="color:white;">Replications <span ng-if="replications.length > 0" class="md-caption">({{replications.length}})</span></p>
   </div>
   <div ng-if="replications.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -41,7 +41,7 @@
 
     </tbody>
   </table>
-  <div ng-if="replication" layout="column" class="view" style="padding:1rem;">
+  <div ng-if="replication" layout="column" class="view" id="details" style="padding:1rem;">
     <div>
       <form name="replicationForm">
         <fieldset class="field_set">

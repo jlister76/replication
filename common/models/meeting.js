@@ -110,6 +110,7 @@ module.exports = function(Meeting) {
     });
   };
   Meeting.propose = function(meeting, cb) {
+    console.log('No email sent. Proposed');
     var m = meeting;
     var emailTo = m.team_leader_email;
     var messageVars = {
