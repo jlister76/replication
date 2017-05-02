@@ -127,34 +127,12 @@
         $location.path('/');
       }
     })
-    .controller('HeathRequestedMeetingCtrl', function ($scope, Meeting, requestedMeetings, proposedMeetings, $http, $timeout, $state, $location, $anchorScroll) {
-      //collect all meeting requests
-      var requests = [];
-
-      if (requestedMeetings.length > 0) {
+    .controller('HeathRequestedMeetingCtrl', function ($scope, Meeting, requestedMeetings, $http, $timeout, $state, $location, $anchorScroll) {
 
 
-        for (var i = 0; i < requestedMeetings.length; i++) {
-
-          requests.push(requestedMeetings[i]);
-
-        }
-
-
-      }
-
-      if (proposedMeetings.length > 0) {
-
-        for (var x = 0; x < proposedMeetings.length; x++) {
-
-          requests.push(proposedMeetings[x]);
-
-        }
-
-      }
 
       //assign request for replications to the view
-      $scope.requests = requests;
+      $scope.requests = requestedMeetings;
 
 
       //event handler for confirming proposed meeting request
@@ -274,10 +252,6 @@
 
         sessionStorage.setItem('data', JSON.stringify(request));
 
-        $location.hash('details');
-
-        $anchorScroll();
-
         getRequest();
 
       };
@@ -298,14 +272,12 @@
 
       //handler for completing a replication response
       $scope.viewMeeting = function (meeting) {
-        console.log(meeting);
+
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(meeting));
 
-        $location.hash('details');
 
-        $anchorScroll();
 
         getMeeting();
 
@@ -579,11 +551,7 @@
 
         sessionStorage.setItem('data', JSON.stringify(replication));
 
-        $location.hash('details');
-
-        $anchorScroll();
-
-        getReplication();
+         getReplication();
 
       };
 
@@ -757,7 +725,7 @@
 
       }
     })
-    .controller('AtmosRequestedMeetingCtrl', function ($scope, Meeting, userCtx, requestedMeetings, proposedMeetings, confirmedMeetings, $http, $timeout, $anchorScroll, $location, $state, towns) {
+    .controller('AtmosRequestedMeetingCtrl', function ($scope, Meeting, userCtx, requestedMeetings, confirmedMeetings, $http, $timeout, $anchorScroll, $location, $state, towns) {
 
       $scope.towns = _.uniqBy(towns, 'city');
 
@@ -765,36 +733,10 @@
 
       $scope.oneWeek = moment().add(7,'days');
 
-      //collect all meeting requests
-      var requests = [];
-
-      if (requestedMeetings.length > 0) {
+      console.log(requestedMeetings);
+      $scope.requests = requestedMeetings;
 
 
-        for (var i = 0; i < requestedMeetings.length; i++) {
-
-          requests.push(requestedMeetings[i]);
-
-        }
-
-        //assign request for replications to the view
-        $scope.requests = requests;
-
-
-      }
-
-      if (proposedMeetings.length > 0) {
-
-        for (var x = 0; x < proposedMeetings.length; x++) {
-
-          requests.push(proposedMeetings[x]);
-
-        }
-
-        //assign request for replications to the view
-        $scope.requests = requests;
-
-      }
 
       if (confirmedMeetings.length > 0) {
         //assign meetings in view
@@ -1049,10 +991,6 @@
 
         sessionStorage.setItem('data', JSON.stringify(request));
 
-        $location.hash('details');
-
-        $anchorScroll();
-
         getRequest();
 
       };
@@ -1227,10 +1165,6 @@
 
         sessionStorage.setItem('data', JSON.stringify(meeting));
 
-        $location.hash('details');
-
-        $anchorScroll();
-
         getMeeting();
 
       };
@@ -1258,10 +1192,6 @@
 
         sessionStorage.setItem('data', JSON.stringify(replication));
 
-        $location.hash('details');
-
-        $anchorScroll();
-
         getReplication();
 
       };
@@ -1286,10 +1216,6 @@
         sessionStorage.removeItem('data');
 
         sessionStorage.setItem('data', JSON.stringify(request));
-
-        $location.hash('details');
-
-        $anchorScroll();
 
         getRequest();
 
@@ -1342,11 +1268,135 @@
       };
 
     })
-    .controller('AtmosReplicationResultsCtrl', function ($scope, currentMonthReplications) {
-      $scope.title = "IT works!";
+    .controller('AtmosScheduledMeetingManagerCtrl', function($scope, confirmedMeetings){
+
+        $scope.meetings = confirmedMeetings;
+
+      //handler for completing a replication response
+      $scope.viewMeeting = function (meeting) {
+        console.log(meeting);
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(meeting));
+
+        getMeeting();
+
+      };
+
+      //controller functions
+      function getMeeting() {
+
+        var meetingObj = sessionStorage.getItem('data');
+
+        $scope.meeting = JSON.parse(meetingObj);
+
+      }
+
+    })
+    .controller('AtmosReplicationResultsCtrl', function ($scope, currentMonthReplications, $location, $anchorScroll, Replication) {
+
       $scope.replications = currentMonthReplications;
 
-      console.log($scope.replications);
+      //set default sort option
+      $scope.sortType = 'team_leader';
+
+      //set default sort order
+      $scope.sortReverse = false;
+
+      //set default filter text
+      $scope.replicationSearch = '';
+
+      //handler for search by date
+      $scope.search = function (start, end){
+        Replication.find({filter: {
+          where: {
+            and: [
+              {replication_date: {gte: start}},
+              {replication_date: {lte: end}}
+            ]
+          }
+        }})
+          .$promise
+          .then(function(replications){
+            console.log(replications);
+            $scope.replications = replications})
+          .catch(function(err){console.error(err)});
+      };
+
+      //handler for displaying previous month results
+      $scope.previousMonth = function (){
+
+        var startOfPriorMonth = moment().startOf('month').subtract(1,'months');
+        var endOfPriorMonth = moment().endOf('month').subtract(1,'months');
+
+        Replication.find({
+          filter: {
+            where: {
+              and: [
+                {replication_date: { gte: startOfPriorMonth}},
+                {replication_date: {lte: endOfPriorMonth}}
+              ]
+            }
+          }
+        })
+          .$promise
+          .then(function(replications){
+            console.log(replications);
+            $scope.replications = replications;
+          })
+          .catch(function(err){console.error(err);});
+      };
+
+      //handler for displaying current month results
+      $scope.getCurrent = function(){ $scope.replications = currentMonthReplications;};
+      //handler for viewing replication details
+      $scope.viewReplication = function (replication) {
+
+        sessionStorage.removeItem('data');
+
+        sessionStorage.setItem('data', JSON.stringify(replication));
+
+
+
+
+
+        getReplication();
+
+      };
+
+      //controller functions
+      function getReplication() {
+
+        var replicationObj = sessionStorage.getItem('data');
+
+        $scope.replication = JSON.parse(replicationObj);
+
+      }
+
+    })
+    .controller('TabsCtrl', function($scope, requestedMeetings, confirmedMeetings){
+
+      $scope.requests = requestedMeetings;
+
+      $scope.meetings = confirmedMeetings;
+
+    })
+    .controller('HeathTabsCtrl', function ($scope, requestedMeetings, confirmedMeetings, completedReplications){
+
+      $scope.meetings = confirmedMeetings;
+
+      $scope.requests = requestedMeetings;
+
+      $scope.replications = completedReplications;
+
+    })
+    .controller('AtmosTabsCtrl', function($scope, confirmedMeetings, requestedMeetings, completedReplications){
+
+      $scope.requests = requestedMeetings;
+
+      $scope.meetings = confirmedMeetings;
+
+      $scope.replications = completedReplications;
 
     })
 })();

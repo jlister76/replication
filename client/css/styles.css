@@ -105,6 +105,10 @@ th {
   font-size: 14px;
 }
 
+th:hover {
+  cursor: hand;
+}
+
 td {
   text-align: left;
   padding: .5rem;
@@ -247,3 +251,6 @@ md-tabs.md-default-theme md-ink-bar, md-tabs md-ink-bar {
   height: 15px;
 }
 
+.search_box:focus {
+  outline: turquoise;
+}

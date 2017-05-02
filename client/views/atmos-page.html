@@ -12,17 +12,34 @@
         <md-tabs md-dynamic-height="always" md-tab-scroll="never" md-border-bottom
                  md-selected="selectedIndex"
                  md-stretch-tabs="always">
-          <md-tab label="requested">
-            <div ui-view name="requested" style="margin:.5rem;padding:1rem;"></div>
+          <md-tab label="">
+            <md-tab-label>
+              requested  <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span>
+            </md-tab-label>
+            <md-tab-body>
+              <div ui-view name="requested" style="margin:.5rem;padding:1rem;"></div>
+            </md-tab-body>
           </md-tab>
-          <md-tab label="scheduled">
-            <div ui-view name="scheduled" style="margin:.5rem;padding:1rem;"></div>
+          <md-tab>
+            <md-tab-label>
+              scheduled <span ng-if="meetings.length > 0" class="md-caption">({{meetings.length}})</span>
+            </md-tab-label>
+            <md-tab-body>
+              <div ui-view name="scheduled" style="margin:.5rem;padding:1rem;"></div>
+            </md-tab-body>
+          </md-tab>
+          <md-tab>
+            <md-tab-label>
+              completed  <span ng-if="replications.length > 0" class="md-caption">({{replications.length}})</span>
+            </md-tab-label>
+            <md-tab-body>
+              <div ui-view name="completed" style="margin:.5rem;padding:1rem;"></div>
+            </md-tab-body>
           </md-tab>
           <md-tab label="unscheduled">
-            <div ui-view name="unscheduled" style="margin:.5rem;padding:1rem;"></div>
-          </md-tab>
-          <md-tab label="completed">
-            <div ui-view name="completed" style="margin:.5rem;padding:1rem;"></div>
+            <md-tab-body>
+              <div ui-view name="unscheduled" style="margin:.5rem;padding:1rem;"></div>
+            </md-tab-body>
           </md-tab>
         </md-tabs>
       </md-content>

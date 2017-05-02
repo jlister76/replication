@@ -14,7 +14,7 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Replications <span ng-if="meetings.length > 0" class="md-caption">({{meetings.length}})</span></p>
+    <p class="md-subhead" style="color:white;">Replications</p>
   </div>
   <div ng-if="meetings.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -26,17 +26,21 @@
   </div>
   <table ng-if="meetings.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
-    <th align="left">Date / Time</th>
-    <th align="left">Team Leader</th>
-    <th align="left">Place</th>
-    <th align="left">Address</th>
-    <th align="left">Town</th>
-    <th align="left">Action</th>
+    <tr>
+      <th align="left">Date & Time</th>
+      <th align="left">Team Leader</th>
+      <th align="left">Technician</th>
+      <th align="left">Place</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left"></th>
+    </tr>
     </thead>
     <tbody>
     <tr ng-repeat="meeting in meetings | orderBy: 'meeting_datetime'" class="table_body">
       <td ng-bind="meeting.meeting_datetime | date:'short'"><em>empty</em></td>
       <td ng-bind="meeting.team_leader"><md-tooltip>{{meeting.team_leader_tel}}</md-tooltip></td>
+      <td ng-bind="meeting.locate_technician"></td>
       <td ng-bind="meeting.location_name || 'none'"></td>
       <td ng-bind="meeting.location"></td>
       <td ng-bind="meeting.town"></td>
@@ -96,100 +100,100 @@
               </div>
             </div>
             <div layout="column" style="padding:.5rem;width:100%;">
-              <div style="height:100%; width:100%;">
-                <md-divider></md-divider>
-                <div layout="column" class="md-padding"
-                     style="margin-top:1rem; background-color: #eaeaea;box-shadow: 1px 1px 1px #888888;">
-
-                  <div layout="column" class="md-padding">
-                    <h4>Replication Results</h4>
-                    <p class="md-caption" style="color: darkorange;"><em>(All fields required)</em></p>
-                    <div layout="column" class="row">
-                      <label for="atmos_report"><strong>ATMOS leak #</strong></label>
-                      <input type="text" ng-model="response.atmos_report" id="atmos_report" style="width:94px;">
-                    </div>
-                    <div layout="column" class="row">
-                      <label for="able_to_replicate"><strong>Can the technician replicate the locate marks?</strong></label>
-                      <select ng-model="response.able_to_replicate" id="able_to_replicate"  required
-                              ng-change="clearForm(response)">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div ng-if="response.able_to_replicate === 'Yes'">
-                    <div class="row">
-                      <div layout="column">
-                        <input ng-model="response.atmos_determination"
-                               ng-init="response.atmos_determination = 'Facility Issue'"
-                               type="hidden">
-                        <label for="facility_issue"><strong>Please describe the root cause of this facility issue.
-                          <p style="color:darkorange;"></p></strong></label>
-                        <textarea ng-model="response.atmos_comments" name="facility_issue"
-                                  id="facility_issue" cols="30"
-                                  rows="7" ng-required="response.atmos_determination === 'Facility Issue'"></textarea>
+              <md-divider></md-divider>
+              <fieldset class="field_set" style="background-color: #eaeaea;">
+                <legend>Replicate Results</legend>
+                <div style="height:100%; width:100%;">
+                  <div layout="column" class="md-padding"
+                       style="margin-top:1rem; ">
+                    <div layout="column" class="md-padding">
+                      <div layout="column" class="row">
+                        <label for="atmos_report"><strong>Leak # <span class="md-caption"><em>(optional)</em></span></strong></label>
+                        <input type="text" ng-model="response.atmos_report" id="atmos_report" style="width:94px;">
+                      </div>
+                      <div layout="column" class="row">
+                        <label for="able_to_replicate"><strong>Can the technician replicate the locate marks?</strong></label>
+                        <select ng-model="response.able_to_replicate" id="able_to_replicate"  required
+                                ng-change="clearForm(response)">
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
                       </div>
                     </div>
-                    <div class="row">
-                      <div layout="column">
-                        <label for="actions_taken"><strong>Please describe the corrective actions taken to resolve this
-                          facility issue.<p style="color:darkorange;"></p></strong></label>
-                        <textarea ng-model="response.corrective_actions" name="actions_taken" id="actions_taken" cols="30"
-                                  rows="7" ng-required="response.atmos_determination === 'Facility Issue'"></textarea>
+                    <div ng-if="response.able_to_replicate === 'Yes'">
+                      <div class="row">
+                        <div layout="column">
+                          <input ng-model="response.atmos_determination"
+                                 ng-init="response.atmos_determination = 'Facility Issue'"
+                                 type="hidden">
+                          <label for="facility_issue"><strong>Please describe the root cause of this facility issue.
+                            <p style="color:darkorange;"></p></strong></label>
+                          <textarea ng-model="response.atmos_comments" name="facility_issue"
+                                    id="facility_issue" cols="30"
+                                    rows="7" ng-required="response.atmos_determination === 'Facility Issue'"></textarea>
+                        </div>
                       </div>
-                    </div>
+                      <div class="row">
+                        <div layout="column">
+                          <label for="actions_taken"><strong>Please describe the corrective actions taken to resolve this
+                            facility issue.<p style="color:darkorange;"></p></strong></label>
+                          <textarea ng-model="response.corrective_actions" name="actions_taken" id="actions_taken" cols="30"
+                                    rows="7" ng-required="response.atmos_determination === 'Facility Issue'"></textarea>
+                        </div>
+                      </div>
 
-                  </div>
-                  <div ng-if="response.able_to_replicate === 'No'">
-                    <div layout="column" class="row">
-                      <strong>Reason<p style="color:darkorange;"></p></strong>
-                      <select ng-model="response.atmos_determination" name="unable_to_replicate"
-                              ng-required="response.able_to_replicate === 'No'" style="">
-                        <option value="Facility Replaced">Facility was altered or replaced</option>
-                        <option value="Locate Error">Locate Error</option>
-                      </select>
                     </div>
-                    <div layout="column" class="row">
-                      <strong>Is this facility able to be accurately marked?<p
-                        style="color:darkorange;"></p></strong>
-                      <select ng-model="response.able_to_locate" name="able_to_locate"
-                              ng-required="response.able_to_replicate === 'Yes'" style="">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                        <option value="Unknown">Unknown</option>
-                      </select>
-                    </div>
-                    <div ng-if="response.able_to_locate === 'Yes'" layout="column" class="row">
-                      <strong>Is this line accurately marked as of today?</strong>
-                      <select ng-model="response.is_line_marked" name="is_line_marked"
-                              ng-required="response.isLocatable === 'Yes'" style="">
-                        <option value="Yes">Yes</option>
-                        <option value="No">No</option>
-                      </select>
-                    </div>
-                    <div layout="column" class="row">
-                      <label for="additional_comments"><strong>Comments
-                        Please describe.<p style="color:darkorange;"></p></strong></label>
-                      <textarea ng-model="response.atmos_comments" name="additional_comments"
-                                id="additional_comments"
-                                ng-required="response.able_to_replicate === 'No'"
-                                cols="30"
-                                rows="7"></textarea>
+                    <div ng-if="response.able_to_replicate === 'No'">
+                      <div layout="column" class="row">
+                        <strong>Reason<p style="color:darkorange;"></p></strong>
+                        <select ng-model="response.atmos_determination" name="unable_to_replicate"
+                                ng-required="response.able_to_replicate === 'No'" style="">
+                          <option value="Facility Replaced">Facility was altered or replaced</option>
+                          <option value="Locate Error">Locate Error</option>
+                        </select>
+                      </div>
+                      <div layout="column" class="row">
+                        <strong>Is this facility able to be accurately marked?<p
+                          style="color:darkorange;"></p></strong>
+                        <select ng-model="response.able_to_locate" name="able_to_locate"
+                                ng-required="response.able_to_replicate === 'Yes'" style="">
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                          <option value="Unknown">Unknown</option>
+                        </select>
+                      </div>
+                      <div ng-if="response.able_to_locate === 'Yes'" layout="column" class="row">
+                        <strong>Is this line accurately marked as of today?</strong>
+                        <select ng-model="response.is_line_marked" name="is_line_marked"
+                                ng-required="response.isLocatable === 'Yes'" style="">
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      </div>
+                      <div layout="column" class="row">
+                        <label for="additional_comments"><strong>Comments
+                          Please describe.<p style="color:darkorange;"></p></strong></label>
+                        <textarea ng-model="response.atmos_comments" name="additional_comments"
+                                  id="additional_comments"
+                                  ng-required="response.able_to_replicate === 'No'"
+                                  cols="30"
+                                  rows="7"></textarea>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div>
-                <div layout layout-align="end center" style="margin-top:1rem;">
-                  <!--html-->
-                  <md-button class="md-raised active" type="submit"
-                             ng-disabled="replicationForm.$invalid"
-                             class="md-raised"
-                             ng-class="{'active':replicationForm.$valid}"
-                             ng-dblclick="false">SEND RESULTS
-                  </md-button>
+                <div>
+                  <div layout layout-align="end center" style="margin-top:1rem;">
+                    <!--html-->
+                    <md-button class="md-raised active" type="submit"
+                               ng-disabled="replicationForm.$invalid"
+                               class="md-raised"
+                               ng-class="{'active':replicationForm.$valid}"
+                               ng-dblclick="false">SEND RESULTS
+                    </md-button>
+                  </div>
                 </div>
-              </div>
+              </fieldset>
             </div>
           </div>
         </fieldset>

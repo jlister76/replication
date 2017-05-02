@@ -14,7 +14,7 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Meeting Requests <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span></p>
+    <p class="md-subhead" style="color:white;">Meeting Requests</p>
   </div>
   <div ng-if="!requests" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -26,12 +26,15 @@
   </div>
   <table ng-if="requests.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;" style="margin-top:1rem;">
     <thead>
-    <th align="left">Status</th>
-    <th align="left">Date / Time</th>
-    <th align="left">Address</th>
-    <th align="left">Town</th>
-    <th align="left">Facility</th>
-    <th align="left">Action</th>
+    <tr>
+      <th align="left">Status</th>
+      <th align="left">Date & Time</th>
+      <th align="left">Address</th>
+      <th align="left">Town</th>
+      <th align="left">Team Leader</th>
+      <th align="left">Facility</th>
+      <th align="left"></th>
+    </tr>
     </thead>
     <tbody>
     <tr ng-repeat="request in requests | orderBy: 'meeting_datetime'" class="table_body">
@@ -45,6 +48,7 @@
       </td>
       <td ng-bind="request.location"></td>
       <td ng-bind="request.town"></td>
+      <td ng-bind="request.team_leader"><md-tooltip ng-bind="request.team_leader_tel"></md-tooltip></td>
       <td ng-bind="request.facility"></td>
       <td>
         <md-button class="md-raised info"

@@ -37,6 +37,7 @@
         .state('authenticated.page.heath', {
           abstract: true,
           url: '/heath',
+          controller: 'HeathTabsCtrl',
           templateUrl: 'views/heath-page.html',
           resolve: {
             "userCtx": function (AuthService) {
@@ -70,23 +71,14 @@
                 filter: {
                   where: {
                     team_leader_email: userCtx.email,
-                    schedule_status: 'pending',
-                    meeting_datetime: {gte: today}
+                    meeting_datetime: {gte: today},
+                    or: [
+                      {schedule_status: 'pending'},
+                      {schedule_status: 'proposed'}
+                    ]
                   }
                 }
               }).$promise
-            },
-            'proposedMeetings': function (Meeting, userCtx) {
-              var today = moment();
-              return Meeting.find({
-                filter: {
-                  where: {
-                    team_leader_email: userCtx.email,
-                    schedule_status: 'proposed',
-                    meeting_datetime: {gte: today}
-                  }
-                }
-              })
             },
             'confirmedMeetings': function (Meeting, userCtx) {
               var today = moment();
@@ -145,6 +137,7 @@
           abstract: true,
           url: '/atmos',
           templateUrl: 'views/atmos-page.html',
+          controller: 'AtmosTabsCtrl',
           resolve: {
             "userCtx": function (AuthService) {
               return AuthService.getCurrent().$promise
@@ -172,23 +165,14 @@
                 filter: {
                   where: {
                     email: userCtx.email,
-                    schedule_status: 'pending',
-                    meeting_datetime: {gte: today}
+                    meeting_datetime: {gte: today},
+                    or: [
+                      {schedule_status: 'pending'},
+                      {schedule_status: 'proposed'}
+                    ]
                   }
                 }
               }).$promise
-            },
-            'proposedMeetings': function (Meeting, userCtx) {
-              var today = moment();
-              return Meeting.find({
-                filter: {
-                  where: {
-                    email: userCtx.email,
-                    schedule_status: 'proposed',
-                    meeting_datetime: {gte: today}
-                  }
-                }
-              })
             },
             'confirmedMeetings': function (Meeting, userCtx) {
               var today = moment();
@@ -257,7 +241,7 @@
         .state('authenticated.page.manager', {
           abstract: true,
           url: '/atmos/manage',
-          controller: 'AtmosReplicationResultsCtrl',
+          controller: 'TabsCtrl',
           templateUrl: 'views/atmos-manager-page.html',
           resolve: {
             "userCtx": function (AuthService) {
@@ -300,33 +284,20 @@
               return Meeting.find({
                 filter: {
                   where: {
+                    meeting_datetime: {gte: beginingOfMonth},
                     or: [
                       {schedule_status: 'pending'},
                       {schedule_status: 'proposed'}
-                    ],
-                    meeting_datetime: {gte: beginingOfMonth}
+                    ]
                   }
                 }
               }).$promise
-            },
-            'proposedMeetings': function (Meeting, userCtx) {
-              var today = moment();
-              return Meeting.find({
-                filter: {
-                  where: {
-                    email: userCtx.email,
-                    schedule_status: 'proposed',
-                    meeting_datetime: {gte: today}
-                  }
-                }
-              })
             },
             'confirmedMeetings': function (Meeting, userCtx) {
               var today = moment();
               return Meeting.find({
                 filter: {
                   where: {
-                    email: userCtx.email,
                     schedule_status: 'confirmed',
                     meeting_datetime: {gte: today}
                   }
@@ -343,29 +314,12 @@
               controller: 'AtmosRequestsManagerCtrl'
             },
             'scheduled': {
-              templateUrl: 'views/atmos-scheduled-meetings.html',
-              controller: 'AtmosConfirmedMeetingCtrl',
-              resolve: {
-                'confirmedMeetings': function (Meeting, userCtx) {
-                  var oneMonth = moment().subtract(1, 'months');
-                  return Meeting.find({
-                    filter: {
-                      where: {
-                        email: userCtx.email,
-                        schedule_status: 'confirmed',
-                        meeting_datetime: {gte: oneMonth}
-                      }
-                    }
-                  }).$promise
-                    .then(function (data) {
-                      console.log(data)
-                    })
-                }
-              }
+              templateUrl: 'views/atmos-scheduled-meetings-manager.html',
+              controller: 'AtmosScheduledMeetingManagerCtrl'
             },
             'completed': {
-              templateUrl: 'views/atmos-completed-replications-manager.html'
-              //controller: 'AtmosReplicationResultsCtrl'
+              templateUrl: 'views/atmos-completed-replications-manager.html',
+              controller: 'AtmosReplicationResultsCtrl'
             }
           }
         })

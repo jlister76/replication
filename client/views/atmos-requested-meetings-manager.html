@@ -14,7 +14,7 @@
     </div>
   </div>
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Meeting Requests <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span></p>
+    <p class="md-subhead" style="color:white;">Meeting Requests</p>
   </div>
   <div ng-if="!requests" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -31,8 +31,9 @@
       <th align="left">Address</th>
       <th align="left">Town</th>
       <th align="left">Facility</th>
-      <th align="left">Emailed To</th>
-      <th align="left">Action</th>
+      <th align="left">DPS</th>
+      <th align="left">Team Leader</th>
+      <th align="left"></th>
     </tr>
     </thead>
     <tbody>
@@ -43,6 +44,7 @@
       <td ng-bind="request.town"></td>
       <td ng-bind="request.facility"></td>
       <td ng-bind="request.fname +' '+request.lname"></td>
+      <td ng-bind="request.team_leader"></td>
       <td style="min-width: 180px;">
         <md-button class="md-raised info"
                    style="font-size:10px;line-height:18px;min-height:24px!important;height:18px!important; min-width:18px!important;"

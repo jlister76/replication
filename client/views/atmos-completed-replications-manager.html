@@ -1,6 +1,6 @@
 <div class="md-padding" id="wrapper">
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
-    <p class="md-subhead" style="color:white;">Replications <span ng-if="replications.length > 0" class="md-caption">({{replications.length}})</span></p>
+    <p class="md-subhead" style="color:white;">Completed Replications</p>
   </div>
   <div ng-if="replications.length === 0" layout layout-align="center center"
        style="background-color: #EAEAEA;color:dimgrey;">
@@ -10,24 +10,130 @@
       </em>
     </p>
   </div>
+  <div layout style="width:100%;">
+    <div layout="column" style="width:100%;padding:.5rem;">
+      <div>
+        <md-button class="md-primary" ng-click="showSearchBox=!showSearchBox" ng-init="showSearchBox = false" style="margin:1rem;">Search by Date</md-button>
+        <md-button class="md-primary" ng-click="getCurrent()">Current Month</md-button>
+        <md-button class="md-primary" ng-click="previousMonth()">Previous Month</md-button>
+        <div ng-if="showSearchBox" layout="column" layout-align="space-between start" style="padding:1rem;margin:1rem; border: solid thin grey; background-color: #eaeaea;">
+          <div layout>
+            <form layout name="searchForm" ng-submit="search(startDate, endDate)">
+              <div layout>
+                <label for="startDate">Beginning</label>
+                <input class="form-control"
+                       placeholder="Select a date..."
+                       moment-picker="startDate"
+                       locale="en"
+                       format="lll"
+                       min-view="month"
+                       max-view="date"
+                       autoclose="true"
+                       today="true"
+                       keyboard="true"
+                       ng-model="startDate"
+                       ng-model-options="{ updateOn: 'blur' }"
+                       id="startDate"
+                       required
+                       width="100%"/>
+              </div>
+              <div layout>
+                <label for="endDate">End</label>
+                <input class="form-control"
+                       placeholder="Select a date..."
+                       moment-picker="endDate"
+                       locale="en"
+                       format="lll"
+                       min-view="month"
+                       max-view="date"
+                       autoclose="true"
+                       today="true"
+                       keyboard="true"
+                       ng-model="endDate"
+                       ng-model-options="{ updateOn: 'blur' }"
+                       id="endDate"
+                       required
+                       width="100%"/>
+              </div>
+              <div>
+                <md-button class="md-raised active" ng-disabled="searchForm.$invalid" type="submit">Search</md-button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+      </div>
+      <md-divider></md-divider>
+      <div layout layout-align="space-between center" style="width:100%;margin-top:1rem;">
+        <div layout layout-align="center center" class="search_box" style="border: solid 2px lightgrey;">
+
+          <p for="search">
+            <i class="material-icons" style="font-size:1.2rem;">search</i>
+          </p>
+          <input type="text" ng-model="replicationSearch" id="search" style="border:none;outline: none;" placeholder="filter by">
+
+        </div>
+        <p class="md-subhead">Total Replications: {{replications.length}}</p>
+      </div>
+    </div>
+  </div>
+  <md-divider></md-divider>
   <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;"
          style="margin-top:1rem;">
-    <thead>
-    <tr>
-      <th align="left">Date</th>
-      <th align="left">Address</th>
-      <th align="left">Town</th>
-      <th align="left">Team Leader</th>
-      <th align="left">Techician</th>
-      <th align="left">Determination</th>
-      <th align="left">Action</th>
+    <thead >
+    <tr style="width:100%;">
+      <th >Date</th>
+      <th >Address</th>
+      <th >
+        <div layout layout-align="center center">
+          <a href="" ng-click="sortType ='town'; sortReverse=!sortReverse"
+             style="color:black;text-decoration: none;">Town</a>
+          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
+          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+        </div>
+      </th>
+      <th >
+        <div layout layout-align="center center">
+          <a href="" ng-click="sortType = 'atmos_employee'; sortReverse=!sortReverse"
+             style="color:black;text-decoration: none;">DPS</a>
+          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
+          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+        </div>
+      </th>
+      <th >
+        <div layout layout-align="center center">
+          <a href="" ng-click="sortType = 'team_leader'; sortReverse=!sortReverse"
+             style="color:black;text-decoration: none;"><md-truncate>Team Leader</md-truncate></a>
+          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
+          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+        </div>
+      </th>
+      <th >
+        <div layout layout-align="center center">
+          <a href="" ng-click="sortType = 'technician'; sortReverse=!sortReverse"
+             style="color:black;text-decoration: none;">Techician</a>
+          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
+          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+        </div>
+      </th>
+      <th >
+        <div layout layout-align="center center">
+          <a href="" ng-click="sortType = 'atmos_determination'; sortReverse=!sortReverse"
+             style="color:black;text-decoration: none;">Determination</a>
+          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
+          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+        </div>
+      </th>
+      <th ></th>
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="replication in replications" class="table_body">
+    <tr ng-repeat="replication in replications | orderBy:sortType:sortReverse | filter:replicationSearch" class="table_body">
       <td ng-bind="replication.replication_date | date:'shortDate'"></td>
       <td ng-bind="replication.location"></td>
       <td ng-bind="replication.town"></td>
+      <td ng-bind="replication.atmos_employee"></td>
       <td ng-bind="replication.team_leader"></td>
       <td ng-bind="replication.locate_technician"></td>
       <td ng-bind="replication.atmos_determination"></td>
@@ -62,7 +168,7 @@
                   <span ng-bind="replication.locate_technician"></span>
                 </div>
                 <div layout>
-                  <span>ATMOS Claim # : </span>
+                  <span>Leak # : </span>
                   <span ng-bind="replication.atmos_report"></span>
                 </div>
                 <div layout>

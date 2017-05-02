@@ -28,9 +28,6 @@
         </div>
       </div>
       <div>
-        <div layout layout-align="end center">
-          <span class="md-caption" style="color: darkorange;"><em>All fields are required</em></span>
-        </div>
         <form name="replicationForm"
               ng-submit="sendEmail(response)">
           <fieldset class="field_set" style="background-color: #eaeaea;">
@@ -76,7 +73,7 @@
                   <input ng-model="response.heath_report" type="number" id="heath_report" required>
                 </div>
                 <div layout="column">
-                  <label for="atmos_report"><strong>ATMOS leak #</strong></label>
+                  <label for="atmos_report"><strong>Leak # <span class="md-caption"><em>optional</em></span></strong></label>
                   <input type="text" ng-model="response.atmos_report" id="atmos_report" style="width:94px;">
                 </div>
                 {{response.atmos_report}}
