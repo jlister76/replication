@@ -4,7 +4,7 @@
 module.exports = function(Appuser) {
   //send password reset link when requested
   Appuser.on('resetPasswordRequest', function(info) {
-    var url = 'http://localhost:3000/reset-password';
+    var url = 'https://rpf.heathfieldapp.com/reset-password';
 
     var html = 'Click <a href="' + url + '?access_token=' +
 
