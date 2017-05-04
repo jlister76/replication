@@ -31,7 +31,7 @@
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>DATE & TIME</legend>
-              <div layout style="width:100%;">
+              <div layout layout-align="start center" style="width:100%;margin-left:1rem;">
                 <input class="form-control"
                        placeholder="Select a date..."
                        moment-picker="request.stringDate"
@@ -46,6 +46,13 @@
                        ng-model="request.momentDate"
                        ng-model-options="{ updateOn: 'blur' }"
                        width="100%"/>
+                <input type="hidden" ng-model="request.schedule_status">
+                {{request.schedule_status}}
+                <div>
+                  <md-checkbox ng-click="onSite()">
+                    ONSITE WITH DPS
+                  </md-checkbox>
+                </div>
               </div>
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">

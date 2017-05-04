@@ -330,6 +330,13 @@
       $scope.date = moment();
       $scope.oneWeek = moment().add(7, 'days');
 
+      $scope.onSite = function(){
+
+        $scope.request.momentDate = moment();
+        $scope.request.schedule_status = 'confirmed';
+
+      };
+
       //combine all emails to send as group list
       var groupList = [];
 
@@ -346,6 +353,7 @@
       $scope.request = {
         team_leader: userCtx.fname + " " + userCtx.lname,
         team_leader_email: userCtx.email
+
 
       };
 
@@ -370,7 +378,7 @@
       };
 
       $scope.sendMeetingRequest = function (request) {
-
+      console.log(request);
         $scope.pageReload = true;
 
         $location.hash('pageReload');
@@ -427,7 +435,7 @@
                     team_leader: request.team_leader,
                     team_leader_email: userCtx.email,
                     team_leader_tel: userCtx.tel,
-                    schedule_status: 'pending'
+                    schedule_status: request.schedule_status
                   })
                     .$promise
                     .then(function (meeting) {
@@ -465,7 +473,7 @@
             //var date = new Date(request.momentDate);
 
             //check DPS scheduled meetings
-            Meeting.find({filter:{where:{email: request.email, schedule_status: 'confirmed', meeting_datetime: request.momentDate}}})
+            Meeting.find({filter:{where:{email: request.email, schedule_status: 'pending', meeting_datetime: request.momentDate}}})
               .$promise
               .then(function(scheduledMeeting){
                 var scheduledMeetingDate = [];
@@ -494,7 +502,7 @@
                     team_leader: request.team_leader,
                     team_leader_email: userCtx.email,
                     team_leader_tel: userCtx.tel,
-                    schedule_status: 'pending'
+                    schedule_status: request.schedule_status
                   })
                     .$promise
                     .then(function (meeting_data) {
