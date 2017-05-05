@@ -330,13 +330,7 @@
       $scope.date = moment();
       $scope.oneWeek = moment().add(7, 'days');
 
-      $scope.onSite = function(){
-
-        $scope.request.momentDate = moment();
-        $scope.request.schedule_status = 'confirmed';
-
-      };
-
+     /* //building send to all object
       //combine all emails to send as group list
       var groupList = [];
 
@@ -345,7 +339,7 @@
       });
       var atmosObj = {fname: "Send to", lname: "All", email: groupList};
       atmos.push(atmosObj);
-      var emailList = [];
+      var emailList = [];*/
 
       //$scope variables
       $scope.suffixes = _.uniqBy(suffixes, 'name');
@@ -354,11 +348,10 @@
         team_leader: userCtx.fname + " " + userCtx.lname,
         team_leader_email: userCtx.email
 
-
       };
 
-      $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '12"', '16"', '18"', '24"', '36"'];
-      $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Copper"];
+      $scope.diameters = ['1/2"', '3/4"', '1"', '1 1/4"', '1 1/2"', '2"', '3"', '4"', '6"', '8"', '10"', '12"', '16"', '18"', '20"', '24"', '36"'];
+      $scope.materials = ["Poly", "Steel", "Mill Wrap", "Cast Iron", "Coated Steel", "Coated Teflon Steel" , "Copper"];
 
       $scope.towns = _.uniqBy(towns, 'city');
 
@@ -377,8 +370,15 @@
 
       };
 
+      $scope.onSite = function(){
+
+        $scope.request.momentDate = moment();
+        $scope.request.schedule_status = 'confirmed';
+
+      };
+
       $scope.sendMeetingRequest = function (request) {
-      console.log(request);
+
         $scope.pageReload = true;
 
         $location.hash('pageReload');
@@ -425,6 +425,7 @@
                     lname: dps.lname,
                     email: dps.email,
                     meeting_datetime: request.momentDate,
+                    incident_date: request.incidentDate,
                     location_name: _.capitalize(request.location_name),
                     location: request.location,
                     cross_street: _.capitalize(request.cross_street),
@@ -473,7 +474,7 @@
             //var date = new Date(request.momentDate);
 
             //check DPS scheduled meetings
-            Meeting.find({filter:{where:{email: request.email, schedule_status: 'pending', meeting_datetime: request.momentDate}}})
+            Meeting.find({filter:{where:{email: request.email, schedule_status: 'confirmed', meeting_datetime: request.momentDate}}})
               .$promise
               .then(function(scheduledMeeting){
                 var scheduledMeetingDate = [];
@@ -492,6 +493,7 @@
                     email: request.email,
                     emailList: request.emailList,
                     meeting_datetime: request.momentDate,
+                    incident_date: request.incidentDate,
                     location_name: _.capitalize(request.location_name),
                     location: request.location,
                     cross_street: _.capitalize(request.cross_street),
@@ -1065,24 +1067,6 @@
       $scope.meetings = confirmedMeetings;
 
 
-
-      //handler to clear form values
-      $scope.clearForm = function (response){
-
-        response.atmos_determination = null;
-
-        response.atmos_comments = null;
-
-        response.actions_taken = null;
-
-        response.atmos_determination = null;
-
-        response.isLocatable = null;
-
-        response.line_marked = null;
-
-        };
-
       //handler for creating replication response
       $scope.sendEmail = function (response,meeting) {
 
@@ -1100,7 +1084,8 @@
 
         Replication.create({
           replication_date: date,
-          atmos_employee: userCtx.fname + userCtx.lname,
+          incident_date: meeting.incident_date,
+          atmos_employee: userCtx.fname + ' ' + userCtx.lname,
           atmos_employeeId: userCtx.id,
           atmos_report: response.atmos_report,
           team_leader: meeting.team_leader,
@@ -1319,8 +1304,8 @@
         Replication.find({filter: {
           where: {
             and: [
-              {replication_date: {gte: start}},
-              {replication_date: {lte: end}}
+              {incident_date: {gte: start}},
+              {incident_date: {lte: end}}
             ]
           }
         }})
@@ -1341,8 +1326,8 @@
           filter: {
             where: {
               and: [
-                {replication_date: { gte: startOfPriorMonth}},
-                {replication_date: {lte: endOfPriorMonth}}
+                {incident_date: { gte: startOfPriorMonth}},
+                {incident_date: {lte: endOfPriorMonth}}
               ]
             }
           }
