@@ -81,7 +81,7 @@
               }).$promise
             },
             'confirmedMeetings': function (Meeting, userCtx) {
-              var today = moment();
+              var today = moment().startOf('day');
               return Meeting.find({
                 filter: {
                   where: {
@@ -175,7 +175,7 @@
               }).$promise
             },
             'confirmedMeetings': function (Meeting, userCtx) {
-              var today = moment();
+              var today = moment().startOf('day');
               return Meeting.find({
                 filter: {
                   where: {
@@ -273,7 +273,7 @@
               return Replication.find({
                 filter: {
                   where: {
-                    replication_date: {gte: beginingOfMonth}
+                    incident_date: {gte: beginingOfMonth}
                   }
                 }
               }).$promise
@@ -294,7 +294,7 @@
               }).$promise
             },
             'confirmedMeetings': function (Meeting, userCtx) {
-              var today = moment();
+              var today = moment().startOf('day');
               return Meeting.find({
                 filter: {
                   where: {

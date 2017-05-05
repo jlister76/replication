@@ -10,6 +10,10 @@
       "type": "date",
       "required": true
     },
+    "incident_date": {
+      "type": "date",
+      "required": true
+    },
     "atmos_employee": {
       "type": "string",
       "required": true

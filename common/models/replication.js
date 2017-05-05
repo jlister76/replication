@@ -10,7 +10,9 @@ var _ = require('lodash');
 
 module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
-    var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
+   console.log('Email was not sent', response);
+    //TODO: uncomment sendEmail function
+    /* var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
     var d = response;
     console.log(d.atmos_report);
     var emailTo = d.team_leader_email;
@@ -50,17 +52,18 @@ module.exports = function(Replication) {
 
     //send email with heath link
     Replication.app.models.Email.send({
-      to: [d.team_leader_email],
-      from: 'locateATMOS@heathus.com',
-      subject: 'Replication Determination - ' + d.town,
-      html: html_body2
-    }, function(err, mail) {
-      if (err) {
-        console.error(err)
-      }
-      console.log('email sent!');
-    })
+     to: [d.team_leader_email],
+     from: 'locateATMOS@heathus.com',
+     subject: 'Replication Determination - ' + d.town,
+     html: html_body2
+     }, function(err, mail) {
+     if (err) {
+     console.error(err)
+     }
+     console.log('email sent!');
+     })*/
   };
+
   Replication.sendHeathResponse = function(response, cb) {
     var d = response;
     switch (d.atmos_determination) {
@@ -75,8 +78,8 @@ module.exports = function(Replication) {
         break;
     }
 
-    var facility = d.facility,
-      location = d.location;
+    var facility = d.facility;
+    var location = d.location;
 
 
     var messageVars = {
@@ -114,7 +117,7 @@ module.exports = function(Replication) {
       console.log('email sent!');
     })
   };
-
+/*****/
   Replication.sendemail = function(msg, next) {
     Replication.sendEmail(msg);
     next();

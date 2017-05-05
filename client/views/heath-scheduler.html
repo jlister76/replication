@@ -25,9 +25,11 @@
             <input ng-model="request.team_leader_email" type="hidden">
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>SELECT DPS</legend>
-              <select ng-model="request.selected_dps" id="dps" required ng-change="showDps(request.selected_dps)">
-                <option ng-repeat="dps in atmos | orderBy: 'lname'" ng-value="dps">{{ dps.fname }} {{ dps.lname }}</option>
-              </select>
+              <div style="width:100%;margin-left:1rem;">
+                <select ng-model="request.selected_dps" id="dps" required ng-change="showDps(request.selected_dps)">
+                  <option ng-repeat="dps in atmos | orderBy: 'lname'" ng-value="dps">{{ dps.fname }} {{ dps.lname }}</option>
+                </select>
+              </div>
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>DATE & TIME</legend>
@@ -47,7 +49,6 @@
                        ng-model-options="{ updateOn: 'blur' }"
                        width="100%"/>
                 <input type="hidden" ng-model="request.schedule_status">
-                {{request.schedule_status}}
                 <div>
                   <md-checkbox ng-click="onSite()">
                     ONSITE WITH DPS
@@ -56,9 +57,8 @@
               </div>
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">
-              <legend>LOCATION</legend>
+              <legend>LOCATION INFORMATION</legend>
               <div layout="column" class="row">
-                <span style="margin-bottom:1rem;">Location</span>
                 <div layout layout-align="start center" style="margin-bottom:1rem;">
                   <div layout="column">
                     <label for="street_number"><strong>Location Name</strong></label>
@@ -107,16 +107,15 @@
               <legend>DAMAGE INFORMATION</legend>
               <div layout layout-align="space-between center">
                 <div layout="column" class="row">
-                  <span>Damge Report</span>
                   <div layout layout-align="start center">
                     <div layout="column" style="margin:1rem;padding:.5rem;">
-                      <label for="heath_report"><strong>Number</strong></label>
-                      <input ng-model="request.heath_report" type="number" id="heath_report" style="width:84px;" required>
+                      <label for="heath_report"><strong>Damge Report #</strong></label>
+                      <input ng-model="request.heath_report" type="number" id="heath_report" style="width:104px;"
+                             required>
                     </div>
                   </div>
                 </div>
                 <div layout="column" class="row">
-                  <span>Facility</span>
                   <div layout layout-align="start center">
                     <div layout="column" style="margin:1rem;padding:.5rem;">
                       <label for="facility_size"><strong>Diameter</strong></label>
@@ -134,7 +133,25 @@
                 </div>
               </div>
               <div layout="column" class="row">
-                <span>Locate Technician</span>
+                <div layout="column" style="margin:1rem;padding:.5rem;">
+                  <label for="incident_date"><strong>Date</strong></label>
+                  <input class="form-control"
+                         id="incident_date"
+                         placeholder="Select a date..."
+                         moment-picker="stringDate"
+                         locale="en"
+                         format="lll"
+                         min-view="month"
+                         autoclose="true"
+                         today="true"
+                         keyboard="true"
+                         ng-model="request.incidentDate"
+                         ng-model-options="{ updateOn: 'blur' }"
+                         width="100%"/>
+                </div>
+              </div>
+              <div layout="column" class="row">
+                <span>Technician</span>
                 <div layout layout-align="start center">
                   <div layout="column" style="margin:1rem;padding:.5rem;">
                     <label for="locate_technician_fname"><strong>First Name</strong></label>

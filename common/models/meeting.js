@@ -9,7 +9,9 @@ var moment = require('moment/min/moment-with-locales');
 
 module.exports = function(Meeting) {
   Meeting.sendMeetingRequest = function(request, cb) {
-    var d = request;
+    console.log('No email was sent', request);
+    //TODO: uncomment sendMeetingRequest function
+   /* var d = request;
     var emailTo = d.email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
@@ -29,7 +31,7 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
       to: [emailTo],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Meeting Request for Replication',
       html: html_body
     }, function(err, mail) {
@@ -37,10 +39,12 @@ module.exports = function(Meeting) {
         console.error(err);
       }
       console.log('email sent!');
-    });
+    });*/
   };
   Meeting.confirm = function(meeting, cb) {
-    var m = meeting;
+    console.log('No email was sent', meeting);
+    //TODO: uncomment confirm function
+   /* var m = meeting;
     var emailTo = m.team_leader_email;
     // create a custom object your want to pass to the email template. You can create as many key-value pairs as you want
     var messageVars = {
@@ -63,7 +67,7 @@ module.exports = function(Meeting) {
 
     Meeting.app.models.Email.send({
       to: [emailTo],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Scheduled',
       html: html_body
     }, function(err, mail) {
@@ -71,7 +75,7 @@ module.exports = function(Meeting) {
         console.error(err);
       }
       console.log('email sent!');
-    });
+    });*/
   };
   Meeting.heathConfirm = function(meeting, cb) {
     var m = meeting;
@@ -97,7 +101,7 @@ module.exports = function(Meeting) {
     console.log('Before send');
     Meeting.app.models.Email.send({
       to: [emailTo],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Replication Meeting Confirmed by  ' + m.team_leader,
       html: html_body
     }, function(err, mail) {
@@ -108,6 +112,7 @@ module.exports = function(Meeting) {
     });
   };
   Meeting.propose = function(meeting, cb) {
+    console.log('No email sent. Proposed');
     var m = meeting;
     var emailTo = m.team_leader_email;
     var messageVars = {
@@ -128,8 +133,8 @@ module.exports = function(Meeting) {
         .resolve(__dirname, '../../server/views/email-meeting-proposed.ejs'));
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
-      to: [emailTo],
-      from: 'locateAtmos@heathus.com',
+      to: ['j.lister@heathus.com', emailTo],
+      from: 'j.lister@heathus.com',
       subject: 'New Schedule Proposal from ' + m.fname + ' ' + m.lname,
       html: html_body
     }, function(err, mail) {
@@ -162,7 +167,7 @@ module.exports = function(Meeting) {
     var html_body = renderer(messageVars);
     Meeting.app.models.Email.send({
       to: [m.team_leader_email, emailTo],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Scheduled Meeting Cancelled by  ' + m.team_leader,
       html: html_body
     }, function(err, mail) {
@@ -193,9 +198,10 @@ module.exports = function(Meeting) {
       .template(path
         .resolve(__dirname, '../../server/views/email-meeting-declined.ejs'));
     var html_body = renderer(messageVars);
+    console.log('Before send');
     Meeting.app.models.Email.send({
       to: [m.team_leader_email],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Meeting Declined by  ' + m.email,
       html: html_body
     }, function(err, mail) {
@@ -231,7 +237,7 @@ module.exports = function(Meeting) {
 
     Meeting.app.models.Email.send({
       to: [emailTo],
-      from: 'locateAtmos@heathus.com',
+      from: 'locateATMOS@heathus.com',
       subject: 'Meeting Request Assigned',
       html: html_body
     }, function(err, mail) {
