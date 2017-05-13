@@ -2,20 +2,26 @@
   <div style="background-color:#0F4A78;width:100%;box-shadow:2px 2px 1px #888888;margin-bottom:1rem;padding: .1rem 0;">
     <p class="md-subhead" style="color:white;">Completed Replications</p>
   </div>
-  <div ng-if="replications.length === 0" layout layout-align="center center"
-       style="background-color: #EAEAEA;color:dimgrey;">
-    <p>
-      <em>
-        There are no completed replications
-      </em>
-    </p>
-  </div>
+
   <div layout style="width:100%;">
     <div layout="column" style="width:100%;padding:.5rem;">
-      <div>
-        <md-button class="md-primary" ng-click="showSearchBox=!showSearchBox" ng-init="showSearchBox = false" style="margin:1rem;">Search by Date</md-button>
-        <md-button class="md-primary" ng-click="getCurrent()">Current Month</md-button>
-        <md-button class="md-primary" ng-click="previousMonth()">Previous Month</md-button>
+      <div >
+        <div layout layout-align="space-between center" >
+          <md-button class="md-primary" ng-click="showSearchBox=!showSearchBox" ng-init="showSearchBox = false" style="margin:1rem;">Search by Date</md-button>
+          <md-button class="md-primary" ng-click="getCurrent()">Current Month</md-button>
+          <md-button class="md-primary" ng-click="previousMonth()">Previous Month</md-button>
+          <div layout="column">
+            <form layout layout-align="center center" name="findByHeathReportForm" ng-submit="findByHeathReport(report)">
+              <div layout="column">
+                <input type="number"  placeholder="Heath Report #" ng-model="report" required>
+              </div>
+              <div>
+                <md-button class="md-raised active" ng-disabled="findByHeathReportForm.$invalid" type="submit">Find</md-button>
+              </div>
+            </form>
+            <span ng-if="noHeathReport"  class="md-caption" style="color:coral;">Unable to find replication</span>
+          </div>
+        </div>
         <div ng-if="showSearchBox" layout="column" layout-align="space-between start" style="padding:1rem;margin:1rem; border: solid thin grey; background-color: #eaeaea;">
           <div layout>
             <form layout name="searchForm" ng-submit="search(startDate, endDate)">
@@ -60,8 +66,8 @@
               </div>
             </form>
           </div>
-
         </div>
+
 
       </div>
       <md-divider></md-divider>
@@ -79,11 +85,19 @@
     </div>
   </div>
   <md-divider></md-divider>
+  <div ng-if="replications.length === 0" layout layout-align="center center"
+       style="background-color: #EAEAEA;color:dimgrey;">
+    <p>
+      <em>
+        There are no completed replications
+      </em>
+    </p>
+  </div>
   <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;"
          style="margin-top:1rem;">
     <thead >
     <tr style="width:100%;">
-      <th >Date</th>
+      <th >Replication Date</th>
       <th >Address</th>
       <th >
         <div layout layout-align="center center">
@@ -161,7 +175,7 @@
             <div layout="column">
               <div>
                 <div layout>
-                  <span>Date: </span>
+                  <span>Replication Date: </span>
                   <span ng-bind="replication.replication_date  | date:'short'"></span>
                 </div>
                 <div layout>
@@ -179,6 +193,10 @@
                 <div layout>
                   <span>Heath Damage Report: </span>
                   <span ng-bind="replication.heath_report"></span>
+                </div>
+                <div layout>
+                  <span>Date of loss: </span>
+                  <span ng-bind="replication.incident_date  | date:'short'"></span>
                 </div>
                 <div layout>
                   <span>Facility: </span>

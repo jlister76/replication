@@ -491,7 +491,7 @@
 
             var scheduleConflicts = [];
 
-            //checking for schedule conflicts against all confirmed meetings in the next 2 weeks
+            //checking for schedule conflicts against all confirmed meetings within the next 2 weeks
             _.forEach(confirmedAtmosMeetings, function (meeting) {
 
               if (moment(meeting.meeting_datetime).format() === moment(request.momentDate).format()) {
@@ -756,6 +756,7 @@
           Replication.create({
             replication_date: date,
             atmos_employee: userCtx.fname + userCtx.lname,
+            atmos_email: userCtx.email,
             atmos_employeeId: userCtx.id,
             atmos_report: response.atmos_report,
             team_leader: team_leader,
@@ -1181,6 +1182,7 @@
           incident_date: meeting.incident_date,
           atmos_employee: userCtx.fname + ' ' + userCtx.lname,
           atmos_employeeId: userCtx.id,
+          atmos_email: userCtx.email,
           atmos_report: response.atmos_report,
           team_leader: meeting.team_leader,
           team_leader_email: meeting.team_leader_email,
@@ -1408,6 +1410,27 @@
             console.log(replications);
             $scope.replications = replications})
           .catch(function(err){console.error(err)});
+      };
+
+      //handler for findByHeathReport
+      $scope.findByHeathReport = function(report){
+        Replication.find({
+          filter: {
+            where: {
+              heath_report: report
+            }
+          }
+        })
+          .$promise
+          .then(function(replications){
+            console.log(replications.length);
+            if(replications.length === 0){
+              $scope.noHeathReport = true;
+            } else {
+              $scope.noHeathReport = false;
+              $scope.replications = replications
+            }})
+          .catch(function(err){ console.error(err)})
       };
 
       //handler for displaying previous month results
@@ -9506,7 +9529,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
             }],
             "atmos": ["Appuser", function (Appuser) {
 
-              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+              return Appuser.find({filter: {where: {fname: {neq: "dps1"}, company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
 
             }],
             "access": ["userCtx", "$state", function (userCtx, $state) {

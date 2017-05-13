@@ -11,7 +11,7 @@
       <md-content style="background-color:white;">
         <md-tabs md-dynamic-height="always" md-tab-scroll="never" md-border-bottom
                  md-selected="selectedIndex"
-                 md-stretch-tabs="always">
+                 md-stretch-tabs="auto">
           <md-tab label="">
             <md-tab-label>
               requested  <span ng-if="requests.length > 0" class="md-caption">({{requests.length}})</span>
@@ -36,11 +36,11 @@
               <div ui-view name="completed" style="margin:.5rem;padding:1rem;"></div>
             </md-tab-body>
           </md-tab>
-          <md-tab label="unscheduled">
+         <!-- <md-tab label="unscheduled">
             <md-tab-body>
               <div ui-view name="unscheduled" style="margin:.5rem;padding:1rem;"></div>
             </md-tab-body>
-          </md-tab>
+          </md-tab>-->
         </md-tabs>
       </md-content>
     </div>

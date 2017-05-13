@@ -33,7 +33,7 @@
             </fieldset>
             <fieldset class="field_set" style="background-color: #eaeaea;">
               <legend>DATE & TIME</legend>
-              <div layout layout-align="start center" style="width:100%;margin-left:1rem;">
+              <div layout  layout-align="start center" style="width:100%;margin-left: 1rem;">
                 <input class="form-control"
                        placeholder="Select a date..."
                        moment-picker="request.stringDate"
@@ -49,10 +49,12 @@
                        ng-model-options="{ updateOn: 'blur' }"
                        width="100%"/>
                 <input type="hidden" ng-model="request.schedule_status">
-                <div>
-                  <md-checkbox ng-click="onSite()">
-                    ONSITE WITH DPS
-                  </md-checkbox>
+                <div layout style="padding-top:1rem; margin-left:4rem;">
+                  <div>
+                    <md-checkbox ng-click="onSite()">
+                      ONSITE WITH DPS
+                    </md-checkbox>
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -134,7 +136,7 @@
               </div>
               <div layout="column" class="row">
                 <div layout="column" style="margin:1rem;padding:.5rem;">
-                  <label for="incident_date"><strong>Date</strong></label>
+                  <label for="incident_date"><strong>Date of loss</strong></label>
                   <input class="form-control"
                          id="incident_date"
                          placeholder="Select a date..."

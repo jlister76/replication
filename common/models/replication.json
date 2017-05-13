@@ -18,6 +18,10 @@
       "type": "string",
       "required": true
     },
+    "atmos_email": {
+      "type": "string",
+      "required": true
+    },
     "atmos_employeeId": {
       "type": "number",
       "required": true

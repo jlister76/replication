@@ -10,11 +10,23 @@ var _ = require('lodash');
 
 module.exports = function(Replication) {
   Replication.sendEmail = function(response, cb) {
-   console.log('Email was not sent', response);
-    //TODO: uncomment sendEmail function
-    /* var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
+
+    var date = moment().subtract(5, 'hours').format('dddd, MMMM, Do, YYYY');
     var d = response;
-    console.log(d.atmos_report);
+    console.log(d.atmos_email);
+    var emailListAtmos = [
+    d.atmos_email,
+    'julie.presley@atmosenergy.com',
+    'alexander.holliness@atmosenergy.com',
+    'melanie.rheingans@atmosenergy.com',
+    'shari.warren@atmosenergy.com'
+    ];
+    var emailListHeath = [
+    'j.lister@heathus.com',
+    'e.parsley@heathus.com',
+    'j.kouba@heathus.com',
+    'f.pinales@heathus.com'
+    ];
     var emailTo = d.team_leader_email;
     var messageVars = {
       replication_date: d.replication_date,
@@ -39,10 +51,9 @@ module.exports = function(Replication) {
     var html_body = renderer(messageVars);
     var html_body2 = render_heath(messageVars);
 
-    //TODO:hard-code ATMOS emails
     Replication.app.models.Email.send({
-      to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
-      from: 'locateATMOS@heathus.com',
+      to: [ emailListHeath, emailListAtmos],
+      from: 'locateAtmos@heathus.com',
       subject: 'Replication Determination - ' + d.town,
       html: html_body
     }, function(err, mail) {
@@ -53,7 +64,7 @@ module.exports = function(Replication) {
     //send email with heath link
     Replication.app.models.Email.send({
      to: [d.team_leader_email],
-     from: 'locateATMOS@heathus.com',
+     from: 'locateAtmos@heathus.com',
      subject: 'Replication Determination - ' + d.town,
      html: html_body2
      }, function(err, mail) {
@@ -61,7 +72,7 @@ module.exports = function(Replication) {
      console.error(err)
      }
      console.log('email sent!');
-     })*/
+     })
   };
 
   Replication.sendHeathResponse = function(response, cb) {
@@ -107,7 +118,7 @@ module.exports = function(Replication) {
 
     Replication.app.models.Email.send({
       to: ['j.lister@heathus.com', 'e.parsley@heathus.com', 'j.kouba@heathus.com', 'f.pinales@heathus.com'],
-      from: 'locateATMOS@heathus.com',
+      from: 'locateAtmos@heathus.com',
       subject: 'Replication Determination Response from ' + d.team_leader,
       html: html_body
     }, function(err, mail) {
