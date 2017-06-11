@@ -436,7 +436,7 @@
                     team_leader: request.team_leader,
                     team_leader_email: userCtx.email,
                     team_leader_tel: userCtx.tel,
-                    schedule_status: request.schedule_status
+                    schedule_status: request.schedule_status || 'pending'
                   })
                     .$promise
                     .then(function (meeting) {

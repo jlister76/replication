@@ -24,7 +24,7 @@ module.exports = function(Replication) {
     var emailListHeath = [
     'j.lister@heathus.com',
     'e.parsley@heathus.com',
-    'j.kouba@heathus.com',
+    'd.durrett@heathus.com',
     'f.pinales@heathus.com'
     ];
     var emailTo = d.team_leader_email;
