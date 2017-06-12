@@ -8,7 +8,7 @@ var path = require('path');
 var moment = require('moment/min/moment-with-locales');
 
 module.exports = function(Meeting) {
-  Meeting.sendMeetingRequest = function(request, cb) {
+ /* Meeting.sendMeetingRequest = function(request, cb) {
 
     var d = request;
     var emailTo = d.email;
@@ -39,7 +39,7 @@ module.exports = function(Meeting) {
       }
       console.log('email sent!');
     });
-  };
+  };*/
   Meeting.confirm = function(meeting, cb) {
 
     var m = meeting;
@@ -295,7 +295,8 @@ module.exports = function(Meeting) {
     http: {path: '/proposed', verb: 'post'}
   });
   Meeting.sendRequest = function(msg, next) {
-    Meeting.sendMeetingRequest(msg);
+    //Meeting.sendMeetingRequest(msg);
+    console.log("Did not send)");
     next();
   };
   Meeting.remoteMethod('sendRequest', {

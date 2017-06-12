@@ -420,6 +420,7 @@
                   request.facility = request.facility_size + " " + request.facility_material;
 
 
+                  console.log("this request", request);
                   Meeting.create({
                     fname: dps.fname,
                     lname: dps.lname,
@@ -487,6 +488,10 @@
                 //create request if no conflict
                 if(scheduledMeeting.length === 0 && scheduledMeetingDate !== request.momentDate){
                   //create instance
+                  if(request.schedule_status === undefined){
+                    request.schedule_status = 'pending';
+                  }
+
                   Meeting.create({
                     fname: request.fname,
                     lname: request.lname,
