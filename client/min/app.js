@@ -604,6 +604,7 @@
                     team_leader_email: userCtx.email,
                     team_leader_tel: userCtx.tel,
                     schedule_status: request.schedule_status
+
                   })
                     .$promise
                     .then(function (meeting_data) {
@@ -9534,7 +9535,7 @@ if (typeof module !== 'undefined' && typeof exports !== 'undefined' &&
             }],
             "atmos": ["Appuser", function (Appuser) {
 
-              return Appuser.find({filter: {where: {fname: {neq: "dps1"}, company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
 
             }],
             "access": ["userCtx", "$state", function (userCtx, $state) {

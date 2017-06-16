@@ -510,6 +510,7 @@
                     team_leader_email: userCtx.email,
                     team_leader_tel: userCtx.tel,
                     schedule_status: request.schedule_status
+
                   })
                     .$promise
                     .then(function (meeting_data) {

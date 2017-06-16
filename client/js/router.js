@@ -45,7 +45,7 @@
             },
             "atmos": function (Appuser) {
 
-              return Appuser.find({filter: {where: {fname: {neq: "dps1"}, company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
+              return Appuser.find({filter: {where: {company: "ATMOS", access_type: "dps", division: "midtx"}}}).$promise
 
             },
             "access": function (userCtx, $state) {
