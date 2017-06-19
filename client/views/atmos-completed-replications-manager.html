@@ -7,7 +7,7 @@
     <div layout="column" style="width:100%;padding:.5rem;">
       <div >
         <div layout layout-align="space-between center" >
-          <md-button class="md-primary" ng-click="showSearchBox=!showSearchBox" ng-init="showSearchBox = false" style="margin:1rem;">Search by Date</md-button>
+          <md-button class="md-primary" ng-disabled=true ng-click="showSearchBox=!showSearchBox" ng-init="showSearchBox = false" style="margin:1rem;">Search by Date</md-button>
           <md-button class="md-primary" ng-click="getCurrent()">Current Month</md-button>
           <md-button class="md-primary" ng-click="previousMonth()">Previous Month</md-button>
           <div layout="column">
@@ -93,54 +93,44 @@
       </em>
     </p>
   </div>
-  <table ng-if="replications.length > 0" cellpadding="2" cellspacing="0" border="0" width="100%;"
+  <table ng-if="replications.length > 0" cellpadding="0" cellspacing="0" border="0" width="100%;"
          style="margin-top:1rem;">
     <thead >
-    <tr style="width:100%;">
-      <th >Replication Date</th>
+    <tr style="width:auto;">
+      <th >Date</th>
       <th >Address</th>
       <th >
         <div layout layout-align="center center">
           <a href="" ng-click="sortType ='town'; sortReverse=!sortReverse"
-             style="color:black;text-decoration: none;">Town
-          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
-          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+             style="color:black;">Town
           </a>
         </div>
       </th>
       <th >
         <div layout layout-align="center center">
           <a href="" ng-click="sortType = 'atmos_employee'; sortReverse=!sortReverse"
-             style="color:black;text-decoration: none;">DPS
-            <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
-            <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
-          </a>
+             style="color:black;">DPS
+            </a>
         </div>
       </th>
       <th >
         <div layout layout-align="center center">
           <a href="" ng-click="sortType = 'team_leader'; sortReverse=!sortReverse"
-             style="color:black;text-decoration: none;"><md-truncate>Team Leader</md-truncate>
-          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
-          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
-          </a>
+             style="color:black;"><md-truncate>Team Leader</md-truncate>
+         </a>
         </div>
       </th>
-      <th >
-        <div layout layout-align="center center">
+      <th>
+        <div >
           <a href="" ng-click="sortType = 'technician'; sortReverse=!sortReverse"
-             style="color:black;text-decoration: none;">Techician
-          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
-          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+             style="color:black;">Technician
           </a>
         </div>
       </th>
       <th >
         <div layout layout-align="center center">
           <a href="" ng-click="sortType = 'atmos_determination'; sortReverse=!sortReverse"
-             style="color:black;text-decoration: none;">Determination
-          <span ng-show="!sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_down</i></span>
-          <span ng-show="sortReverse"><i class="material-icons" style="font-size:1.2rem;">arrow_drop_up</i></span>
+             style="color:black;">Determination
           </a>
         </div>
       </th>
